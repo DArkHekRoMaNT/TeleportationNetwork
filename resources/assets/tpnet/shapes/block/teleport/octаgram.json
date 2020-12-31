@@ -6,7 +6,7 @@
   "textureWidth": 48,
   "textureHeight": 48,
   "textureSizes": {},
-  "textures": { "octogram": "block/teleport/octogram" },
+  "textures": { "octagram": "block/teleport/octagram" },
   "elements": [
     {
       "name": "Cube1",
@@ -15,34 +15,34 @@
       "rotationOrigin": [8.0, 0.0, 8.0],
       "faces": {
         "north": {
-          "texture": "#octogram",
+          "texture": "#octagram",
           "uv": [0.0, 0.0, 0.0, 0.0],
           "glow": 127,
           "autoUv": false,
           "snapUv": false
         },
         "east": {
-          "texture": "#octogram",
+          "texture": "#octagram",
           "uv": [0.0, 0.0, 0.0, 0.0],
           "autoUv": false
         },
         "south": {
-          "texture": "#octogram",
+          "texture": "#octagram",
           "uv": [0.0, 0.0, 0.0, 0.0],
           "autoUv": false
         },
         "west": {
-          "texture": "#octogram",
+          "texture": "#octagram",
           "uv": [-0.5, 0.0, -0.5, 0.0],
           "autoUv": false
         },
         "up": {
-          "texture": "#octogram",
+          "texture": "#octagram",
           "uv": [0.0, 0.0, 48.0, 48.0],
           "autoUv": false
         },
         "down": {
-          "texture": "#octogram",
+          "texture": "#octagram",
           "uv": [0.0, 0.0, 48.0, 48.0],
           "autoUv": false
         }

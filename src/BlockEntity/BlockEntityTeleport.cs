@@ -1,114 +1,65 @@
-using Vintagestory.API.Client;
+using Vintagestory.GameContent;
 using Vintagestory.API.Common;
 using Vintagestory.API.Common.Entities;
-using Vintagestory.API.MathTools;
 
 namespace TeleportationNetwork
 {
     public class BlockEntityTeleport : BlockEntity
     {
-        long? collidems;
-        long? lastcollidems;
+        public bool IsBroken { get { return Type == null || Type == "brokencore"; } }
+        public string Type { get { return Block?.LastCodePart(); } }
 
-        OctogramRender renderer;
-        GuiDialogTeleport dialog;
-
-        MeshData OctogramMesh
-        {
-            get
-            {
-                object value;
-                Api.ObjectCache.TryGetValue("octogrammesh", out value);
-                return (MeshData)value;
-            }
-            set { Api.ObjectCache["octogrammesh"] = value; }
-        }
-
-        internal MeshData GenMesh(string type = "octogram")
-        {
-            Block block = Api.World.BlockAccessor.GetBlock(Pos);
-            if (block.BlockId == 0) return null;
-
-            MeshData mesh;
-            ITesselatorAPI mesher = (Api as ICoreClientAPI).Tesselator;
-
-            mesher.TesselateShape(block, Api.Assets.TryGet(new AssetLocation(
-                Constants.MOD_ID, "shapes/block/teleport/" + type + ".json")).ToObject<Shape>(), out mesh
-            );
-
-            return mesh;
-        }
+        BlockEntityAnimationUtil animUtil { get { return GetBehavior<BEBehaviorAnimatable>()?.animUtil; } }
 
         public override void Initialize(ICoreAPI api)
         {
             base.Initialize(api);
-            RegisterGameTickListener(OnGameTick, 200);
-            if (Api.Side == EnumAppSide.Client)
-            {
-                ICoreClientAPI capi = api as ICoreClientAPI;
-                renderer = new OctogramRender(capi, Pos, GenMesh("octogram"));
-                capi.Event.RegisterRenderer(renderer, EnumRenderStage.Opaque, "teleport");
 
-                if (OctogramMesh == null)
+            if (api.Side == EnumAppSide.Client)
+            {
+                animUtil?.InitializeAnimator(Constants.MOD_ID + "-teleport-" + Type, null, (Block as BlockTeleport).GetShape(Type));
+                if (Type == "core")
                 {
-                    OctogramMesh = GenMesh("octogram");
+
                 }
             }
+
+            RegisterGameTickListener(OnGameLongTick, 2000);
         }
 
-        private void OnGameTick(float dt)
+        private void OnGameLongTick(float dt)
         {
-            if (lastcollidems != null && Api.World.ElapsedMilliseconds - lastcollidems > 1000)
+            if (!IsBroken && animUtil?.animator?.GetAnimationState("octagram")?.Running == false)
             {
-                collidems = null;
-                lastcollidems = null;
+                animUtil.StartAnimation(new AnimationMetaData()
+                {
+                    Animation = "octagram",
+                    Code = "octagram",
+                    AnimationSpeed = 0.025f
+                });
+                animUtil.StartAnimation(new AnimationMetaData()
+                {
+                    Animation = "gear",
+                    Code = "gear",
+                    AnimationSpeed = 0.5f
+                });
             }
         }
-        public override bool OnTesselation(ITerrainMeshPool mesher, ITesselatorAPI tessThreadTesselator)
-        {
-            if (Block == null) return false;
 
-            mesher.AddMeshData(
-                OctogramMesh.Clone()
-                .Rotate(new Vec3f(0.5f, 0.5f, 0.5f), 0, renderer.AngleRad, 0)
-                .Translate(0 / 16f, 11 / 16f, 0 / 16f)
-            );
-
-            return true;
-        }
-        public override void OnBlockUnloaded()
-        {
-            base.OnBlockUnloaded();
-            renderer?.Dispose();
-        }
         public override void OnBlockRemoved()
         {
             base.OnBlockRemoved();
-
-            renderer?.Dispose();
-            renderer = null;
-        }
-        public void OnRightClick(IPlayer byPlayer)
-        {
-            if (byPlayer?.Entity != null)
-            {
-                Api.SendMessageAll("Clicked");
-            }
+            animUtil?.StopAnimation("octagram");
+            animUtil?.StopAnimation("gear");
         }
 
-        public void OnCollide(IWorldAccessor world, Entity entity, BlockPos pos, BlockFacing facing, Vec3d collideSpeed, bool isImpact)
+        public void OnEntityCollide(Entity entity)
         {
-            if (collidems == null)
+            if (entity is EntityPlayer player && !IsBroken &&
+                animUtil?.animator?.GetAnimationState("octagram").CurrentFrame == 29)
             {
-                collidems = Api.World.ElapsedMilliseconds;
-                Api.SendMessageAll(collidems + "");
-            }
-            lastcollidems = Api.World.ElapsedMilliseconds;
-
-            if (Api.World.ElapsedMilliseconds - collidems > Constants.COOLDOWN)
-            {
-                Api.SendMessageAll("Open GUI");
-                collidems = null;
+                animUtil.StopAnimation("octagram");
+                animUtil.StopAnimation("gear");
             }
         }
     }

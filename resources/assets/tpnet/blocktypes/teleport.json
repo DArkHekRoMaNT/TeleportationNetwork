@@ -2,21 +2,31 @@
   "code": "teleport",
   "class": "BlockTeleport",
   "entityclass": "BlockEntityTeleport",
+  "variantgroups": [{ "code": "type", "states": ["core", "brokencore"] }],
   "creativeinventory": { "general": ["*"], "decorative": ["*"] },
   "blockmaterial": "Stone",
-  "shape": { "base": "game:block/basic/cube" },
-  "drawtype": "Cube",
+  "shape": { "base": "block/teleport/{type}" },
+  "drawtype": "json",
   "textures": {
-    "all": {
-      "base": "game:block/stone/rock/whitemarble1"
+    "core": {
+      "base": "game:block/stone/brick/granite1",
+      "alternates": [
+        { "base": "game:block/stone/brick/granite2" },
+        { "base": "game:block/stone/brick/granite3" }
+      ]
     },
-    "octogram": { "base": "block/teleport/octogram" }
+    "seal": { "base": "block/teleport/seal" },
+    "rustyglow": { "base": "game:block/machine/statictranslocator/rustyglow" },
+    "darkwood": {
+      "base": "game:block/machine/statictranslocator/base_darkwood"
+    }
   },
   "replaceable": 100,
   "resistance": 8,
   "sounds": {
     "walk": "game:walk/stone"
   },
+  "entityBehaviors": [{ "name": "Animatable" }],
   "lightAbsorption": 0,
   "heldTpIdleAnimation": "holdbothhandslarge",
   "heldTpUseAnimation": "twohandplaceblock",

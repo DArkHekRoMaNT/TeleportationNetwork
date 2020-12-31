@@ -1,4 +1,7 @@
+using TeleportationNetwork;
 using Vintagestory.API.Common;
+
+[assembly: ModInfo(Constants.MOD_ID)]
 
 namespace TeleportationNetwork
 {

@@ -1,0 +1,109 @@
+{
+	"editor": {
+		"allAngles": false,
+		"entityTextureMode": false
+	},
+	"textureWidth": 48,
+	"textureHeight": 48,
+	"textureSizes": {
+	},
+	"textures": {
+		"core": "block/stone/rock/whitemarble1",
+		"seal": "D:/Dev/VintageStory/mods/!WIP/TeleportationNetwork/resources/assets/tpnet/textures/block/teleport/seal"
+	},
+	"elements": [
+		{
+			"name": "core",
+			"from": [ 0.0, 0.0, 0.0 ], 
+			"to": [ 16.0, 16.0, 16.0 ], 
+			"rotationOrigin": [ 8.0, 8.0, 8.0 ],
+			"faces": {
+				"north": { "texture": "#core", "uv": [ 0.0, 0.0, 48.0, 48.0 ], "autoUv": false },
+				"east": { "texture": "#core", "uv": [ 0.0, 0.0, 48.0, 48.0 ], "autoUv": false },
+				"south": { "texture": "#core", "uv": [ 0.0, 0.0, 48.0, 48.0 ], "autoUv": false },
+				"west": { "texture": "#core", "uv": [ 0.0, 0.0, 48.0, 48.0 ], "autoUv": false },
+				"up": { "texture": "#core", "uv": [ 0.0, 0.0, 48.0, 48.0 ], "autoUv": false },
+				"down": { "texture": "#core", "uv": [ 0.0, 0.0, 48.0, 48.0 ], "autoUv": false }
+			},
+			"children": [
+				{
+					"name": "seal",
+					"from": [ -32.0, 16.01, -32.0 ], 
+					"to": [ 48.0, 16.02, 48.0 ], 
+					"rotationOrigin": [ 8.0, 64.0, 8.0 ],
+					"faces": {
+						"north": { "texture": "#seal", "uv": [ 0.0, 0.0, 0.0, 0.0 ], "glow": 127, "autoUv": false, "snapUv": false },
+						"east": { "texture": "#seal", "uv": [ 0.0, 0.0, 0.0, 0.0 ], "autoUv": false },
+						"south": { "texture": "#seal", "uv": [ 0.0, 0.0, 0.0, 0.0 ], "autoUv": false },
+						"west": { "texture": "#seal", "uv": [ 0.0, 0.0, 0.0, 0.0 ], "autoUv": false },
+						"up": { "texture": "#seal", "uv": [ 0.0, 0.0, 48.0, 48.0 ], "glow": 127, "autoUv": false },
+						"down": { "texture": "#seal", "uv": [ 0.0, 0.0, 0.0, 0.0 ], "autoUv": false }
+					}
+				}
+			]
+		}
+	],
+	"animations": [
+		{
+			"name": "launch",
+			"code": "launch",
+			"quantityframes": 300,
+			"onActivityStopped": "EaseOut",
+			"onAnimationEnd": "Repeat",
+			"keyframes": [
+				{
+					"frame": 0,
+					"elements": {
+						"core": {  },
+						"seal": { "offsetX": 0.0, "offsetY": 0.0, "offsetZ": 0.0, "rotationX": 0.0, "rotationY": 180.0, "rotationZ": 0.0 }
+					}
+				},
+				{
+					"frame": 179,
+					"elements": {
+						"core": {  },
+						"seal": { "offsetX": 0.0, "offsetY": 8.0, "offsetZ": 0.0, "rotationX": 0.0, "rotationY": -180.0, "rotationZ": 0.0 }
+					}
+				},
+				{
+					"frame": 239,
+					"elements": {
+						"core": {  },
+						"seal": { "offsetX": 0.0, "offsetY": 32.0, "offsetZ": 0.0, "rotationX": -22.5, "rotationY": 180.0, "rotationZ": 22.5 }
+					}
+				},
+				{
+					"frame": 299,
+					"elements": {
+						"core": {  },
+						"seal": { "offsetX": 0.0, "offsetY": 48.0, "offsetZ": 0.0, "rotationX": -180.0, "rotationY": -180.0, "rotationZ": 180.0 }
+					}
+				}
+			]
+		},
+
+		{
+			"name": "idle",
+			"code": "idle",
+			"quantityframes": 300,
+			"onActivityStopped": "PlayTillEnd",
+			"onAnimationEnd": "Repeat",
+			"keyframes": [
+				{
+					"frame": 0,
+					"elements": {
+						"core": {  },
+						"seal": { "rotationX": 0.0, "rotationY": -180.0, "rotationZ": 0.0 }
+					}
+				},
+				{
+					"frame": 299,
+					"elements": {
+						"core": {  },
+						"seal": { "rotationX": 0.0, "rotationY": 180.0, "rotationZ": 0.0 }
+					}
+				}
+			]
+		}
+	]
+}
