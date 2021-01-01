@@ -13,7 +13,7 @@ namespace TeleportationNetwork
         public Shape GetShape(EnumTeleportState state)
         {
             string path = "shapes/block/teleport/broken.json";
-            if (state == EnumTeleportState.Ready) path = "shapes/block/teleport/ready.json";
+            if (state == EnumTeleportState.Normal) path = "shapes/block/teleport/normal.json";
 
             return api.Assets.Get(new AssetLocation(Constants.MOD_ID, path)).ToObject<Shape>();
         }
@@ -41,7 +41,7 @@ namespace TeleportationNetwork
             be.OnEntityCollide(entity);
         }
 
-        // TODO
+        // TODO: Teleport
         public override void OnEntityInside(IWorldAccessor world, Entity entity, BlockPos pos)
         {
             base.OnEntityInside(world, entity, pos);
@@ -62,7 +62,7 @@ namespace TeleportationNetwork
 
             if (be.State == EnumTeleportState.Broken && slot.Itemstack.Collectible is ItemTemporalGear)
             {
-                be.State = EnumTeleportState.Ready;
+                be.State = EnumTeleportState.Normal;
 
                 if (byPlayer.WorldData.CurrentGameMode != EnumGameMode.Creative)
                 {
