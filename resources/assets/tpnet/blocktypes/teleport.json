@@ -2,10 +2,7 @@
   "code": "teleport",
   "class": "BlockTeleport",
   "entityclass": "BlockEntityTeleport",
-  "variantgroups": [{ "code": "type", "states": ["core", "brokencore"] }],
-  "creativeinventory": { "general": ["*"], "decorative": ["*"] },
   "blockmaterial": "Stone",
-  "shape": { "base": "block/teleport/{type}" },
   "drawtype": "json",
   "textures": {
     "core": {
@@ -21,6 +18,11 @@
       "base": "game:block/machine/statictranslocator/base_darkwood"
     }
   },
+  "attributes": {
+    "state": "broken"
+  },
+  "shapeInventory": { "base": "block/teleport/broken" },
+  "creativeinventory": { "general": ["*"], "decorative": ["*"] },
   "replaceable": 100,
   "resistance": 8,
   "sounds": {

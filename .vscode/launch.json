@@ -18,7 +18,8 @@
         "${workspaceFolder}/mods"
       ],
       "console": "internalConsole",
-      "internalConsoleOptions": "openOnSessionStart"
+      "internalConsoleOptions": "openOnSessionStart",
+      "justMyCode": false
     },
     {
       "name": "Launch Client (Mono)",
