@@ -1,7 +1,7 @@
 {
   "code": "teleport",
   "class": "BlockTeleport",
-  "entityclass": "BlockEntityTeleport",
+  "entityclass": "BETeleport",
   "blockmaterial": "Stone",
   "drawtype": "json",
   "shapeByType": {
@@ -9,14 +9,10 @@
     "*-normal": { "base": "block/teleport/normal" }
   },
   "textures": {
-    "core": {
-      "base": "game:block/stone/brick/granite1",
-      "alternates": [
-        { "base": "game:block/stone/brick/granite2" },
-        { "base": "game:block/stone/brick/granite3" }
-      ]
+    "base": {
+      "base": "game:block/stone/brick/granite*"
     },
-    "seal": { "base": "block/teleport/seal" },
+    "seal": { "base": "block/teleport/seal2" },
     "rustyglow": { "base": "game:block/machine/statictranslocator/rustyglow" },
     "darkwood": {
       "base": "game:block/machine/statictranslocator/base_darkwood"
@@ -24,13 +20,13 @@
   },
   "variantgroups": [{ "code": "state", "states": ["broken", "normal"] }],
   "creativeinventory": { "general": ["*"], "decorative": ["*"] },
-  "replaceable": 100,
-  "resistance": 8,
+  "replaceable": 200,
+  "resistance": 9999,
+  "lightAbsorption": 99,
   "sounds": {
     "walk": "game:walk/stone"
   },
   "entityBehaviors": [{ "name": "Animatable" }],
-  "lightAbsorption": 0,
   "heldTpIdleAnimation": "holdbothhandslarge",
   "heldTpUseAnimation": "twohandplaceblock",
   "tpHandTransform": {

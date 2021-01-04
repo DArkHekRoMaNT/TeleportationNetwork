@@ -8,8 +8,8 @@
       "preLaunchTask": "build (Debug)",
       "program": "${env:VINTAGE_STORY}/${config:vsversion}/Vintagestory.exe",
       "args": [
-        "--playstyle",
-        "surviveandbuild",
+        "--playStyle",
+        "preset-surviveandbuild",
         "--openWorld",
         "modding test world",
         "--dataPath",
@@ -19,7 +19,8 @@
       ],
       "console": "internalConsole",
       "internalConsoleOptions": "openOnSessionStart",
-      "justMyCode": false
+      "justMyCode": false,
+      "enableStepFiltering": false
     },
     {
       "name": "Launch Client (Mono)",
@@ -28,8 +29,8 @@
       "preLaunchTask": "build (Debug)",
       "program": "${env:VINTAGE_STORY}/${config:vsversion}/Vintagestory.exe",
       "args": [
-        "--playstyle",
-        "surviveandbuild",
+        "--playStyle",
+        "preset-surviveandbuild",
         "--openWorld",
         "modding test world",
         "--dataPath",

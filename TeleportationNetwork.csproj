@@ -23,6 +23,9 @@
     <Reference Include="Newtonsoft.Json">
       <HintPath>$(VINTAGE_STORY)/$(VSVersion)/Lib/Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="cairo-sharp">
+      <HintPath>$(VINTAGE_STORY)/$(VSVersion)/Lib/cairo-sharp.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
   <Target Name="Copy" AfterTargets="PostBuildEvent">
