@@ -19,8 +19,7 @@
       ],
       "console": "internalConsole",
       "internalConsoleOptions": "openOnSessionStart",
-      "justMyCode": false,
-      "enableStepFiltering": false
+      "requireExactSource": false
     },
     {
       "name": "Launch Client (Mono)",

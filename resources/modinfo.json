@@ -6,7 +6,7 @@
   "description": "",
   "version": "1.0.0",
   "dependency": {
-    "game": "1.14.0"
+    "game": "1.14.2"
   },
   "website": "https://github.com/DArkHekRoMaNT/TeleportationNetwork"
 }

@@ -88,6 +88,7 @@ namespace TeleportationNetwork
 
             foreach (var player in sapi.World.AllPlayers)
             {
+                SaveAvailableTeleportsFromPlayer(player as IServerPlayer);
             }
         }
 
@@ -104,7 +105,14 @@ namespace TeleportationNetwork
                     sapi.World.Logger.ModDebug($"Loaded teleport data for {tp.Value.Name} at {tp.Key}");
                 }
 
+                foreach (var player in sapi.World.AllPlayers)
+                {
+                    LoadAvailableTeleportsToPlayer(player as IServerPlayer);
+                }
+
                 sapi.World.Logger.ModNotification("Data loaded");
+
+
             }
             catch (Exception e)
             {
@@ -112,23 +120,23 @@ namespace TeleportationNetwork
             }
         }
 
-
-        internal static void SaveAvailableTeleports(IServerPlayer player)
+        internal void SaveAvailableTeleportsFromPlayer(IServerPlayer player)
         {
-            string[] at = player.Entity.WatchedAttributes.GetStringArray("availableteleports");
-            byte[] data = SerializerUtil.Serialize<string[]>(at);
+            BlockPos[] at = player.Entity.WatchedAttributes.GetBlockPosArray("availableteleports");
+            byte[] data = SerializerUtil.Serialize<BlockPos[]>(at);
 
             player.SetModdata(Constants.MOD_ID + "availableteleports", data);
+            sapi.World.Logger.ModDebug($"Saved available teleports from {player.PlayerName} ({player.PlayerUID})");
         }
 
-        internal static void LoadAvailableTeleports(IServerPlayer player)
+        internal void LoadAvailableTeleportsToPlayer(IServerPlayer player)
         {
             byte[] data = player.GetModdata(Constants.MOD_ID + "availableteleports");
-            string[] at = SerializerUtil.Deserialize<string[]>(data);
+            BlockPos[] at = SerializerUtil.Deserialize<BlockPos[]>(data);
 
-            player.Entity.WatchedAttributes.SetStringArray("availableteleports", at);
+            player.Entity.WatchedAttributes.SetBlockPosArray("availableteleports", at);
+            sapi.World.Logger.ModDebug($"Loaded available teleports to {player.PlayerName} ({player.PlayerUID})");
         }
-
 
         public void TeleportTo(Vec3d targetPos, Vec3d sourcePos = null)
         {
@@ -182,6 +190,44 @@ namespace TeleportationNetwork
                 sapi.World.Logger.ModNotification($"{entity?.GetName()} teleported to {x}, {y}, {z} ({name})");
             }
         }
+
+
+
+
+        public static BlockPos[] GetAvailableTeleports(IPlayer player)
+        {
+            return player.Entity.WatchedAttributes.GetBlockPosArray("availableteleports");
+        }
+
+        public static void SetAvailableTeleports(IPlayer player, BlockPos[] atPos)
+        {
+            player.Entity.WatchedAttributes.SetBlockPosArray("availableteleports", atPos);
+        }
+
+        public static void AddAvailableTeleport(IPlayer player, BlockPos pos)
+        {
+            List<BlockPos> atPos = GetAvailableTeleports(player)?.ToList() ?? new List<BlockPos>();
+            atPos.Add(pos);
+            SetAvailableTeleports(player, atPos.ToArray());
+        }
+
+        public static void RemoveAvailableTeleport(IPlayer player, BlockPos pos)
+        {
+            List<BlockPos> atPos = GetAvailableTeleports(player)?.ToList();
+            atPos?.Remove(pos);
+            SetAvailableTeleports(player, atPos?.ToArray());
+        }
+
+        public static Dictionary<BlockPos, TeleportData> GetAvailableTeleportsWithData(IPlayer player)
+        {
+            if (Config.Current.SharedTeleports.Val) return AllTeleports;
+
+            BlockPos[] atPos = GetAvailableTeleports(player);
+            if (atPos == null || atPos.Length == 0) return null;
+
+            return AllTeleports.Where((dict) => atPos.Contains(dict.Key))?.ToDictionary(dict => dict.Key, dict => dict.Value);
+        }
+
 
         #endregion
 

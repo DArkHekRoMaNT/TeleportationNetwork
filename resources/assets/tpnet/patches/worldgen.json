@@ -7,7 +7,7 @@
       "code": "tpnet_teleport",
       "name": "Teleportation place",
       "group": "tpnet_teleport",
-      "minGroupDistance": 1,
+      "minGroupDistance": 4096,
       "schematics": ["tpnet/teleport/*"],
       "chance": 100,
       "replacewithblocklayers": ["soil-medium-normal", "soil-medium-none"],

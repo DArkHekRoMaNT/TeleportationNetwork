@@ -21,7 +21,7 @@
   "variantgroups": [{ "code": "state", "states": ["broken", "normal"] }],
   "creativeinventory": { "general": ["*"], "decorative": ["*"] },
   "replaceable": 200,
-  "resistance": 9999,
+  "resistance": 4,
   "lightAbsorption": 99,
   "sounds": {
     "walk": "game:walk/stone"

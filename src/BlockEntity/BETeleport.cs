@@ -18,8 +18,8 @@ namespace TeleportationNetwork
     public enum EnumTeleportingEntityState
     {
         None = 0,
-        UI = 1,
-        Teleporting = 2
+        Teleporting = 1,
+        UI = 2
     }
 
     public class TeleportingPlayer
@@ -101,20 +101,19 @@ namespace TeleportationNetwork
         TeleportData tpData;
         Dictionary<string, TeleportingPlayer> tpingPlayers = new Dictionary<string, TeleportingPlayer>();
 
-        //REVIEW: State
-        // TODO: Was been activated flag
+
         public EnumTeleportState State
         {
             get
             {
                 string state = null;
-                Block?.Variant.TryGetValue("state", out state);
+                Block.Variant.TryGetValue("state", out state);
 
                 if (state == "broken") return EnumTeleportState.Broken;
                 if (state == "normal") return EnumTeleportState.Normal;
 
-                Api?.Logger?.ModWarning("Unknown teleport state " + state + ", will be replaced to default.");
-                Block def = Api?.World?.GetBlock(new AssetLocation(Constants.MOD_ID, "teleport-broken"));
+                Api.Logger.ModWarning("Unknown teleport state " + state + ", will be replaced to default.");
+                Block def = Api.World.GetBlock(new AssetLocation(Constants.MOD_ID, "teleport-broken"));
                 if (def != null) Block = def;
 
                 State = EnumTeleportState.Broken;
@@ -137,8 +136,8 @@ namespace TeleportationNetwork
 
                 if (state != null)
                 {
-                    Block block = Api?.World?.GetBlock(Block?.CodeWithVariant("state", state));
-                    Api?.World?.BlockAccessor?.SetBlock(block.BlockId, Pos);
+                    Block block = Api.World.GetBlock(Block.CodeWithVariant("state", state));
+                    Api.World.BlockAccessor.SetBlock(block.BlockId, Pos);
                 }
             }
         }
@@ -163,7 +162,7 @@ namespace TeleportationNetwork
             if (api.Side == EnumAppSide.Client)
             {
                 float rotY = Block.Shape.rotateY;
-                animUtil.InitializeAnimator(Constants.MOD_ID + "-teleport", new Vec3f(0, rotY, 0));
+                animUtil?.InitializeAnimator(Constants.MOD_ID + "-teleport", new Vec3f(0, rotY, 0));
             }
 
             ownBlock = Block as BlockTeleport;
@@ -186,7 +185,7 @@ namespace TeleportationNetwork
         List<string> toremove = new List<string>();
         private void OnGameTick(float dt)
         {
-            if (animUtil.animator?.ActiveAnimationCount == 0)
+            if (animUtil?.animator?.ActiveAnimationCount == 0)
             {
                 animUtil.StartAnimation(new AnimationMetaData()
                 {
@@ -213,7 +212,10 @@ namespace TeleportationNetwork
             float bestSecondsPassed = 0;
             foreach (var val in tpingPlayers)
             {
-                if (val.Value.State == EnumTeleportingEntityState.Teleporting) continue;
+                if (val.Value.State == EnumTeleportingEntityState.None)
+                {
+                    TPNetManager.AddAvailableTeleport((Api as ICoreClientAPI).World.Player, Pos);
+                }
 
                 val.Value.SecondsPassed += Math.Min(0.5f, dt);
 
@@ -223,7 +225,7 @@ namespace TeleportationNetwork
                     continue;
                 }
 
-                if (val.Value.SecondsPassed > 3 && val.Value.State == EnumTeleportingEntityState.None)
+                if (val.Value.SecondsPassed > 3 && val.Value.State == EnumTeleportingEntityState.Teleporting)
                 {
                     val.Value.State = EnumTeleportingEntityState.UI;
 
@@ -232,7 +234,7 @@ namespace TeleportationNetwork
                         if (teleportDlg?.IsOpened() == true)
                         {
                             teleportDlg.TryClose();
-                            val.Value.State = EnumTeleportingEntityState.None;
+                            val.Value.State = EnumTeleportingEntityState.Teleporting;
                         }
                         else
                         {
@@ -282,7 +284,7 @@ namespace TeleportationNetwork
             EntityPlayer player = entity as EntityPlayer;
             if (player == null) return;
 
-            if (player.IsActivityRunning("teleportCooldown"))
+            if (player.IsActivityRunning("teleportCooldown")) //REVIEW ActivityRunning not working?
             {
                 return;
             }
@@ -293,7 +295,7 @@ namespace TeleportationNetwork
                 tpingPlayers[player.PlayerUID] = tpe = new TeleportingPlayer()
                 {
                     Player = player,
-                    State = EnumTeleportingEntityState.None
+                    State = EnumTeleportingEntityState.Teleporting
                 };
             }
 
