@@ -4,5 +4,7 @@
 
   "Available Points": "Available Points",
   "No available teleports": "No available teleports",
-  "Not found": "Not found"
+  "Not found": "Not found",
+
+  "blockhelp-teleport-rename": "Rename"
 }

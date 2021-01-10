@@ -10,13 +10,12 @@ namespace TeleportationNetwork
 {
     public class Core : ModSystem
     {
-        ICoreAPI api;
         public override void Start(ICoreAPI api)
         {
             RuntimeEnv.DebugOutOfRangeBlockAccess = true;
 
             api.RegisterBlockClass("BlockTeleport", typeof(BlockTeleport));
-            api.RegisterBlockEntityClass("BETeleport", typeof(BETeleport));
+            api.RegisterBlockEntityClass("BETeleport", typeof(BlockEntityTeleport));
 
             TreeAttribute.RegisterAttribute(Constants.ATTRIBUTES_ID + 1, typeof(BlockPosArrayAttribute));
 

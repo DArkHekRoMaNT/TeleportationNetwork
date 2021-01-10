@@ -12,7 +12,7 @@ namespace TeleportationNetwork
 
         public override void OnEntityCollide(IWorldAccessor world, Entity entity, BlockPos pos, BlockFacing facing, Vec3d collideSpeed, bool isImpact)
         {
-            BETeleport be = api.World.BlockAccessor.GetBlockEntity(pos) as BETeleport;
+            BlockEntityTeleport be = api.World.BlockAccessor.GetBlockEntity(pos) as BlockEntityTeleport;
             if (be == null) return;
 
             be.OnEntityCollide(entity);
@@ -20,8 +20,14 @@ namespace TeleportationNetwork
 
         public override bool OnBlockInteractStart(IWorldAccessor world, IPlayer byPlayer, BlockSelection blockSel)
         {
-            BETeleport be = api.World.BlockAccessor.GetBlockEntity(blockSel.Position) as BETeleport;
+            BlockEntityTeleport be = api.World.BlockAccessor.GetBlockEntity(blockSel.Position) as BlockEntityTeleport;
             if (be == null) return false;
+
+            if (be.Repaired && byPlayer.WorldData.EntityControls.Sneak)
+            {
+                be.OnShiftRightClick();
+                return true;
+            }
 
             ItemSlot slot = byPlayer.InventoryManager.ActiveHotbarSlot;
             if (slot.Empty) return base.OnBlockInteractStart(world, byPlayer, blockSel);
@@ -63,7 +69,7 @@ namespace TeleportationNetwork
 
             if (flag && byPlayer.WorldData.CurrentGameMode == EnumGameMode.Creative)
             {
-                BETeleport bet = api.World.BlockAccessor.GetBlockEntity(blockSel.Position) as BETeleport;
+                BlockEntityTeleport bet = api.World.BlockAccessor.GetBlockEntity(blockSel.Position) as BlockEntityTeleport;
 
                 if (bet != null && bet.State == EnumTeleportState.Normal)
                 {
@@ -74,7 +80,7 @@ namespace TeleportationNetwork
             return flag;
         }
 
-        // TOFO: Need over way for prevent broke
+        // TODO: Need over way for prevent broke
         public override float OnGettingBroken(IPlayer player, BlockSelection blockSel, ItemSlot itemslot, float remainingResistance, float dt, int counter)
         {
             if (Config.Current.Unbreakable.Val) return 9999;
@@ -91,6 +97,16 @@ namespace TeleportationNetwork
                         ActionLangCode = "blockhelp-translocator-repair-2",
                         Itemstacks = new ItemStack[] { new ItemStack(world.GetItem(new AssetLocation("gear-temporal")), 1) },
                         MouseButton = EnumMouseButton.Right
+                    }
+                };
+            }
+            if (LastCodePart() == "normal")
+            {
+                return new WorldInteraction[]{
+                    new WorldInteraction(){
+                        ActionLangCode = Constants.MOD_ID + ":blockhelp-teleport-rename",
+                        MouseButton = EnumMouseButton.Right,
+                        HotKeyCode = "sneak"
                     }
                 };
             }

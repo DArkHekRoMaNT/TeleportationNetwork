@@ -163,7 +163,7 @@ namespace TeleportationNetwork
             }
             else
             {
-                BETeleport bet = sapi.World.BlockAccessor.GetBlockEntity(data.SourcePos.AsBlockPos) as BETeleport;
+                BlockEntityTeleport bet = sapi.World.BlockAccessor.GetBlockEntity(data.SourcePos.AsBlockPos) as BlockEntityTeleport;
                 if (bet == null) return;
 
                 tpEntities = bet.GetInCircleEntities();

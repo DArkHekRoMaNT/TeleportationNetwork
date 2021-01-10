@@ -4,7 +4,6 @@ using Vintagestory.API.Common.Entities;
 using Vintagestory.API.MathTools;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Vintagestory.API.Client;
 
 namespace TeleportationNetwork
@@ -30,7 +29,7 @@ namespace TeleportationNetwork
         public EnumTeleportingEntityState State;
     }
 
-    public class BETeleport : BlockEntity
+    public class BlockEntityTeleport : BlockEntity
     {
         #region render
 
@@ -96,6 +95,7 @@ namespace TeleportationNetwork
         BlockTeleport ownBlock;
         long listenerid;
         GuiDialogTeleport teleportDlg;
+        GuiDialogRenameTeleport renameDlg;
 
         TPNetManager manager;
         TeleportData tpData;
@@ -221,7 +221,7 @@ namespace TeleportationNetwork
 
                 val.Value.SecondsPassed += Math.Min(0.5f, dt);
 
-                if (Api.World.ElapsedMilliseconds - val.Value.LastCollideMs > 100)
+                if (Api.World.ElapsedMilliseconds - val.Value.LastCollideMs > 300)
                 {
                     toremove.Add(val.Key);
                     continue;
@@ -231,20 +231,12 @@ namespace TeleportationNetwork
                 {
                     val.Value.State = EnumTeleportingEntityState.UI;
 
-                    if (Api.Side == EnumAppSide.Client)
+                    if (Api.Side == EnumAppSide.Client && teleportDlg?.IsOpened() != true)
                     {
-                        if (teleportDlg?.IsOpened() == true)
-                        {
-                            teleportDlg.TryClose();
-                            val.Value.State = EnumTeleportingEntityState.Teleporting;
-                        }
-                        else
-                        {
-                            if (teleportDlg != null) teleportDlg.Dispose();
+                        if (teleportDlg != null) teleportDlg.Dispose();
 
-                            teleportDlg = new GuiDialogTeleport(Api as ICoreClientAPI, Pos);
-                            teleportDlg.TryOpen();
-                        }
+                        teleportDlg = new GuiDialogTeleport(Api as ICoreClientAPI, Pos);
+                        teleportDlg.TryOpen();
                     }
                 }
 
@@ -321,6 +313,19 @@ namespace TeleportationNetwork
             Vec3d c = Pos.ToVec3d().Add(0.5, r, 0.5);
 
             return Api.World.GetEntitiesAround(c, r, r, (e) => e.Pos.DistanceTo(c) < r);
+        }
+
+        public void OnShiftRightClick()
+        {
+            if (Api.Side == EnumAppSide.Client)
+            {
+                if (renameDlg == null)
+                {
+                    renameDlg = new GuiDialogRenameTeleport("Rename", Pos, Api as ICoreClientAPI, CairoFont.WhiteSmallText());
+                }
+
+                if (!renameDlg.IsOpened()) renameDlg.TryOpen();
+            }
         }
 
         #endregion

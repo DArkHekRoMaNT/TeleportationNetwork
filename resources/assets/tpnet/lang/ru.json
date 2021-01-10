@@ -4,5 +4,7 @@
 
   "Available Points": "Доступные точки",
   "No available teleports": "Нет доступных телепортов",
-  "Not found": "Не найдено"
+  "Not found": "Не найдено",
+
+  "blockhelp-teleport-rename": "Переименовать"
 }

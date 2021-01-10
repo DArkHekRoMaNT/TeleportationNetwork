@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
 using Vintagestory.API.Config;
@@ -13,18 +15,18 @@ namespace TeleportationNetwork
         public bool IsDuplicate { get; }
         public override bool PrefersUngrabbedMouse => false;
         public override bool UnregisterOnClose => true;
-        public BlockPos OwnBEPos { get; }
+        BlockPos blockEntityPos;
 
         TPNetManager manager;
 
         public GuiDialogTeleport(ICoreClientAPI capi, BlockPos ownBEPos)
             : base(Lang.Get("Available Points"), capi)
         {
-            IsDuplicate = (capi.OpenedGuis.FirstOrDefault((object dlg) => ownBEPos != null && (dlg as GuiDialogTeleport)?.OwnBEPos == ownBEPos) != null);
+            IsDuplicate = (capi.OpenedGuis.FirstOrDefault((object dlg) => ownBEPos != null && (dlg as GuiDialogTeleport)?.blockEntityPos == ownBEPos) != null);
             if (!IsDuplicate)
             {
                 manager = capi.ModLoader.GetModSystem<TPNetManager>();
-                OwnBEPos = ownBEPos;
+                blockEntityPos = ownBEPos;
             }
         }
 
@@ -104,9 +106,13 @@ namespace TeleportationNetwork
                         .AddInset(insetBounds, 3)
                         .AddContainer(listBounds, "stacklist")
                     .EndClip()
+                    .AddHoverText("", CairoFont.WhiteDetailText(), 300, listBounds.FlatCopy(), "hovertext")
                     .AddVerticalScrollbar(onNewScrollbarValue, scrollbarBounds, "scrollbar")
                 .EndChildElements()
             ;
+
+            var hoverTextElem = SingleComposer.GetHoverText("hovertext");
+            hoverTextElem.SetAutoWidth(true);
 
             var stacklist = SingleComposer.GetContainer("stacklist");
 
@@ -115,14 +121,9 @@ namespace TeleportationNetwork
                 var tp = availableTps.ElementAt(i);
                 if (tp.Value.Name == null) tp.Value.Name = "null";
 
-                // string tpName = tp.Value.Name + "\n\r" +
-                //     "[ " + (tp.Key.X - capi.World.DefaultSpawnPosition.XYZInt.X) + ", " +
-                //     (tp.Key.Z - capi.World.DefaultSpawnPosition.XYZInt.Z) + " ]";
-
-                string tpName = tp.Value.Name;
-
-                stacklist.Add(new GuiElementTextButton(capi,
-                    tpName,
+                stacklist.Add(new GuiElementTextButtonExt(capi,
+                    tp.Value.Name,
+                    tp.Key,
                     CairoFont.WhiteSmallText(),
                     CairoFont.WhiteSmallText(),
                     () => onClickItem(tp.Key),
@@ -130,9 +131,9 @@ namespace TeleportationNetwork
                     EnumButtonStyle.Normal
                 ));
 
-                if (tp.Key == OwnBEPos)
+                if (tp.Key == blockEntityPos)
                 {
-                    (stacklist.Elements.Last() as GuiElementTextButton).Enabled = false;
+                    (stacklist.Elements.Last() as GuiElementTextButtonExt).Enabled = false;
                 }
             }
 
@@ -149,10 +150,41 @@ namespace TeleportationNetwork
         {
             var tp = TPNetManager.AllTeleports[targetPos];
 
-            manager.TeleportTo(targetPos.ToVec3d(), OwnBEPos?.ToVec3d());
+            manager.TeleportTo(targetPos.ToVec3d(), blockEntityPos?.ToVec3d());
             TryClose();
 
             return true;
+        }
+
+        public override void OnMouseMove(MouseEvent args)
+        {
+            base.OnMouseMove(args);
+
+            if (SingleComposer != null && SingleComposer.Bounds.PointInside(args.X, args.Y))
+            {
+                var stacklist = SingleComposer.GetContainer("stacklist");
+                var button = stacklist.Elements.FirstOrDefault((elem) => elem.IsPositionInside(args.X, args.Y)) as GuiElementTextButtonExt;
+
+                if (button != null)
+                {
+
+                    int x = button.TeleportPos.X - capi.World.DefaultSpawnPosition.XYZInt.X;
+                    int y = button.TeleportPos.Y;
+                    int z = button.TeleportPos.Z - capi.World.DefaultSpawnPosition.XYZInt.Z;
+
+                    StringBuilder hoverText = new StringBuilder();
+                    hoverText.AppendLine(string.Format("{0}, {1}, {2}", x, y, z));
+                    string text = hoverText.ToString().TrimEnd();
+
+                    var hoverTextElem = SingleComposer.GetHoverText("hovertext");
+                    hoverTextElem.SetNewText(text);
+                }
+                else
+                {
+                    var hoverTextElem = SingleComposer.GetHoverText("hovertext");
+                    hoverTextElem.SetNewText("");
+                }
+            }
         }
     }
 }
