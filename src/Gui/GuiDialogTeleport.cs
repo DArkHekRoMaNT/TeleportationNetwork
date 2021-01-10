@@ -162,6 +162,8 @@ namespace TeleportationNetwork
             if (SingleComposer != null && SingleComposer.Bounds.PointInside(args.X, args.Y))
             {
                 var stacklist = SingleComposer.GetContainer("stacklist");
+                if (stacklist == null) return;
+
                 var button = stacklist.Elements.FirstOrDefault((elem) => elem.IsPositionInside(args.X, args.Y)) as GuiElementTextButtonExt;
 
                 if (button != null)
