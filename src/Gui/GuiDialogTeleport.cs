@@ -1,10 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
+using Cairo;
 using Vintagestory.API.Client;
-using Vintagestory.API.Common;
 using Vintagestory.API.Config;
 using Vintagestory.API.MathTools;
 
@@ -43,7 +42,7 @@ namespace TeleportationNetwork
             return base.TryOpen();
         }
 
-        private void onNewScrollbarValue(float value)
+        private void OnNewScrollbarValue(float value)
         {
             ElementBounds bounds = SingleComposer.GetContainer("stacklist").Bounds;
 
@@ -107,7 +106,7 @@ namespace TeleportationNetwork
                         .AddContainer(listBounds, "stacklist")
                     .EndClip()
                     .AddHoverText("", CairoFont.WhiteDetailText(), 300, listBounds.FlatCopy(), "hovertext")
-                    .AddVerticalScrollbar(onNewScrollbarValue, scrollbarBounds, "scrollbar")
+                    .AddVerticalScrollbar(OnNewScrollbarValue, scrollbarBounds, "scrollbar")
                 .EndChildElements()
             ;
 
@@ -124,9 +123,9 @@ namespace TeleportationNetwork
                 stacklist.Add(new GuiElementTextButtonExt(capi,
                     tp.Value.Name,
                     tp.Key,
+                    tp.Value.Available ? CairoFont.WhiteSmallText() : CairoFont.WhiteSmallText().WithColor(ColorUtil.Hex2Doubles("#c91a1a")),
                     CairoFont.WhiteSmallText(),
-                    CairoFont.WhiteSmallText(),
-                    () => onClickItem(tp.Key),
+                    () => OnClickItem(tp.Key),
                     buttons[i],
                     EnumButtonStyle.Normal
                 ));
@@ -140,13 +139,13 @@ namespace TeleportationNetwork
             SingleComposer.GetScrollbar("scrollbar").SetHeights(
                 (float)Math.Min(listBounds.fixedHeight, (buttons.Last().fixedHeight + buttons.Last().fixedY)),
                 (float)(buttons.Last().fixedHeight + buttons.Last().fixedY)
-                );
+            );
             //SingleComposer.GetScrollbar("scrollbar").ScrollToBottom();
             //SingleComposer.GetScrollbar("scrollbar").CurrentYPosition = 0;
             SingleComposer.Compose();
         }
 
-        private bool onClickItem(BlockPos targetPos)
+        private bool OnClickItem(BlockPos targetPos)
         {
             var tp = TPNetManager.AllTeleports[targetPos];
 
@@ -172,9 +171,7 @@ namespace TeleportationNetwork
                     int y = button.TeleportPos.Y;
                     int z = button.TeleportPos.Z - capi.World.DefaultSpawnPosition.XYZInt.Z;
 
-                    StringBuilder hoverText = new StringBuilder();
-                    hoverText.AppendLine(string.Format("{0}, {1}, {2}", x, y, z));
-                    string text = hoverText.ToString().TrimEnd();
+                    string text = $"{x}, {y}, {z}";
 
                     var hoverTextElem = SingleComposer.GetHoverText("hovertext");
                     hoverTextElem.SetNewText(text);

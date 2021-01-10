@@ -156,7 +156,7 @@ namespace TeleportationNetwork
 
             if (api.Side == EnumAppSide.Server)
             {
-                tpData = manager.GetOrCreateData(Pos);
+                tpData = manager.GetOrCreateData(Pos, Repaired);
             }
 
             if (api.Side == EnumAppSide.Client)

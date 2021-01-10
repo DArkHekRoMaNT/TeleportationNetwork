@@ -119,7 +119,7 @@ namespace TeleportationNetwork
 
                             Config.Current.SharedTeleports.Val = !Config.Current.SharedTeleports.Val;
                             api.StoreModConfig<Config>(Config.Current, api.GetWorldId() + "/" + Constants.MOD_ID);
-                            player.SendMessage(groupId, "Shared teleports now is " + (Config.Current.SharedTeleports.Val ? "On" : "Off"), EnumChatType.CommandSuccess);
+                            player.SendMessage(groupId, Lang.Get("Shared teleports now is " + (Config.Current.SharedTeleports.Val ? "on" : "off")), EnumChatType.CommandSuccess);
                             break;
 
 
@@ -127,7 +127,7 @@ namespace TeleportationNetwork
 
                             Config.Current.Unbreakable.Val = !Config.Current.Unbreakable.Val;
                             api.StoreModConfig<Config>(Config.Current, api.GetWorldId() + "/" + Constants.MOD_ID);
-                            player.SendMessage(groupId, "Unbreakable teleports now is " + (Config.Current.Unbreakable.Val ? "On" : "Off"), EnumChatType.CommandSuccess);
+                            player.SendMessage(groupId, Lang.Get("Unbreakable teleports now is " + (Config.Current.Unbreakable.Val ? "on" : "off")), EnumChatType.CommandSuccess);
                             break;
 
 

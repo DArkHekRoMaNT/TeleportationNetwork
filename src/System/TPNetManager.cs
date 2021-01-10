@@ -1,9 +1,6 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using HarmonyLib;
-using Newtonsoft.Json.Converters;
 using ProtoBuf;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
@@ -55,8 +52,10 @@ namespace TeleportationNetwork
                 .SetMessageHandler<ForTeleportingData>(OnTeleport);
         }
 
-        internal TeleportData GetOrCreateData(BlockPos pos)
+        internal TeleportData GetOrCreateData(BlockPos pos, bool available = false)
         {
+            if (pos == null) return null;
+
             TeleportData data = null;
             if (AllTeleports.TryGetValue(pos, out data))
             {
@@ -66,20 +65,22 @@ namespace TeleportationNetwork
             data = new TeleportData()
             {
                 Pos = pos.Copy(),
-                Available = false,
+                Available = available,
                 Name = defNames.ElementAt(sapi.World.Rand.Next(defNames.Count))
             };
             AllTeleports.Add(data.Pos, data);
-            sapi.World.Logger.ModNotification($"Added teleport {data.Name} at {data.Pos} to teleports list");
+            string type = data.Available ? "normal" : "broken";
+            sapi.World.Logger.ModNotification($"Added teleport {data.Name} ({type}) at {data.Pos} to teleports list");
 
             return data;
         }
 
         public void DeleteData(BlockPos pos)
         {
+            string type = AllTeleports[pos].Available ? "normal" : "broken";
             string name = AllTeleports[pos].Name;
             AllTeleports.Remove(pos);
-            sapi.World.Logger.ModNotification($"Removed teleport {name} at {pos} from teleports list");
+            sapi.World.Logger.ModNotification($"Removed teleport {name} ({type}) at {pos} from teleports list");
         }
 
         private void OnSaveGame()
@@ -207,20 +208,30 @@ namespace TeleportationNetwork
         public static void AddAvailableTeleport(IPlayer player, BlockPos pos)
         {
             List<BlockPos> atPos = GetAvailableTeleports(player)?.ToList() ?? new List<BlockPos>();
-            if (!atPos.Contains(pos)) atPos.Add(pos);
-            SetAvailableTeleports(player, atPos.ToArray());
+            if (!atPos.Contains(pos))
+            {
+                atPos.Add(pos);
+                SetAvailableTeleports(player, atPos.ToArray());
+            }
         }
 
         public static void RemoveAvailableTeleport(IPlayer player, BlockPos pos)
         {
             List<BlockPos> atPos = GetAvailableTeleports(player)?.ToList();
-            if (atPos.Contains(pos)) atPos?.Remove(pos);
-            SetAvailableTeleports(player, atPos?.ToArray());
+            if (atPos.Contains(pos))
+            {
+                atPos?.Remove(pos);
+                SetAvailableTeleports(player, atPos?.ToArray());
+            }
         }
 
         public static Dictionary<BlockPos, TeleportData> GetAvailableTeleportsWithData(IPlayer player)
         {
-            if (Config.Current.SharedTeleports.Val) return AllTeleports;
+            if (player.WorldData.CurrentGameMode == EnumGameMode.Creative) return AllTeleports;
+            if (Config.Current.SharedTeleports.Val)
+            {
+                return AllTeleports.Where((dict) => dict.Value.Available)?.ToDictionary(dict => dict.Key, dict => dict.Value);
+            }
 
             BlockPos[] atPos = GetAvailableTeleports(player);
             if (atPos == null || atPos.Length == 0) return null;

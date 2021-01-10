@@ -12,13 +12,31 @@ namespace Vintagestory.GameContent
         public Action OnCloseCancel;
         private bool didSave;
         private CairoFont font;
-        private TeleportData Data => blockEntityPos != null ? TPNetManager.AllTeleports[blockEntityPos] : null;
+        private TeleportData Data
+        {
+            get
+            {
+                if (blockEntityPos == null) return null;
+                if (!TPNetManager.AllTeleports.ContainsKey(blockEntityPos))
+                {
+
+                }
+
+                return TPNetManager.AllTeleports[blockEntityPos];
+            }
+        }
 
         public GuiDialogRenameTeleport(string DialogTitle, BlockPos blockEntityPos, ICoreClientAPI capi, CairoFont font)
             : base(DialogTitle, capi)
         {
             this.font = font;
             this.blockEntityPos = blockEntityPos;
+
+            if (Data == null)
+            {
+                capi.Logger.ModError("Unable to rename an unregistered teleport");
+                Dispose();
+            }
 
             ElementBounds elementBounds = ElementBounds.Fixed(0.0, 0.0, 150.0, 20.0);
             ElementBounds elementBounds2 = ElementBounds.Fixed(0.0, 15.0, 150.0, 25.0);

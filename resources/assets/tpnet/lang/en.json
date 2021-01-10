@@ -6,5 +6,10 @@
   "No available teleports": "No available teleports",
   "Not found": "Not found",
 
-  "blockhelp-teleport-rename": "Rename"
+  "blockhelp-teleport-rename": "Rename",
+
+  "Unbreakable teleports now is on": "Unbreakable teleports now is on",
+  "Unbreakable teleports now is off": "Unbreakable teleports now is off",
+  "Shared teleports now is on": "Shared teleports now is on",
+  "Shared teleports now is off": "Shared teleports now is off"
 }
