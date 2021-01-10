@@ -4,7 +4,7 @@
   "name": "Teleportation Network",
   "authors": ["DArkHekRoMaNT"],
   "description": "",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "dependency": {
     "game": "1.14.2"
   },
