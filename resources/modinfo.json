@@ -2,9 +2,9 @@
   "type": "code",
   "modid": "tpnet",
   "name": "Teleportation Network",
-  "author": "DArkHekRoMaNT",
+  "authors": ["DArkHekRoMaNT"],
   "description": "",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "dependency": {
     "game": "1.14.2"
   },

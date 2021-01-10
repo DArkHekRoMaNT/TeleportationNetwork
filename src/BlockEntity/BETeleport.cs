@@ -214,7 +214,9 @@ namespace TeleportationNetwork
             {
                 if (val.Value.State == EnumTeleportingEntityState.None)
                 {
-                    TPNetManager.AddAvailableTeleport((Api as ICoreClientAPI).World.Player, Pos);
+                    IPlayer player = Api.World.PlayerByUid(val.Key);
+                    TPNetManager.AddAvailableTeleport(player, Pos);
+                    val.Value.State = EnumTeleportingEntityState.Teleporting;
                 }
 
                 val.Value.SecondsPassed += Math.Min(0.5f, dt);
@@ -295,7 +297,7 @@ namespace TeleportationNetwork
                 tpingPlayers[player.PlayerUID] = tpe = new TeleportingPlayer()
                 {
                     Player = player,
-                    State = EnumTeleportingEntityState.Teleporting
+                    State = EnumTeleportingEntityState.None
                 };
             }
 

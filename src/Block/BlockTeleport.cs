@@ -61,7 +61,7 @@ namespace TeleportationNetwork
         {
             bool flag = base.DoPlaceBlock(world, byPlayer, blockSel, byItemStack);
 
-            if (flag)
+            if (flag && byPlayer.WorldData.CurrentGameMode == EnumGameMode.Creative)
             {
                 BETeleport bet = api.World.BlockAccessor.GetBlockEntity(blockSel.Position) as BETeleport;
 

@@ -207,14 +207,14 @@ namespace TeleportationNetwork
         public static void AddAvailableTeleport(IPlayer player, BlockPos pos)
         {
             List<BlockPos> atPos = GetAvailableTeleports(player)?.ToList() ?? new List<BlockPos>();
-            atPos.Add(pos);
+            if (!atPos.Contains(pos)) atPos.Add(pos);
             SetAvailableTeleports(player, atPos.ToArray());
         }
 
         public static void RemoveAvailableTeleport(IPlayer player, BlockPos pos)
         {
             List<BlockPos> atPos = GetAvailableTeleports(player)?.ToList();
-            atPos?.Remove(pos);
+            if (atPos.Contains(pos)) atPos?.Remove(pos);
             SetAvailableTeleports(player, atPos?.ToArray());
         }
 
