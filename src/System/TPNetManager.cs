@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
 using ProtoBuf;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
@@ -77,9 +78,9 @@ namespace TeleportationNetwork
 
     public class TPNetManager : ModSystem
     {
+
         #region server
 
-        private static Dictionary<BlockPos, TeleportData> AllTeleports = new Dictionary<BlockPos, TeleportData>();
         public static List<string> defNames;
 
         static ICoreServerAPI sapi;
@@ -91,147 +92,50 @@ namespace TeleportationNetwork
 
             api.Event.SaveGameLoaded += OnLoadGame;
             api.Event.GameWorldSave += OnSaveGame;
-            api.Event.PlayerJoin += PushAvailableTeleports;
-
-            defNames = api.Assets.Get(new AssetLocation(Constants.MOD_ID, "config/names.json"))?.ToObject<List<string>>();
-            if (defNames == null) defNames = new List<string>(new string[] { "null" });
+            api.Event.PlayerJoin += PushTeleports;
 
             serverChannel = api.Network
                 .RegisterChannel("tpnet")
                 .RegisterMessageType(typeof(ForTeleportingData))
                 .RegisterMessageType(typeof(TeleportMsg))
                 .SetMessageHandler<ForTeleportingData>(OnTeleport)
+                .SetMessageHandler<TeleportMsg>(OnServerReceiveTeleportMsg)
             ;
         }
 
-        private void PushAvailableTeleports(IServerPlayer byPlayer)
+        private void OnServerReceiveTeleportMsg(IServerPlayer fromPlayer, TeleportMsg msg)
         {
-            string playerUID = byPlayer?.PlayerUID;
-
-            Dictionary<BlockPos, TeleportData> availableTeleports;
-
-            if (Config.Current.SharedTeleports.Val)
+            if (!msg.DoRemove)
             {
-                availableTeleports = AllTeleports;
+                if (Teleports.ContainsKey(msg.Pos))
+                {
+                    Teleports[msg.Pos] = msg.Data;
+                }
+                else { Teleports.Add(msg.Pos, msg.Data); }
             }
             else
             {
-                availableTeleports = AllTeleports
-                    ?.Where((dict) => dict.Value.ActivatedBy.Contains(playerUID))
-                    ?.ToDictionary(dict => dict.Key, dict => dict.Value)
-                ;
-            }
-
-            if (availableTeleports != null)
-            {
-                foreach (var tp in availableTeleports)
+                if (Teleports.ContainsKey(msg.Pos))
                 {
-                    serverChannel.SendPacket(new TeleportMsg(
-                        tp.Key,
-                        tp.Value
-                    ));
+                    Teleports.Remove(msg.Pos);
                 }
             }
         }
 
-        internal static void AddAvailableTeleport(IServerPlayer byPlayer, BlockPos pos)
+        private void PushTeleports(IServerPlayer byPlayer)
         {
-            if (byPlayer == null) throw new ArgumentNullException();
-            if (byPlayer?.Entity == null) return;
-
-            if (AllTeleports.ContainsKey(pos))
+            foreach (var tp in Teleports)
             {
-                if (!AllTeleports[pos].ActivatedBy.Contains(byPlayer.PlayerUID))
-                {
-                    AllTeleports[pos].ActivatedBy.Add(byPlayer.PlayerUID);
-                }
-
                 serverChannel.SendPacket(new TeleportMsg(
-                    pos,
-                    AllTeleports[pos]
-                ), byPlayer);
+                    tp.Key,
+                    tp.Value
+                ));
             }
-        }
-
-        internal static void AddTeleport(BlockPos pos, TeleportData data)
-        {
-            if (!AllTeleports.ContainsKey(pos))
-            {
-                AllTeleports.Add(pos, data);
-                foreach (string playerUID in data.ActivatedBy)
-                {
-                    IServerPlayer player = sapi.World.PlayerByUid(playerUID) as IServerPlayer;
-                    if (player != null)
-                    {
-                        serverChannel.SendPacket(new TeleportMsg(
-                            pos,
-                            data
-                        ), player);
-                    }
-                }
-
-                string type = data.Available ? "normal" : "broken";
-                sapi.World.Logger.ModNotification($"Added teleport {data.Name} ({type}) at {pos} to teleports list");
-            }
-        }
-
-        internal static void RemoveTeleport(BlockPos pos)
-        {
-            if (sapi == null) return;
-            if (AllTeleports.ContainsKey(pos))
-            {
-                string type = AllTeleports[pos].Available ? "normal" : "broken";
-                string name = AllTeleports[pos].Name;
-
-                serverChannel.SendPacket(new TeleportMsg(
-                    pos,
-                    AllTeleports[pos],
-                    true
-                ), sapi.World.AllOnlinePlayers as IServerPlayer[]);
-                AllTeleports.Remove(pos);
-
-                sapi.World.Logger.ModNotification($"Removed teleport {name} ({type}) at {pos} from teleports list");
-            }
-        }
-
-        internal static TeleportData GetTeleport(BlockPos pos)
-        {
-            if (capi != null)
-            {
-                return AvailableTeleports.ContainsKey(pos) ? AvailableTeleports[pos] : null;
-            }
-            else if (sapi != null)
-            {
-                return AllTeleports.ContainsKey(pos) ? AllTeleports[pos] : null;
-            }
-            else return null;
-        }
-
-
-        internal static TeleportData GetOrCreateData(BlockPos pos, bool available = false)
-        {
-            if (pos == null) throw new ArgumentNullException();
-
-            TeleportData data = null;
-            if (AllTeleports.TryGetValue(pos, out data))
-            {
-                return data;
-            }
-
-            data = new TeleportData()
-            {
-                Available = available,
-                Name = defNames.ElementAt(sapi.World.Rand.Next(defNames.Count))
-            };
-
-            AddTeleport(pos.Copy(), data);
-
-            return data;
         }
 
         private void OnSaveGame()
         {
-            sapi.WorldManager.SaveGame.StoreData("TPNetData", SerializerUtil.Serialize(AllTeleports));
+            sapi.WorldManager.SaveGame.StoreData("TPNetData", SerializerUtil.Serialize(Teleports));
         }
 
         private void OnLoadGame()
@@ -240,9 +144,9 @@ namespace TeleportationNetwork
             {
                 sapi.World.Logger.ModNotification("Start loading data");
                 byte[] data = sapi.WorldManager.SaveGame.GetData("TPNetData");
-                if (data != null) AllTeleports = SerializerUtil.Deserialize<Dictionary<BlockPos, TeleportData>>(data);
+                if (data != null) Teleports = SerializerUtil.Deserialize<Dictionary<BlockPos, TeleportData>>(data);
 
-                foreach (var tp in AllTeleports)
+                foreach (var tp in Teleports)
                 {
                     sapi.World.Logger.ModDebug($"Loaded teleport data for {tp.Value.Name} at {tp.Key}");
                 }
@@ -290,7 +194,7 @@ namespace TeleportationNetwork
             if (tpEntities == null) return;
 
 
-            string name = AllTeleports[data.TargetPos.AsBlockPos]?.Name;
+            string name = Teleports[data.TargetPos.AsBlockPos]?.Name;
             foreach (var entity in tpEntities)
             {
                 double x = data.TargetPos.X + (entity.Pos.X - currCenterPos.X) + 0.5;
@@ -310,9 +214,147 @@ namespace TeleportationNetwork
 
         #endregion
 
+        #region common
+
+        private static Dictionary<BlockPos, TeleportData> Teleports = new Dictionary<BlockPos, TeleportData>();
+
+        private static ICoreAPI api => (sapi as ICoreAPI) ?? (capi as ICoreAPI);
+
+        public override void Start(ICoreAPI api)
+        {
+            base.Start(api);
+
+            defNames = api.Assets.Get(new AssetLocation(Constants.MOD_ID, "config/names.json"))?.ToObject<List<string>>();
+            if (defNames == null) defNames = new List<string>(new string[] { "null" });
+        }
+
+        internal static void AddAvailableTeleport(IPlayer byPlayer, BlockPos pos)
+        {
+            if (byPlayer == null) throw new ArgumentNullException("byPlayer");
+            if (pos == null) throw new ArgumentNullException("pos");
+
+            if (byPlayer?.Entity == null) return;
+
+            if (Teleports.ContainsKey(pos))
+            {
+                if (!Teleports[pos].ActivatedBy.Contains(byPlayer.PlayerUID))
+                {
+                    Teleports[pos].ActivatedBy.Add(byPlayer.PlayerUID);
+                }
+
+                if (sapi != null)
+                {
+                    serverChannel.SendPacket(new TeleportMsg(
+                        pos,
+                        Teleports[pos]
+                    ), sapi.World.AllOnlinePlayers as IServerPlayer[]);
+                }
+                else if (capi != null)
+                {
+                    clientChannel.SendPacket(new TeleportMsg(
+                        pos,
+                        Teleports[pos]
+                    ));
+                }
+            }
+        }
+
+        internal static void AddTeleport(BlockPos pos, TeleportData data)
+        {
+            if (!Teleports.ContainsKey(pos))
+            {
+                Teleports.Add(pos, data);
+
+                if (sapi != null)
+                {
+                    serverChannel.SendPacket(new TeleportMsg(
+                        pos,
+                        data
+                    ), sapi.World.AllOnlinePlayers as IServerPlayer[]);
+                }
+                else if (capi != null)
+                {
+                    clientChannel.SendPacket(new TeleportMsg(
+                        pos,
+                        data
+                    ));
+                }
+
+                string type = data.Available ? "normal" : "broken";
+                api.World.Logger.ModNotification($"Added teleport {data.Name} ({type}) at {pos} to teleports list");
+            }
+        }
+
+        internal static void RemoveTeleport(BlockPos pos)
+        {
+            if (Teleports.ContainsKey(pos))
+            {
+                string type = Teleports[pos].Available ? "normal" : "broken";
+                string name = Teleports[pos].Name;
+
+                if (sapi != null)
+                {
+                    serverChannel.SendPacket(new TeleportMsg(
+                        pos,
+                        Teleports[pos],
+                        true
+                    ), sapi.World.AllOnlinePlayers as IServerPlayer[]);
+                }
+                else if (capi != null)
+                {
+                    clientChannel.SendPacket(new TeleportMsg(
+                        pos,
+                        Teleports[pos],
+                        true
+                    ));
+                }
+
+                Teleports.Remove(pos);
+
+                api.World.Logger.ModNotification($"Removed teleport {name} ({type}) at {pos} from teleports list");
+            }
+        }
+
+        internal static TeleportData GetTeleport(BlockPos pos)
+        {
+            return Teleports.ContainsKey(pos) ? Teleports[pos] : null;
+        }
+
+        internal static void TryCreateData(BlockPos pos, bool available = false)
+        {
+            if (pos == null) throw new ArgumentNullException();
+            if (Teleports.ContainsKey(pos)) return;
+
+            TeleportData data = new TeleportData()
+            {
+                Available = available,
+                Name = defNames.ElementAt(api.World.Rand.Next(defNames.Count))
+            };
+
+            AddTeleport(pos.Copy(), data);
+        }
+
+        internal static Dictionary<BlockPos, TeleportData> GetAvailableTeleports(IPlayer forPlayer)
+        {
+            if (forPlayer.WorldData.CurrentGameMode == EnumGameMode.Creative) return Teleports;
+
+            if (Config.Current.SharedTeleports.Val) return Teleports
+                ?.Where((dict) => dict.Value.Available)
+                ?.ToDictionary(dict => dict.Key, dict => dict.Value)
+            ;
+
+            return Teleports
+                ?.Where((dict) =>
+                    dict.Value.Available &&
+                    dict.Value.ActivatedBy.Contains(forPlayer.PlayerUID)
+                )?.ToDictionary(dict => dict.Key, dict => dict.Value)
+            ;
+        }
+
+        #endregion
+
         #region client
 
-        internal static Dictionary<BlockPos, TeleportData> AvailableTeleports = new Dictionary<BlockPos, TeleportData>();
         static ICoreClientAPI capi;
         static IClientNetworkChannel clientChannel;
 
@@ -332,20 +374,20 @@ namespace TeleportationNetwork
         {
             if (!msg.DoRemove)
             {
-                if (AvailableTeleports.ContainsKey(msg.Pos))
+                if (Teleports.ContainsKey(msg.Pos))
                 {
-                    AvailableTeleports[msg.Pos] = msg.Data;
+                    Teleports[msg.Pos] = msg.Data;
                 }
                 else
                 {
-                    AvailableTeleports.Add(msg.Pos, msg.Data);
+                    Teleports.Add(msg.Pos, msg.Data);
                 }
             }
             else
             {
-                if (AvailableTeleports.ContainsKey(msg.Pos))
+                if (Teleports.ContainsKey(msg.Pos))
                 {
-                    AvailableTeleports.Remove(msg.Pos);
+                    Teleports.Remove(msg.Pos);
                 }
             }
         }

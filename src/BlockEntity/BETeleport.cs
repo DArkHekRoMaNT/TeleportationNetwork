@@ -99,7 +99,6 @@ namespace TeleportationNetwork
         GuiDialogTeleport teleportDlg;
         GuiDialogRenameTeleport renameDlg;
 
-        TeleportData tpData;
         Dictionary<string, TeleportingPlayer> tpingPlayers = new Dictionary<string, TeleportingPlayer>();
 
 
@@ -154,10 +153,7 @@ namespace TeleportationNetwork
         {
             base.Initialize(api);
 
-            if (api.Side == EnumAppSide.Server)
-            {
-                tpData = TPNetManager.GetOrCreateData(Pos, Repaired);
-            }
+            TPNetManager.TryCreateData(Pos, Repaired);
 
             if (api.Side == EnumAppSide.Client)
             {
@@ -168,7 +164,6 @@ namespace TeleportationNetwork
             ownBlock = Block as BlockTeleport;
             if (Repaired)
             {
-
                 SetupGameTickers();
             }
         }
@@ -337,8 +332,15 @@ namespace TeleportationNetwork
 
             if (Repaired)
             {
-                dsc.AppendLine(TPNetManager.GetTeleport(Pos).Name);
+                dsc.AppendLine(TPNetManager.GetTeleport(Pos)?.Name);
             }
+        }
+
+        public override void OnBlockUnloaded()
+        {
+            base.OnBlockUnloaded();
+
+            RemoveGameTickers();
         }
 
         #endregion

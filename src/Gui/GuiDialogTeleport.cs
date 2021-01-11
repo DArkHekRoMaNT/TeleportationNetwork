@@ -50,9 +50,7 @@ namespace TeleportationNetwork
 
         private void SetupDialog()
         {
-            var availableTeleports = TPNetManager.AvailableTeleports
-                ?.Where((dict) => capi.World.Player.WorldData.CurrentGameMode == EnumGameMode.Creative || dict.Value.Available)
-            ;
+            var availableTeleports = TPNetManager.GetAvailableTeleports(capi.World.Player);
 
             ElementBounds[] buttons = new ElementBounds[availableTeleports?.Count() > 0 ? availableTeleports.Count() : 1];
 
