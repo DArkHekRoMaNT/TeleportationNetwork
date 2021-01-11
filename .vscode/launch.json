@@ -2,7 +2,41 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "Launch Server",
+      "type": "clr",
+      "request": "launch",
+      "program": "${env:VINTAGE_STORY}/${config:vsversion}/VintagestoryServer.exe",
+      "args": [
+        "--playStyle",
+        "preset-surviveandbuild",
+        "--openWorld",
+        "modding test world",
+        "--dataPath",
+        "${env:VINTAGE_STORY_DATA}",
+        "--addModPath",
+        "${workspaceFolder}/mods"
+      ],
+      "console": "internalConsole",
+      "internalConsoleOptions": "openOnSessionStart",
+      "requireExactSource": false
+    },
+    {
       "name": "Launch Client",
+      "type": "clr",
+      "request": "launch",
+      "program": "${env:VINTAGE_STORY}/${config:vsversion}/Vintagestory.exe",
+      "args": [
+        "--dataPath",
+        "${env:VINTAGE_STORY_DATA}",
+        "--addModPath",
+        "${workspaceFolder}/mods"
+      ],
+      "console": "internalConsole",
+      "internalConsoleOptions": "openOnSessionStart",
+      "requireExactSource": false
+    },
+    {
+      "name": "Launch Client with TestWorld",
       "type": "clr",
       "request": "launch",
       "preLaunchTask": "build (Debug)",
@@ -39,6 +73,14 @@
       ],
       "console": "internalConsole",
       "internalConsoleOptions": "openOnSessionStart"
+    }
+  ],
+  "compounds": [
+    {
+      "name": "Launch Server/Client",
+      "configurations": ["Launch Server", "Launch Client"],
+      "preLaunchTask": "build (Debug)",
+      "stopAll": true
     }
   ]
 }

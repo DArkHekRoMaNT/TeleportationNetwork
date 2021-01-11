@@ -12,19 +12,6 @@ namespace Vintagestory.GameContent
         public Action OnCloseCancel;
         private bool didSave;
         private CairoFont font;
-        private TeleportData Data
-        {
-            get
-            {
-                if (blockEntityPos == null) return null;
-                if (!TPNetManager.AllTeleports.ContainsKey(blockEntityPos))
-                {
-
-                }
-
-                return TPNetManager.AllTeleports[blockEntityPos];
-            }
-        }
 
         public GuiDialogRenameTeleport(string DialogTitle, BlockPos blockEntityPos, ICoreClientAPI capi, CairoFont font)
             : base(DialogTitle, capi)
@@ -32,10 +19,11 @@ namespace Vintagestory.GameContent
             this.font = font;
             this.blockEntityPos = blockEntityPos;
 
-            if (Data == null)
+            if (blockEntityPos == null || TPNetManager.GetTeleport(blockEntityPos) == null)
             {
                 capi.Logger.ModError("Unable to rename an unregistered teleport");
                 Dispose();
+                return;
             }
 
             ElementBounds elementBounds = ElementBounds.Fixed(0.0, 0.0, 150.0, 20.0);
@@ -55,7 +43,7 @@ namespace Vintagestory.GameContent
                 .EndChildElements()
                 .Compose();
 
-            base.SingleComposer.GetTextInput("text").SetValue(Data.Name);
+            base.SingleComposer.GetTextInput("text").SetValue(TPNetManager.GetTeleport(blockEntityPos).Name);
         }
 
         public override void OnGuiOpened()
@@ -71,7 +59,7 @@ namespace Vintagestory.GameContent
         private bool OnButtonSave()
         {
             GuiElementTextInput textInput = base.SingleComposer.GetTextInput("text");
-            Data.Name = textInput.GetText();
+            TPNetManager.GetTeleport(blockEntityPos).Name = textInput.GetText();
             didSave = true;
             TryClose();
             return true;

@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Linq;
 using Cairo;
 using Vintagestory.API.Client;
+using Vintagestory.API.Common;
 using Vintagestory.API.Config;
 using Vintagestory.API.MathTools;
 
@@ -16,15 +17,12 @@ namespace TeleportationNetwork
         public override bool UnregisterOnClose => true;
         BlockPos blockEntityPos;
 
-        TPNetManager manager;
-
         public GuiDialogTeleport(ICoreClientAPI capi, BlockPos ownBEPos)
             : base(Lang.Get("Available Points"), capi)
         {
             IsDuplicate = (capi.OpenedGuis.FirstOrDefault((object dlg) => ownBEPos != null && (dlg as GuiDialogTeleport)?.blockEntityPos == ownBEPos) != null);
             if (!IsDuplicate)
             {
-                manager = capi.ModLoader.GetModSystem<TPNetManager>();
                 blockEntityPos = ownBEPos;
             }
         }
@@ -52,9 +50,11 @@ namespace TeleportationNetwork
 
         private void SetupDialog()
         {
-            Dictionary<BlockPos, TeleportData> availableTps = TPNetManager.GetAvailableTeleportsWithData(capi.World.Player);
+            var availableTeleports = TPNetManager.AvailableTeleports
+                ?.Where((dict) => capi.World.Player.WorldData.CurrentGameMode == EnumGameMode.Creative || dict.Value.Available)
+            ;
 
-            ElementBounds[] buttons = new ElementBounds[availableTps?.Count() > 0 ? availableTps.Count() : 1];
+            ElementBounds[] buttons = new ElementBounds[availableTeleports?.Count() > 0 ? availableTeleports.Count() : 1];
 
             buttons[0] = ElementBounds.Fixed(0, 0, 300, 40);
             for (int i = 1; i < buttons.Length; i++)
@@ -87,7 +87,7 @@ namespace TeleportationNetwork
                 .BeginChildElements(bgBounds)
             ;
 
-            if (availableTps == null || availableTps.Count == 0)
+            if (availableTeleports == null || availableTeleports.Count() == 0)
             {
                 SingleComposer
                         .AddStaticText(
@@ -117,7 +117,7 @@ namespace TeleportationNetwork
 
             for (int i = 0; i < buttons.Length; i++)
             {
-                var tp = availableTps.ElementAt(i);
+                var tp = availableTeleports.ElementAt(i);
                 if (tp.Value.Name == null) tp.Value.Name = "null";
 
                 stacklist.Add(new GuiElementTextButtonExt(capi,
@@ -147,9 +147,14 @@ namespace TeleportationNetwork
 
         private bool OnClickItem(BlockPos targetPos)
         {
-            var tp = TPNetManager.AllTeleports[targetPos];
+            var data = TPNetManager.GetTeleport(targetPos);
+            if (data == null)
+            {
+                TryClose();
+                return false;
+            }
 
-            manager.TeleportTo(targetPos.ToVec3d(), blockEntityPos?.ToVec3d());
+            TPNetManager.TeleportTo(targetPos.ToVec3d(), blockEntityPos?.ToVec3d());
             TryClose();
 
             return true;

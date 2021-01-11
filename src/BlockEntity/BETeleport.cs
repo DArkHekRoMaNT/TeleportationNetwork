@@ -5,6 +5,8 @@ using Vintagestory.API.MathTools;
 using System;
 using System.Collections.Generic;
 using Vintagestory.API.Client;
+using Vintagestory.API.Server;
+using System.Text;
 
 namespace TeleportationNetwork
 {
@@ -97,7 +99,6 @@ namespace TeleportationNetwork
         GuiDialogTeleport teleportDlg;
         GuiDialogRenameTeleport renameDlg;
 
-        TPNetManager manager;
         TeleportData tpData;
         Dictionary<string, TeleportingPlayer> tpingPlayers = new Dictionary<string, TeleportingPlayer>();
 
@@ -152,11 +153,10 @@ namespace TeleportationNetwork
         public override void Initialize(ICoreAPI api)
         {
             base.Initialize(api);
-            manager = api.ModLoader.GetModSystem<TPNetManager>();
 
             if (api.Side == EnumAppSide.Server)
             {
-                tpData = manager.GetOrCreateData(Pos, Repaired);
+                tpData = TPNetManager.GetOrCreateData(Pos, Repaired);
             }
 
             if (api.Side == EnumAppSide.Client)
@@ -214,8 +214,11 @@ namespace TeleportationNetwork
             {
                 if (val.Value.State == EnumTeleportingEntityState.None)
                 {
-                    IPlayer player = Api.World.PlayerByUid(val.Key);
-                    TPNetManager.AddAvailableTeleport(player, Pos);
+                    if (Api.Side == EnumAppSide.Server)
+                    {
+                        IServerPlayer player = Api.World.PlayerByUid(val.Key) as IServerPlayer;
+                        TPNetManager.AddAvailableTeleport(player, Pos);
+                    }
                     val.Value.State = EnumTeleportingEntityState.Teleporting;
                 }
 
@@ -303,7 +306,7 @@ namespace TeleportationNetwork
 
             if (Api.Side == EnumAppSide.Server)
             {
-                manager?.DeleteData(Pos);
+                TPNetManager.RemoveTeleport(Pos);
             }
         }
 
@@ -325,6 +328,16 @@ namespace TeleportationNetwork
                 }
 
                 if (!renameDlg.IsOpened()) renameDlg.TryOpen();
+            }
+        }
+
+        public override void GetBlockInfo(IPlayer forPlayer, StringBuilder dsc)
+        {
+            base.GetBlockInfo(forPlayer, dsc);
+
+            if (Repaired)
+            {
+                dsc.AppendLine(TPNetManager.GetTeleport(Pos).Name);
             }
         }
 

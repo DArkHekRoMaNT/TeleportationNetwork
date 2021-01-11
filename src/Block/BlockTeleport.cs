@@ -2,6 +2,7 @@ using Vintagestory.API.Client;
 using Vintagestory.API.Common;
 using Vintagestory.API.Common.Entities;
 using Vintagestory.API.MathTools;
+using Vintagestory.API.Server;
 using Vintagestory.GameContent;
 
 namespace TeleportationNetwork
@@ -21,7 +22,11 @@ namespace TeleportationNetwork
         public override bool OnBlockInteractStart(IWorldAccessor world, IPlayer byPlayer, BlockSelection blockSel)
         {
             BlockEntityTeleport be = api.World.BlockAccessor.GetBlockEntity(blockSel.Position) as BlockEntityTeleport;
-            if (be == null) return false;
+            if (be == null)
+            {
+                //api.World.BlockAccessor.SetBlock(BlockId, blockSel.Position);
+                return false;
+            }
 
             if (be.Repaired && byPlayer.WorldData.EntityControls.Sneak)
             {
@@ -41,8 +46,10 @@ namespace TeleportationNetwork
                     slot.TakeOut(1);
                     slot.MarkDirty();
                 }
-
-                TPNetManager.AddAvailableTeleport(byPlayer, be.Pos);
+                if (api.Side == EnumAppSide.Server)
+                {
+                    TPNetManager.AddAvailableTeleport(byPlayer as IServerPlayer, be.Pos);
+                }
 
                 world.PlaySoundAt(new AssetLocation("sounds/effect/latch"), blockSel.Position.X + 0.5, blockSel.Position.Y, blockSel.Position.Z + 0.5, byPlayer, true, 16);
 
@@ -58,11 +65,6 @@ namespace TeleportationNetwork
             base.OnAsyncClientParticleTick(manager, pos, windAffectednessAtPos, secondsTicking);
         }
 
-        public override void OnBlockRemoved(IWorldAccessor world, BlockPos pos)
-        {
-            base.OnBlockRemoved(world, pos);
-        }
-
         public override bool DoPlaceBlock(IWorldAccessor world, IPlayer byPlayer, BlockSelection blockSel, ItemStack byItemStack)
         {
             bool flag = base.DoPlaceBlock(world, byPlayer, blockSel, byItemStack);
@@ -71,9 +73,9 @@ namespace TeleportationNetwork
             {
                 BlockEntityTeleport bet = api.World.BlockAccessor.GetBlockEntity(blockSel.Position) as BlockEntityTeleport;
 
-                if (bet != null && bet.State == EnumTeleportState.Normal)
+                if (bet != null && bet.State == EnumTeleportState.Normal && api.Side == EnumAppSide.Server)
                 {
-                    TPNetManager.AddAvailableTeleport(byPlayer, blockSel.Position);
+                    TPNetManager.AddAvailableTeleport(byPlayer as IServerPlayer, blockSel.Position);
                 }
             }
 
