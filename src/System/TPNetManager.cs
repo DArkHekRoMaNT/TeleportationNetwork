@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using ProtoBuf;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
@@ -53,16 +52,20 @@ namespace TeleportationNetwork
         [ProtoMember(3)]
         public bool DoRemove;
 
+        [ProtoMember(4)]
+        public bool Synced;
+
         public TeleportMsg()
         {
 
         }
 
-        public TeleportMsg(BlockPos pos, TeleportData data, bool doRemove = false)
+        public TeleportMsg(BlockPos pos, TeleportData data, bool doRemove = false, bool synced = false)
         {
             this.Pos = pos;
             this.Data = data;
             this.DoRemove = doRemove;
+            this.Synced = synced;
         }
     }
 
@@ -111,7 +114,10 @@ namespace TeleportationNetwork
                 {
                     Teleports[msg.Pos] = msg.Data;
                 }
-                else { Teleports.Add(msg.Pos, msg.Data); }
+                else
+                {
+                    Teleports.Add(msg.Pos, msg.Data);
+                }
             }
             else
             {
@@ -119,6 +125,16 @@ namespace TeleportationNetwork
                 {
                     Teleports.Remove(msg.Pos);
                 }
+            }
+
+            if (!msg.Synced)
+            {
+                serverChannel.BroadcastPacket(new TeleportMsg(
+                    msg.Pos,
+                    msg.Data,
+                    msg.DoRemove,
+                    true
+                ));
             }
         }
 
@@ -129,7 +145,7 @@ namespace TeleportationNetwork
                 serverChannel.SendPacket(new TeleportMsg(
                     tp.Key,
                     tp.Value
-                ));
+                ), byPlayer);
             }
         }
 
@@ -244,10 +260,10 @@ namespace TeleportationNetwork
 
                 if (sapi != null)
                 {
-                    serverChannel.SendPacket(new TeleportMsg(
+                    serverChannel.BroadcastPacket(new TeleportMsg(
                         pos,
                         Teleports[pos]
-                    ), sapi.World.AllOnlinePlayers as IServerPlayer[]);
+                    ));
                 }
                 else if (capi != null)
                 {
@@ -267,10 +283,10 @@ namespace TeleportationNetwork
 
                 if (sapi != null)
                 {
-                    serverChannel.SendPacket(new TeleportMsg(
+                    serverChannel.BroadcastPacket(new TeleportMsg(
                         pos,
                         data
-                    ), sapi.World.AllOnlinePlayers as IServerPlayer[]);
+                    ));
                 }
                 else if (capi != null)
                 {
@@ -285,6 +301,35 @@ namespace TeleportationNetwork
             }
         }
 
+        internal static void SetTeleport(BlockPos pos, TeleportData data)
+        {
+            if (!Teleports.ContainsKey(pos))
+            {
+                AddTeleport(pos, data);
+                return;
+            }
+
+            Teleports[pos] = data;
+
+            if (sapi != null)
+            {
+                serverChannel.BroadcastPacket(new TeleportMsg(
+                    pos,
+                    data
+                ));
+            }
+            else if (capi != null)
+            {
+                clientChannel.SendPacket(new TeleportMsg(
+                    pos,
+                    data
+                ));
+            }
+
+            string type = data.Available ? "normal" : "broken";
+            api.World.Logger.ModNotification($"Modified teleport {data.Name} ({type}) at {pos}");
+        }
+
         internal static void RemoveTeleport(BlockPos pos)
         {
             if (Teleports.ContainsKey(pos))
@@ -294,11 +339,11 @@ namespace TeleportationNetwork
 
                 if (sapi != null)
                 {
-                    serverChannel.SendPacket(new TeleportMsg(
+                    serverChannel.BroadcastPacket(new TeleportMsg(
                         pos,
                         Teleports[pos],
                         true
-                    ), sapi.World.AllOnlinePlayers as IServerPlayer[]);
+                    ));
                 }
                 else if (capi != null)
                 {
@@ -389,6 +434,15 @@ namespace TeleportationNetwork
                 {
                     Teleports.Remove(msg.Pos);
                 }
+            }
+
+            if (!msg.Synced)
+            {
+                clientChannel.SendPacket(new TeleportMsg(
+                    msg.Pos,
+                    msg.Data,
+                    msg.DoRemove
+                ));
             }
         }
 

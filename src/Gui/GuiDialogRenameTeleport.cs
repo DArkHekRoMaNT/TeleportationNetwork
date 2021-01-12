@@ -59,7 +59,11 @@ namespace Vintagestory.GameContent
         private bool OnButtonSave()
         {
             GuiElementTextInput textInput = base.SingleComposer.GetTextInput("text");
-            TPNetManager.GetTeleport(blockEntityPos).Name = textInput.GetText();
+
+            TeleportData data = TPNetManager.GetTeleport(blockEntityPos);
+            data.Name = textInput.GetText();
+            TPNetManager.SetTeleport(blockEntityPos, data);
+
             didSave = true;
             TryClose();
             return true;

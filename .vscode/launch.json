@@ -36,6 +36,21 @@
       "requireExactSource": false
     },
     {
+      "name": "Launch Client 2",
+      "type": "clr",
+      "request": "launch",
+      "program": "${env:VINTAGE_STORY}/${config:vsversion}/Vintagestory.exe",
+      "args": [
+        "--dataPath",
+        "${env:VINTAGE_STORY_DATA}2",
+        "--addModPath",
+        "${workspaceFolder}/mods"
+      ],
+      "console": "internalConsole",
+      "internalConsoleOptions": "openOnSessionStart",
+      "requireExactSource": false
+    },
+    {
       "name": "Launch Client with TestWorld",
       "type": "clr",
       "request": "launch",
@@ -79,6 +94,12 @@
     {
       "name": "Launch Server/Client",
       "configurations": ["Launch Server", "Launch Client"],
+      "preLaunchTask": "build (Debug)",
+      "stopAll": true
+    },
+    {
+      "name": "Launch Server/Client х2",
+      "configurations": ["Launch Server", "Launch Client", "Launch Client 2"],
       "preLaunchTask": "build (Debug)",
       "stopAll": true
     }
