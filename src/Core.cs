@@ -12,8 +12,6 @@ namespace TeleportationNetwork
     {
         public override void Start(ICoreAPI api)
         {
-            RuntimeEnv.DebugOutOfRangeBlockAccess = true;
-
             api.RegisterBlockClass("BlockTeleport", typeof(BlockTeleport));
             api.RegisterBlockEntityClass("BETeleport", typeof(BlockEntityTeleport));
 

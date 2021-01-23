@@ -1,12 +1,10 @@
 using System;
-using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
-using Cairo;
+using System.Text;
 using Vintagestory.API.Client;
-using Vintagestory.API.Common;
 using Vintagestory.API.Config;
 using Vintagestory.API.MathTools;
+using Vintagestory.GameContent;
 
 namespace TeleportationNetwork
 {
@@ -118,10 +116,15 @@ namespace TeleportationNetwork
                 var tp = availableTeleports.ElementAt(i);
                 if (tp.Value.Name == null) tp.Value.Name = "null";
 
+                bool playerLowStability = capi.World.Player?.Entity?.GetBehavior<EntityBehaviorTemporalStabilityAffected>()?.OwnStability < 0.2;
+                bool nowStormActive = capi.ModLoader.GetModSystem<SystemTemporalStability>().StormData.nowStormActive;
+
+                var font = CairoFont.WhiteSmallText();
+
                 stacklist.Add(new GuiElementTextButtonExt(capi,
-                    tp.Value.Name,
+                    (nowStormActive || playerLowStability) ? tp.Value.Name.Shuffle() : tp.Value.Name,
                     tp.Key,
-                    tp.Value.Available ? CairoFont.WhiteSmallText() : CairoFont.WhiteSmallText().WithColor(ColorUtil.Hex2Doubles("#c91a1a")),
+                    tp.Value.Available ? font : font.WithColor(ColorUtil.Hex2Doubles("#c91a1a")),
                     CairoFont.WhiteSmallText(),
                     () => OnClickItem(tp.Key),
                     buttons[i],
@@ -153,6 +156,10 @@ namespace TeleportationNetwork
             }
 
             TPNetManager.TeleportTo(targetPos.ToVec3d(), blockEntityPos?.ToVec3d());
+
+            double curr = capi.World.Player?.Entity?.WatchedAttributes.GetDouble("temporalStability") ?? 1;
+            capi.World.Player?.Entity?.WatchedAttributes.SetDouble("temporalStability", Math.Max(0, (double)curr - 0.1));
+
             TryClose();
 
             return true;

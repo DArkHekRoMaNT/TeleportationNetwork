@@ -151,7 +151,7 @@ namespace TeleportationNetwork
 
         private void OnSaveGame()
         {
-            sapi.WorldManager.SaveGame.StoreData("TPNetData", SerializerUtil.Serialize(Teleports));
+            sapi?.WorldManager.SaveGame.StoreData("TPNetData", SerializerUtil.Serialize(Teleports));
         }
 
         private void OnLoadGame()
@@ -451,6 +451,8 @@ namespace TeleportationNetwork
         public override void Dispose()
         {
             base.Dispose();
+
+            OnSaveGame();
 
             capi = null;
             sapi = null;
