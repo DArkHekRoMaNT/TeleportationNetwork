@@ -7,6 +7,8 @@ using System.Collections.Generic;
 using Vintagestory.API.Client;
 using Vintagestory.API.Server;
 using System.Text;
+using SharedUtils.Extensions;
+using SharedUtils;
 
 namespace TeleportationNetwork
 {
@@ -65,7 +67,7 @@ namespace TeleportationNetwork
             if (animUtil.activeAnimationsByAnimCode.Count > 0) return false;
             if (!Repaired) return false;
 
-            MeshData mesh = ObjectCacheUtil.GetOrCreate(Api, Constants.MOD_ID + "-teleport-" + State + "-" + Type, () =>
+            MeshData mesh = ObjectCacheUtil.GetOrCreate(Api, ConstantsCore.ModID + "-teleport-" + State + "-" + Type, () =>
             {
                 ICoreClientAPI capi = Api as ICoreClientAPI;
 
@@ -78,7 +80,7 @@ namespace TeleportationNetwork
                 // }
 
                 MeshData meshdata;
-                IAsset asset = Api.Assets.TryGet(new AssetLocation(Constants.MOD_ID, "shapes/block/teleport/" + shapeCode + ".json"));
+                IAsset asset = Api.Assets.TryGet(new AssetLocation(ConstantsCore.ModID, "shapes/block/teleport/" + shapeCode + ".json"));
                 Shape shape = asset.ToObject<Shape>();
 
                 tessThreadTesselator.TesselateShape(ownBlock, shape, out meshdata, new Vec3f(0, 0, 0));
@@ -113,7 +115,7 @@ namespace TeleportationNetwork
                 if (state == "normal") return EnumTeleportState.Normal;
 
                 Api.Logger.ModWarning("Unknown teleport state " + state + ", will be replaced to default.");
-                Block def = Api.World.GetBlock(new AssetLocation(Constants.MOD_ID, "teleport-broken"));
+                Block def = Api.World.GetBlock(new AssetLocation(ConstantsCore.ModId, "teleport-broken"));
                 if (def != null) Block = def;
 
                 State = EnumTeleportState.Broken;
@@ -158,7 +160,7 @@ namespace TeleportationNetwork
             if (api.Side == EnumAppSide.Client)
             {
                 float rotY = Block.Shape.rotateY;
-                animUtil?.InitializeAnimator(Constants.MOD_ID + "-teleport", new Vec3f(0, rotY, 0));
+                animUtil?.InitializeAnimator(ConstantsCore.ModId + "-teleport", new Vec3f(0, rotY, 0));
             }
 
             ownBlock = Block as BlockTeleport;

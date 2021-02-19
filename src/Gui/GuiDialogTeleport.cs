@@ -1,6 +1,6 @@
 using System;
 using System.Linq;
-using System.Text;
+using SharedUtils.Extensions;
 using Vintagestory.API.Client;
 using Vintagestory.API.Config;
 using Vintagestory.API.MathTools;

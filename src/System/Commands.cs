@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using SharedUtils;
+using SharedUtils.Extensions;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
 using Vintagestory.API.Config;
@@ -22,7 +24,7 @@ namespace TeleportationNetwork
 
             this.sapi = api;
 
-            api.RegisterCommand("tpimp", Constants.PREFIX_DSC + "Import teleport schematic", "[list|paste]",
+            api.RegisterCommand("tpimp", ConstantsCore.ModPrefix + "Import teleport schematic", "[list|paste]",
                 (IServerPlayer player, int groupId, CmdArgs args) =>
                 {
                     switch (args?.PopWord())
@@ -35,7 +37,7 @@ namespace TeleportationNetwork
 
                         case "list":
 
-                            List<IAsset> schematics = api.Assets.GetMany(Constants.TELEPORT_SCHEMATIC_PATH, Constants.MOD_ID);
+                            List<IAsset> schematics = api.Assets.GetMany(Constants.TELEPORT_SCHEMATIC_PATH);
 
                             if (schematics == null || schematics.Count == 0)
                             {
@@ -46,10 +48,7 @@ namespace TeleportationNetwork
                             StringBuilder list = new StringBuilder();
                             foreach (var sch in schematics)
                             {
-                                list.AppendLine(sch.Location.Path.Substring(
-                                    Constants.TELEPORT_SCHEMATIC_PATH.Length + 1,
-                                    sch.Location.Path.Length - Constants.TELEPORT_SCHEMATIC_PATH.Length + 1 + 5
-                                ));
+                                list.AppendLine(sch.Name.Remove(sch.Name.Length - 5));
                             }
                             player.SendMessage(groupId, list.ToString(), EnumChatType.CommandSuccess);
 
@@ -65,7 +64,7 @@ namespace TeleportationNetwork
                                 break;
                             }
 
-                            IAsset schema = api.Assets.TryGet($"{Constants.MOD_ID}:{Constants.TELEPORT_SCHEMATIC_PATH}/{name}.json");
+                            IAsset schema = api.Assets.TryGet($"{Constants.TELEPORT_SCHEMATIC_PATH}/{name}.json");
                             if (schema == null)
                             {
                                 player.SendMessage(groupId, Lang.Get("Not found"), EnumChatType.CommandError);
@@ -75,7 +74,7 @@ namespace TeleportationNetwork
                             string error = null;
 
                             BlockSchematic schematic = BlockSchematic.LoadFromFile(
-                                schema.Origin.OriginPath + "/" + Constants.MOD_ID + "/" + schema.Location.Path, ref error);
+                                schema.Origin.OriginPath + "/" + "game" + "/" + schema.Location.Path, ref error);
 
                             if (error != null)
                             {
@@ -96,7 +95,7 @@ namespace TeleportationNetwork
                 Privilege.controlserver
             );
 
-            api.RegisterCommand("rndtp", Constants.PREFIX_DSC + "Teleport player to random location", "[range]",
+            api.RegisterCommand("rndtp", ConstantsCore.ModPrefix + "Teleport player to random location", "[range]",
                 (IServerPlayer player, int groupId, CmdArgs args) =>
                 {
                     RandomTeleport(player, (int)args.PopInt(-1));
@@ -104,7 +103,7 @@ namespace TeleportationNetwork
                 Privilege.tp
             );
 
-            api.RegisterCommand("tpnetconfig", Constants.PREFIX_DSC + "Config for TPNet", "[shared|unbreakable]",
+            api.RegisterCommand("tpnetconfig", ConstantsCore.ModPrefix + "Config for TPNet", "[shared|unbreakable]",
                 (IServerPlayer player, int groupId, CmdArgs args) =>
                 {
                     switch (args?.PopWord())
@@ -118,7 +117,7 @@ namespace TeleportationNetwork
                         case "shared":
 
                             Config.Current.SharedTeleports.Val = !Config.Current.SharedTeleports.Val;
-                            api.StoreModConfig<Config>(Config.Current, api.GetWorldId() + "/" + Constants.MOD_ID);
+                            api.StoreModConfig<Config>(Config.Current, api.GetWorldId() + "/" + ConstantsCore.ModId);
                             player.SendMessage(groupId, Lang.Get("Shared teleports now is " + (Config.Current.SharedTeleports.Val ? "on" : "off")), EnumChatType.CommandSuccess);
                             break;
 
@@ -126,7 +125,7 @@ namespace TeleportationNetwork
                         case "unbreakable":
 
                             Config.Current.Unbreakable.Val = !Config.Current.Unbreakable.Val;
-                            api.StoreModConfig<Config>(Config.Current, api.GetWorldId() + "/" + Constants.MOD_ID);
+                            api.StoreModConfig<Config>(Config.Current, api.GetWorldId() + "/" + ConstantsCore.ModId);
                             player.SendMessage(groupId, Lang.Get("Unbreakable teleports now is " + (Config.Current.Unbreakable.Val ? "on" : "off")), EnumChatType.CommandSuccess);
                             break;
 
@@ -190,13 +189,13 @@ namespace TeleportationNetwork
         {
             this.capi = api;
 
-            api.RegisterCommand("csc", Constants.PREFIX_DSC + "Clear shapes cache", "", (int groupId, CmdArgs args) =>
+            api.RegisterCommand("csc", ConstantsCore.ModPrefix + "Clear shapes cache", "", (int groupId, CmdArgs args) =>
             {
-                api.ObjectCache.RemoveAll((str, obj) => str.StartsWith(Constants.MOD_ID));
+                api.ObjectCache.RemoveAll((str, obj) => str.StartsWith(ConstantsCore.ModId));
             });
 
             // TODO Need move dialog to TPNetManager -.-
-            api.RegisterCommand("tpdlg", Constants.PREFIX_DSC + "Open teleport dialog", "", (int groupId, CmdArgs args) =>
+            api.RegisterCommand("tpdlg", ConstantsCore.ModPrefix + "Open teleport dialog", "", (int groupId, CmdArgs args) =>
             {
                 if (capi.World.Player.WorldData.CurrentGameMode != EnumGameMode.Creative) return;
 

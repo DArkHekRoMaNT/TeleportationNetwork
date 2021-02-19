@@ -1,10 +1,10 @@
-using TeleportationNetwork;
+using SharedUtils.Extensions;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
 using Vintagestory.API.Config;
 using Vintagestory.API.MathTools;
 
-namespace Vintagestory.GameContent
+namespace TeleportationNetwork
 {
     public class GuiDialogRenameTeleport : GuiDialogGeneric
     {

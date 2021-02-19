@@ -1,10 +1,7 @@
-using System.Diagnostics;
-using TeleportationNetwork;
+using SharedUtils;
+using SharedUtils.Extensions;
 using Vintagestory.API.Common;
-using Vintagestory.API.Config;
 using Vintagestory.API.Datastructures;
-
-[assembly: ModInfo(Constants.MOD_ID)]
 
 namespace TeleportationNetwork
 {
@@ -17,7 +14,7 @@ namespace TeleportationNetwork
 
             TreeAttribute.RegisterAttribute(Constants.ATTRIBUTES_ID + 1, typeof(BlockPosArrayAttribute));
 
-            Config.Current = api.LoadOrCreateConfig<Config>(Constants.MOD_ID);
+            Config.Current = api.LoadOrCreateConfig<Config>(ConstantsCore.ModId + ".json");
         }
     }
 }

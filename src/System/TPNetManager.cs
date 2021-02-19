@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using ProtoBuf;
+using SharedUtils;
+using SharedUtils.Extensions;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
 using Vintagestory.API.Common.Entities;
@@ -160,6 +162,8 @@ namespace TeleportationNetwork
             {
                 sapi.World.Logger.ModNotification("Start loading data");
                 byte[] data = sapi.WorldManager.SaveGame.GetData("TPNetData");
+                sapi.WorldManager.SaveGame.StoreData("test", new byte[] { 0x1 });
+
                 if (data != null) Teleports = SerializerUtil.Deserialize<Dictionary<BlockPos, TeleportData>>(data);
 
                 foreach (var tp in Teleports)
@@ -240,7 +244,7 @@ namespace TeleportationNetwork
         {
             base.Start(api);
 
-            defNames = api.Assets.Get(new AssetLocation(Constants.MOD_ID, "config/names.json"))?.ToObject<List<string>>();
+            defNames = api.Assets.Get(new AssetLocation(ConstantsCore.ModId, "config/names.json"))?.ToObject<List<string>>();
             if (defNames == null) defNames = new List<string>(new string[] { "null" });
         }
 

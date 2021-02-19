@@ -1,3 +1,4 @@
+using SharedUtils;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
 using Vintagestory.API.Common.Entities;
@@ -106,7 +107,7 @@ namespace TeleportationNetwork
             {
                 return new WorldInteraction[]{
                     new WorldInteraction(){
-                        ActionLangCode = Constants.MOD_ID + ":blockhelp-teleport-rename",
+                        ActionLangCode = ConstantsCore.ModId + ":blockhelp-teleport-rename",
                         MouseButton = EnumMouseButton.Right,
                         HotKeyCode = "sneak"
                     }
