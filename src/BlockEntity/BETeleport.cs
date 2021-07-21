@@ -37,7 +37,7 @@ namespace TeleportationNetwork
     {
         #region render
 
-        BlockEntityAnimationUtil animUtil { get { return GetBehavior<BEBehaviorAnimatable>()?.animUtil; } }
+        BlockEntityAnimationUtil AnimUtil { get { return GetBehavior<BEBehaviorAnimatable>()?.animUtil; } }
         static SimpleParticleProperties props = new SimpleParticleProperties(
             minQuantity: 0.3f,
             maxQuantity: 1.3f,
@@ -81,8 +81,7 @@ namespace TeleportationNetwork
         {
             get
             {
-                string state = null;
-                Block.Variant.TryGetValue("state", out state);
+                Block.Variant.TryGetValue("state", out string state);
 
                 if (state == "broken") return EnumTeleportState.Broken;
                 if (state == "normal") return EnumTeleportState.Normal;
@@ -135,7 +134,7 @@ namespace TeleportationNetwork
             if (api.Side == EnumAppSide.Client)
             {
                 float rotY = Block.Shape.rotateY;
-                animUtil?.InitializeAnimator(ConstantsCore.ModId + "-teleport", new Vec3f(0, rotY, 0));
+                AnimUtil?.InitializeAnimator(ConstantsCore.ModId + "-teleport", new Vec3f(0, rotY, 0));
             }
 
             ownBlock = Block as BlockTeleport;
@@ -157,9 +156,9 @@ namespace TeleportationNetwork
         List<string> toremove = new List<string>();
         private void OnGameTick(float dt)
         {
-            if (animUtil?.animator?.ActiveAnimationCount == 0)
+            if (AnimUtil?.animator?.ActiveAnimationCount == 0)
             {
-                animUtil.StartAnimation(new AnimationMetaData()
+                AnimUtil.StartAnimation(new AnimationMetaData()
                 {
                     Animation = "octagram",
                     Code = "octagram",
@@ -167,7 +166,7 @@ namespace TeleportationNetwork
                     EaseInSpeed = 1f,
                     EaseOutSpeed = 1f
                 });
-                animUtil.StartAnimation(new AnimationMetaData()
+                AnimUtil.StartAnimation(new AnimationMetaData()
                 {
                     Animation = "gear",
                     Code = "gear",
@@ -243,7 +242,7 @@ namespace TeleportationNetwork
             if (Api.Side == EnumAppSide.Client)
             {
                 bestSecondsPassed = Math.Min(bestSecondsPassed, 3);
-                animUtil.activeAnimationsByAnimCode["octagram"].AnimationSpeed = (float)(0.5f * (1 + Math.Exp(bestSecondsPassed) * 0.3f));
+                AnimUtil.activeAnimationsByAnimCode["octagram"].AnimationSpeed = (float)(0.5f * (1 + Math.Exp(bestSecondsPassed) * 0.3f));
                 Core.HudCircleRenderer.CircleProgress = bestSecondsPassed / 3f;
             }
         }
@@ -252,16 +251,14 @@ namespace TeleportationNetwork
         {
             if (!Repaired) return;
 
-            EntityPlayer player = entity as EntityPlayer;
-            if (player == null) return;
+            if (!(entity is EntityPlayer player)) return;
 
             if (player.IsActivityRunning("teleportCooldown")) //REVIEW ActivityRunning not working?
             {
                 return;
             }
 
-            TeleportingPlayer tpe;
-            if (!tpingPlayers.TryGetValue(player.PlayerUID, out tpe))
+            if (!tpingPlayers.TryGetValue(player.PlayerUID, out TeleportingPlayer tpe))
             {
                 tpingPlayers[player.PlayerUID] = tpe = new TeleportingPlayer()
                 {

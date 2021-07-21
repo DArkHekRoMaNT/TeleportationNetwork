@@ -204,8 +204,7 @@ namespace TeleportationNetwork
             }
             else
             {
-                BlockEntityTeleport bet = sapi.World.BlockAccessor.GetBlockEntity(data.SourcePos.AsBlockPos) as BlockEntityTeleport;
-                if (bet == null) return;
+                if (!(sapi.World.BlockAccessor.GetBlockEntity(data.SourcePos.AsBlockPos) is BlockEntityTeleport bet)) return;
 
                 tpEntities = bet.GetInCircleEntities();
                 currCenterPos = bet.Pos.ToVec3d().Add(0.5, 1, 0.5);
@@ -238,7 +237,7 @@ namespace TeleportationNetwork
 
         private static Dictionary<BlockPos, TeleportData> Teleports = new Dictionary<BlockPos, TeleportData>();
 
-        private static ICoreAPI api => (sapi as ICoreAPI) ?? (capi as ICoreAPI);
+        private static ICoreAPI Api => (sapi as ICoreAPI) ?? (capi as ICoreAPI);
 
         public override void Start(ICoreAPI api)
         {
@@ -301,7 +300,7 @@ namespace TeleportationNetwork
                 }
 
                 string type = data.Available ? "normal" : "broken";
-                api.World.Logger.ModNotification($"Added teleport {data.Name} ({type}) at {pos} to teleports list");
+                Api.World.Logger.ModNotification($"Added teleport {data.Name} ({type}) at {pos} to teleports list");
             }
         }
 
@@ -331,7 +330,7 @@ namespace TeleportationNetwork
             }
 
             string type = data.Available ? "normal" : "broken";
-            api.World.Logger.ModNotification($"Modified teleport {data.Name} ({type}) at {pos}");
+            Api.World.Logger.ModNotification($"Modified teleport {data.Name} ({type}) at {pos}");
         }
 
         internal static void RemoveTeleport(BlockPos pos)
@@ -360,7 +359,7 @@ namespace TeleportationNetwork
 
                 Teleports.Remove(pos);
 
-                api.World.Logger.ModNotification($"Removed teleport {name} ({type}) at {pos} from teleports list");
+                Api.World.Logger.ModNotification($"Removed teleport {name} ({type}) at {pos} from teleports list");
             }
         }
 
@@ -377,7 +376,7 @@ namespace TeleportationNetwork
             TeleportData data = new TeleportData()
             {
                 Available = available,
-                Name = defNames.ElementAt(api.World.Rand.Next(defNames.Count))
+                Name = defNames.ElementAt(Api.World.Rand.Next(defNames.Count))
             };
 
             AddTeleport(pos.Copy(), data);

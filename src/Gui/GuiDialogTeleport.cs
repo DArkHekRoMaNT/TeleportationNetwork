@@ -174,9 +174,8 @@ namespace TeleportationNetwork
                 var stacklist = SingleComposer.GetContainer("stacklist");
                 if (stacklist == null) return;
 
-                var button = stacklist.Elements.FirstOrDefault((elem) => elem.IsPositionInside(args.X, args.Y)) as GuiElementTextButtonExt;
 
-                if (button != null)
+                if (stacklist.Elements.FirstOrDefault((elem) => elem.IsPositionInside(args.X, args.Y)) is GuiElementTextButtonExt button)
                 {
 
                     int x = button.TeleportPos.X - capi.World.DefaultSpawnPosition.XYZInt.X;

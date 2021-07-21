@@ -14,16 +14,14 @@ namespace TeleportationNetwork
 
         public override void OnEntityCollide(IWorldAccessor world, Entity entity, BlockPos pos, BlockFacing facing, Vec3d collideSpeed, bool isImpact)
         {
-            BlockEntityTeleport be = api.World.BlockAccessor.GetBlockEntity(pos) as BlockEntityTeleport;
-            if (be == null) return;
+            if (!(api.World.BlockAccessor.GetBlockEntity(pos) is BlockEntityTeleport be)) return;
 
             be.OnEntityCollide(entity);
         }
 
         public override bool OnBlockInteractStart(IWorldAccessor world, IPlayer byPlayer, BlockSelection blockSel)
         {
-            BlockEntityTeleport be = api.World.BlockAccessor.GetBlockEntity(blockSel.Position) as BlockEntityTeleport;
-            if (be == null)
+            if (!(api.World.BlockAccessor.GetBlockEntity(blockSel.Position) is BlockEntityTeleport be))
             {
                 //api.World.BlockAccessor.SetBlock(BlockId, blockSel.Position);
                 return false;
@@ -72,9 +70,8 @@ namespace TeleportationNetwork
 
             if (flag && byPlayer.WorldData.CurrentGameMode == EnumGameMode.Creative)
             {
-                BlockEntityTeleport bet = api.World.BlockAccessor.GetBlockEntity(blockSel.Position) as BlockEntityTeleport;
-
-                if (bet != null && bet.State == EnumTeleportState.Normal && api.Side == EnumAppSide.Server)
+                if (api.World.BlockAccessor.GetBlockEntity(blockSel.Position) is BlockEntityTeleport bet
+                    && bet.State == EnumTeleportState.Normal && api.Side == EnumAppSide.Server)
                 {
                     TPNetManager.AddAvailableTeleport(byPlayer as IServerPlayer, blockSel.Position);
                 }
