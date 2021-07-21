@@ -1,14 +1,14 @@
-using Vintagestory.GameContent;
+using System;
+using System.Collections.Generic;
+using System.Text;
+using SharedUtils;
+using SharedUtils.Extensions;
+using Vintagestory.API.Client;
 using Vintagestory.API.Common;
 using Vintagestory.API.Common.Entities;
 using Vintagestory.API.MathTools;
-using System;
-using System.Collections.Generic;
-using Vintagestory.API.Client;
 using Vintagestory.API.Server;
-using System.Text;
-using SharedUtils.Extensions;
-using SharedUtils;
+using Vintagestory.GameContent;
 
 namespace TeleportationNetwork
 {
@@ -62,39 +62,11 @@ namespace TeleportationNetwork
             );
         }
 
-        /*public override bool OnTesselation(ITerrainMeshPool mesher, ITesselatorAPI tessThreadTesselator)
-        {
-            if (animUtil.activeAnimationsByAnimCode.Count > 0) return false;
-            if (!Repaired) return false;
-
-            MeshData mesh = ObjectCacheUtil.GetOrCreate(Api, ConstantsCore.ModID + "-teleport-" + State + "-" + Type, () =>
-            {
-                ICoreClientAPI capi = Api as ICoreClientAPI;
-
-                string shapeCode = "seal";
-                // string shapeCode = "normal";
-                // switch (State)
-                // {
-                //     case EnumTeleportState.Broken: shapeCode = "broken"; break;
-                //     case EnumTeleportState.Normal: shapeCode = "normal"; break;
-                // }
-
-                MeshData meshdata;
-                IAsset asset = Api.Assets.TryGet(new AssetLocation(ConstantsCore.ModID, "shapes/block/teleport/" + shapeCode + ".json"));
-                Shape shape = asset.ToObject<Shape>();
-
-                tessThreadTesselator.TesselateShape(ownBlock, shape, out meshdata, new Vec3f(0, 0, 0));
-
-                return meshdata;
-            });
-
-            mesher.AddMeshData(mesh);
-            return false;
-        }*/
-
         #endregion
 
         #region common
+
+        public Core Core { get; private set; }
 
         BlockTeleport ownBlock;
         long listenerid;
@@ -102,6 +74,7 @@ namespace TeleportationNetwork
         GuiDialogRenameTeleport renameDlg;
 
         Dictionary<string, TeleportingPlayer> tpingPlayers = new Dictionary<string, TeleportingPlayer>();
+
 
 
         public EnumTeleportState State
@@ -154,6 +127,8 @@ namespace TeleportationNetwork
         public override void Initialize(ICoreAPI api)
         {
             base.Initialize(api);
+
+            Core = api.ModLoader.GetModSystem<Core>();
 
             TPNetManager.TryCreateData(Pos, Repaired);
 
@@ -237,6 +212,7 @@ namespace TeleportationNetwork
 
                         teleportDlg = new GuiDialogTeleport(Api as ICoreClientAPI, Pos);
                         teleportDlg.TryOpen();
+                        Core.HudCircleRenderer.CircleVisible = false;
                     }
                 }
 
@@ -268,6 +244,7 @@ namespace TeleportationNetwork
             {
                 bestSecondsPassed = Math.Min(bestSecondsPassed, 3);
                 animUtil.activeAnimationsByAnimCode["octagram"].AnimationSpeed = (float)(0.5f * (1 + Math.Exp(bestSecondsPassed) * 0.3f));
+                Core.HudCircleRenderer.CircleProgress = bestSecondsPassed / 3f;
             }
         }
 
