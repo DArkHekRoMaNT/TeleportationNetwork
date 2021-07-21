@@ -21,16 +21,16 @@
     "op": "add",
     "path": "/structures/-",
     "value": {
-      "code": "tpnet_teleport_quartz",
+      "code": "tpnet_teleport",
       "name": "Teleportation place",
       "group": "tpnet_teleport",
       "minGroupDistance": 4096,
-      "schematics": ["tpnet/teleport/quartz"],
+      "schematics": ["tpnet/teleport/locust"],
       "chance": 1,
       "replacewithblocklayers": ["soil-medium-normal", "soil-medium-none"],
       "postPass": true,
       "placement": "surface",
-      "offsetY": -5
+      "offsetY": -6
     }
   }
 ]
