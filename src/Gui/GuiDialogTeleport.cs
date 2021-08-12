@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using SharedUtils;
 using SharedUtils.Extensions;
 using Vintagestory.API.Client;
 using Vintagestory.API.Config;
@@ -18,7 +19,7 @@ namespace TeleportationNetwork
         public GuiDialogTeleport(ICoreClientAPI capi, BlockPos ownBEPos)
             : base(Lang.Get("Available Points"), capi)
         {
-            IsDuplicate = (capi.OpenedGuis.FirstOrDefault((object dlg) => ownBEPos != null && (dlg as GuiDialogTeleport)?.blockEntityPos == ownBEPos) != null);
+            IsDuplicate = capi.OpenedGuis.FirstOrDefault((object dlg) => ownBEPos != null && (dlg as GuiDialogTeleport)?.blockEntityPos == ownBEPos) != null;
             if (!IsDuplicate)
             {
                 blockEntityPos = ownBEPos;
@@ -65,7 +66,10 @@ namespace TeleportationNetwork
             ElementBounds clipBounds = listBounds.ForkBoundingParent();
             ElementBounds insetBounds = listBounds.FlatCopy().FixedGrow(6).WithFixedOffset(-3, -3);
 
-            ElementBounds scrollbarBounds = ElementStdBounds.VerticalScrollbar(insetBounds);
+            ElementBounds scrollbarBounds = insetBounds
+                .CopyOffsetedSibling(insetBounds.fixedWidth + 3.0)
+                .WithFixedWidth(GuiElementScrollbar.DefaultScrollbarWidth)
+                .WithFixedPadding(GuiElementScrollbar.DeafultScrollbarPadding);
 
 
             ElementBounds bgBounds = ElementBounds.Fill.WithFixedPadding(GuiStyle.ElementToDialogPadding).WithFixedOffset(0, GuiStyle.TitleBarHeight);
@@ -77,7 +81,7 @@ namespace TeleportationNetwork
 
 
             SingleComposer = capi.Gui
-                .CreateCompo("teleport-dialog", dialogBounds)
+                .CreateCompo(ConstantsCore.ModId + "-teleport-dialog", dialogBounds)
                 .AddDialogTitleBar(DialogTitle, CloseIconPressed)
                 .AddDialogBG(bgBounds, false)
                 .BeginChildElements(bgBounds)
@@ -101,8 +105,8 @@ namespace TeleportationNetwork
                         .AddInset(insetBounds, 3)
                         .AddContainer(listBounds, "stacklist")
                     .EndClip()
-                    .AddHoverText("", CairoFont.WhiteDetailText(), 300, listBounds.FlatCopy(), "hovertext")
                     .AddVerticalScrollbar(OnNewScrollbarValue, scrollbarBounds, "scrollbar")
+                    .AddHoverText("", CairoFont.WhiteDetailText(), 300, listBounds.FlatCopy(), "hovertext")
                 .EndChildElements()
             ;
 
@@ -137,13 +141,11 @@ namespace TeleportationNetwork
                 }
             }
 
-            SingleComposer.GetScrollbar("scrollbar").SetHeights(
-                (float)Math.Min(listBounds.fixedHeight, (buttons.Last().fixedHeight + buttons.Last().fixedY)),
-                (float)(buttons.Last().fixedHeight + buttons.Last().fixedY)
-            );
-            //SingleComposer.GetScrollbar("scrollbar").ScrollToBottom();
-            //SingleComposer.GetScrollbar("scrollbar").CurrentYPosition = 0;
             SingleComposer.Compose();
+            SingleComposer.GetScrollbar("scrollbar").SetHeights(
+                (float)insetBounds.fixedHeight,
+                (float)Math.Max(insetBounds.fixedHeight, listBounds.fixedHeight)
+            );
         }
 
         private bool OnClickItem(BlockPos targetPos)
