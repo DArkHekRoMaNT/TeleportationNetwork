@@ -162,7 +162,6 @@ namespace TeleportationNetwork
             {
                 sapi.World.Logger.ModNotification("Start loading data");
                 byte[] data = sapi.WorldManager.SaveGame.GetData("TPNetData");
-                sapi.WorldManager.SaveGame.StoreData("test", new byte[] { 0x1 });
 
                 if (data != null) Teleports = SerializerUtil.Deserialize<Dictionary<BlockPos, TeleportData>>(data);
 
