@@ -1,0 +1,19 @@
+[
+  {
+    "file": "game:worldgen/structures.json",
+    "op": "add",
+    "path": "/structures/-",
+    "value": {
+      "code": "tpnet_teleport_common",
+      "name": "TpNet's teleport (common)",
+      "group": "tpnet_teleport",
+      "schematics": ["tpnet/teleport/common"],
+      "chance": 10,
+      "minGroupDistance": 4096,
+      "replacewithblocklayers": ["soil-medium-normal", "soil-medium-none"],
+      "postPass": true,
+      "placement": "surface",
+      "offsetY": -6
+    }
+  }
+]
