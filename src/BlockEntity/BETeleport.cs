@@ -127,6 +127,20 @@ namespace TeleportationNetwork
             }
         }
 
+        public override void OnLoadCollectibleMappings(IWorldAccessor worldForNewMappings, Dictionary<int, AssetLocation> oldBlockIdMapping, Dictionary<int, AssetLocation> oldItemIdMapping, int schematicSeed)
+        {
+            if (FrameStack == null)
+            {
+                FrameStack = new ItemStack(worldForNewMappings.GetBlock(DefaultFrameCode));
+            }
+            else
+            {
+                FrameStack.FixMapping(oldBlockIdMapping, oldItemIdMapping, worldForNewMappings);
+            }
+
+            base.OnLoadCollectibleMappings(worldForNewMappings, oldBlockIdMapping, oldItemIdMapping, schematicSeed);
+        }
+
         private void SetupGameTickers()
         {
             listenerid = RegisterGameTickListener(OnGameTick_Normal, 50);
