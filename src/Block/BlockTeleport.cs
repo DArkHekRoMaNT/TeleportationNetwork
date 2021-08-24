@@ -115,7 +115,7 @@ namespace TeleportationNetwork
                     {
                         ActionLangCode = ConstantsCore.ModId + ":blockhelp-teleport-change-frame",
                         MouseButton = EnumMouseButton.Right,
-                        HotKeyCode = "sneak",
+                        HotKeyCode = "sprint",
                         Itemstacks = api.World.Blocks.Where((b)=>b.DrawType == EnumDrawType.Cube).Select((Block b)=>new ItemStack(b)).ToArray()
                     }
                 });
@@ -133,7 +133,7 @@ namespace TeleportationNetwork
                     {
                         ActionLangCode = ConstantsCore.ModId + ":blockhelp-teleport-change-frame",
                         MouseButton = EnumMouseButton.Right,
-                        HotKeyCode = "sneak",
+                        HotKeyCode = "sprint",
                         Itemstacks = api.World.Blocks.Where((b)=>b.DrawType == EnumDrawType.Cube).Select((Block b)=>new ItemStack(b)).ToArray()
                     }
                 });
