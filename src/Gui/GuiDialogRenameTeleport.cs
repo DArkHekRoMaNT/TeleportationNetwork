@@ -8,16 +8,18 @@ namespace TeleportationNetwork
 {
     public class GuiDialogRenameTeleport : GuiDialogGeneric
     {
+        public TPNetManager TPNetManager { get; private set; }
+
         private BlockPos blockEntityPos;
         public Action OnCloseCancel;
         private bool didSave;
-        private CairoFont font;
 
-        public GuiDialogRenameTeleport(string DialogTitle, BlockPos blockEntityPos, ICoreClientAPI capi, CairoFont font)
-            : base(DialogTitle, capi)
+        public GuiDialogRenameTeleport(BlockPos blockEntityPos, ICoreClientAPI capi, CairoFont font)
+            : base(Lang.Get("Rename"), capi)
         {
-            this.font = font;
             this.blockEntityPos = blockEntityPos;
+
+            TPNetManager = capi.ModLoader.GetModSystem<TPNetManager>();
 
             if (blockEntityPos == null || TPNetManager.GetTeleport(blockEntityPos) == null)
             {
@@ -33,7 +35,7 @@ namespace TeleportationNetwork
             ElementBounds bounds = ElementStdBounds.AutosizedMainDialog.WithAlignment(EnumDialogArea.CenterMiddle).WithFixedAlignmentOffset(60.0 + GuiStyle.DialogToScreenPadding, GuiStyle.DialogToScreenPadding);
 
             float num3 = 250f;
-            base.SingleComposer = capi.Gui.CreateCompo("blockentitytexteditordialog", bounds).AddShadedDialogBG(elementBounds3).AddDialogTitleBar(DialogTitle, OnTitleBarClose)
+            SingleComposer = capi.Gui.CreateCompo("blockentitytexteditordialog", bounds).AddShadedDialogBG(elementBounds3).AddDialogTitleBar(DialogTitle, OnTitleBarClose)
                 .BeginChildElements(elementBounds3)
                 .AddTextInput(elementBounds2 = elementBounds2.BelowCopy().WithFixedWidth(num3), null, CairoFont.WhiteSmallText(), "text")
                 .AddSmallButton(Lang.Get("Cancel"), OnButtonCancel, elementBounds2 = elementBounds2.BelowCopy(0.0, 20.0).WithFixedSize(100.0, 20.0).WithAlignment(EnumDialogArea.LeftFixed)
@@ -43,7 +45,7 @@ namespace TeleportationNetwork
                 .EndChildElements()
                 .Compose();
 
-            base.SingleComposer.GetTextInput("text").SetValue(TPNetManager.GetTeleport(blockEntityPos).Name);
+            SingleComposer.GetTextInput("text").SetValue(TPNetManager.GetTeleport(blockEntityPos).Name);
         }
 
         public override void OnGuiOpened()

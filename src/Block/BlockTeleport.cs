@@ -1,3 +1,5 @@
+using System.Linq;
+using HarmonyLib;
 using SharedUtils;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
@@ -10,7 +12,8 @@ namespace TeleportationNetwork
 {
     public class BlockTeleport : Block
     {
-        //public MeshData[] meshes = new MeshData[2];
+        private WorldInteraction[] WorldInteractions_Normal;
+        private WorldInteraction[] WorldInteractions_Broken;
 
         public override void OnEntityCollide(IWorldAccessor world, Entity entity, BlockPos pos, BlockFacing facing, Vec3d collideSpeed, bool isImpact)
         {
@@ -23,22 +26,22 @@ namespace TeleportationNetwork
         {
             if (!(api.World.BlockAccessor.GetBlockEntity(blockSel.Position) is BlockEntityTeleport be))
             {
-                //api.World.BlockAccessor.SetBlock(BlockId, blockSel.Position);
+                //api.World.BlockAccessor.SetBlock(BlockId, blockSel.Position); //TODO Check it
                 return false;
             }
 
-            if (be.Repaired && byPlayer.WorldData.EntityControls.Sneak)
+            if (be.IsNormal && byPlayer.WorldData.EntityControls.Sneak)
             {
-                be.OnShiftRightClick();
+                be.OpenRenameDlg();
                 return true;
             }
 
             ItemSlot slot = byPlayer.InventoryManager.ActiveHotbarSlot;
             if (slot.Empty) return base.OnBlockInteractStart(world, byPlayer, blockSel);
 
-            if (!be.Repaired && slot.Itemstack.Collectible is ItemTemporalGear)
+            if (!be.IsNormal && slot.Itemstack.Collectible is ItemTemporalGear)
             {
-                be.Repaired = true;
+                be.State = TeleportState.Normal;
 
                 if (byPlayer.WorldData.CurrentGameMode != EnumGameMode.Creative)
                 {
@@ -47,11 +50,20 @@ namespace TeleportationNetwork
                 }
                 if (api.Side == EnumAppSide.Server)
                 {
-                    TPNetManager.AddAvailableTeleport(byPlayer as IServerPlayer, be.Pos);
+                    be.TPNetManager.AddAvailableTeleport(byPlayer as IServerPlayer, be.Pos);
                 }
 
                 world.PlaySoundAt(new AssetLocation("sounds/effect/latch"), blockSel.Position.X + 0.5, blockSel.Position.Y, blockSel.Position.Z + 0.5, byPlayer, true, 16);
 
+                return true;
+            }
+
+            if (byPlayer.Entity.Controls.Sprint &&
+                slot.Itemstack.Class == EnumItemClass.Block &&
+                slot.Itemstack.Block.DrawType == EnumDrawType.Cube &&
+                !slot.Itemstack.Collectible.Equals(slot.Itemstack, be.FrameStack))
+            {
+                be.FrameStack = slot.TakeOut(1);
                 return true;
             }
 
@@ -71,9 +83,9 @@ namespace TeleportationNetwork
             if (flag && byPlayer.WorldData.CurrentGameMode == EnumGameMode.Creative)
             {
                 if (api.World.BlockAccessor.GetBlockEntity(blockSel.Position) is BlockEntityTeleport bet
-                    && bet.State == EnumTeleportState.Normal && api.Side == EnumAppSide.Server)
+                    && bet.State == TeleportState.Normal && api.Side == EnumAppSide.Server)
                 {
-                    TPNetManager.AddAvailableTeleport(byPlayer as IServerPlayer, blockSel.Position);
+                    bet.TPNetManager.AddAvailableTeleport(byPlayer as IServerPlayer, blockSel.Position);
                 }
             }
 
@@ -81,36 +93,65 @@ namespace TeleportationNetwork
         }
 
         // TODO: Need over way for prevent broke
+        // TODO: Need check
         public override float OnGettingBroken(IPlayer player, BlockSelection blockSel, ItemSlot itemslot, float remainingResistance, float dt, int counter)
         {
-            if (Config.Current.Unbreakable.Val) return 9999;
+            if (Config.Current.Unbreakable.Val) remainingResistance = 1f;
 
             return base.OnGettingBroken(player, blockSel, itemslot, remainingResistance, dt, counter);
         }
 
         public override WorldInteraction[] GetPlacedBlockInteractionHelp(IWorldAccessor world, BlockSelection selection, IPlayer forPlayer)
         {
-            if (LastCodePart() == "broken")
+            if (LastCodePart() == TeleportState.Broken)
             {
-                return new WorldInteraction[]{
+                return WorldInteractions_Broken ?? (WorldInteractions_Broken = new WorldInteraction[]{
                     new WorldInteraction(){
                         ActionLangCode = "blockhelp-translocator-repair-2",
+                        MouseButton = EnumMouseButton.Right,
                         Itemstacks = new ItemStack[] { new ItemStack(world.GetItem(new AssetLocation("gear-temporal")), 1) },
-                        MouseButton = EnumMouseButton.Right
+                    },
+                    new WorldInteraction()
+                    {
+                        ActionLangCode = ConstantsCore.ModId + ":blockhelp-teleport-change-frame",
+                        MouseButton = EnumMouseButton.Right,
+                        HotKeyCode = "sneak",
+                        Itemstacks = api.World.Blocks.Where((b)=>b.DrawType == EnumDrawType.Cube).Select((Block b)=>new ItemStack(b)).ToArray()
                     }
-                };
+                });
             }
-            if (LastCodePart() == "normal")
+            if (LastCodePart() == TeleportState.Normal)
             {
-                return new WorldInteraction[]{
-                    new WorldInteraction(){
+                return WorldInteractions_Normal ?? (WorldInteractions_Normal = new WorldInteraction[]{
+                    new WorldInteraction()
+                    {
                         ActionLangCode = ConstantsCore.ModId + ":blockhelp-teleport-rename",
                         MouseButton = EnumMouseButton.Right,
                         HotKeyCode = "sneak"
+                    },
+                    new WorldInteraction()
+                    {
+                        ActionLangCode = ConstantsCore.ModId + ":blockhelp-teleport-change-frame",
+                        MouseButton = EnumMouseButton.Right,
+                        HotKeyCode = "sneak",
+                        Itemstacks = api.World.Blocks.Where((b)=>b.DrawType == EnumDrawType.Cube).Select((Block b)=>new ItemStack(b)).ToArray()
                     }
-                };
+                });
             }
             return base.GetPlacedBlockInteractionHelp(world, selection, forPlayer);
+        }
+
+        public override ItemStack[] GetDrops(IWorldAccessor world, BlockPos pos, IPlayer byPlayer, float dropQuantityMultiplier = 1)
+        {
+            var drops = base.GetDrops(world, pos, byPlayer, dropQuantityMultiplier) ?? new ItemStack[] { };
+            if (world.BlockAccessor.GetBlockEntity(pos) is BlockEntityTeleport bet)
+            {
+                if (bet.FrameStack.Collectible.Code != bet.DefaultFrameCode)
+                {
+                    drops.AddItem(bet.FrameStack);
+                }
+            }
+            return drops;
         }
     }
 }

@@ -9,17 +9,18 @@
     "*-normal": { "base": "block/teleport/normal" }
   },
   "textures": {
-    "base": {
-      "base": "game:block/stone/brick/granite*"
-    },
-    "seal": { "base": "block/teleport/seal2" },
+    "darkwood": { "base": "game:block/machine/statictranslocator/base_darkwood" },
+    "rusty": { "base": "game:block/machine/statictranslocator/rusty" },
     "rustyglow": { "base": "game:block/machine/statictranslocator/rustyglow" },
-    "darkwood": {
-      "base": "game:block/machine/statictranslocator/base_darkwood"
-    }
+    "statictranslocator_glass": { "base": "game:block/machine/statictranslocator/statictranslocator_glass" },
+    "statictranslocator_structure": { "base": "game:block/machine/statictranslocator/statictranslocator_structure" },
+    "lead": { "base": "game:block/metal/ingot/lead" },
+
+    "empty": { "base": "empty" },
+    "seal": { "base": "block/teleport/seal2" }
   },
   "variantgroups": [{ "code": "state", "states": ["broken", "normal"] }],
-  "creativeinventory": { "general": ["*"], "decorative": ["*"] },
+  "creativeinventory": { "general": ["*"], "decorative": ["*"], "tpnet": ["*"] },
   "replaceable": 200,
   "resistance": 4,
   "lightAbsorption": 99,

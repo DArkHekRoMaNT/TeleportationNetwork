@@ -14,15 +14,12 @@ namespace TeleportationNetwork
 {
     public class Commands : ModSystem
     {
-
-        #region server
-
         ICoreServerAPI sapi;
         public override void StartServerSide(ICoreServerAPI api)
         {
             base.StartServerSide(api);
 
-            this.sapi = api;
+            sapi = api;
 
             api.RegisterCommand("tpimp", ConstantsCore.ModPrefix + "Import teleport schematic", "[list|paste]",
                 (IServerPlayer player, int groupId, CmdArgs args) =>
@@ -180,32 +177,14 @@ namespace TeleportationNetwork
             }
         }
 
-        #endregion
-
-        #region client
-
-        ICoreClientAPI capi;
         public override void StartClientSide(ICoreClientAPI api)
         {
-            this.capi = api;
-
-            api.RegisterCommand("csc", ConstantsCore.ModPrefix + "Clear shapes cache", "", (int groupId, CmdArgs args) =>
-            {
-                api.ObjectCache.RemoveAll((str, obj) => str.StartsWith(ConstantsCore.ModId));
-            });
-
-            // TODO Need move dialog to TPNetManager -.-
             api.RegisterCommand("tpdlg", ConstantsCore.ModPrefix + "Open teleport dialog", "", (int groupId, CmdArgs args) =>
             {
-                if (capi.World.Player.WorldData.CurrentGameMode != EnumGameMode.Creative) return;
-
-                TPNetManager manager = api.ModLoader.GetModSystem<TPNetManager>();
-
-                GuiDialogTeleport dialog = new GuiDialogTeleport(capi, null);
+                if (api.World.Player.WorldData.CurrentGameMode != EnumGameMode.Creative) return;
+                GuiDialogTeleport dialog = new GuiDialogTeleport(api, null);
                 dialog.TryOpen();
             });
         }
-
-        #endregion
     }
 }

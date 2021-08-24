@@ -13,83 +13,15 @@ using Vintagestory.API.Util;
 
 namespace TeleportationNetwork
 {
-    [ProtoContract]
-    public class TeleportData
-    {
-        [ProtoMember(1)]
-        public string Name;
-
-        [ProtoMember(2)]
-        public bool Available;
-
-        [ProtoMember(3)]
-        public List<string> ActivatedBy = new List<string>();
-
-        public TeleportData()
-        {
-
-        }
-
-        public TeleportData(string name, List<string> activatedBy = null, bool available = false)
-        {
-            this.Name = name;
-            this.Available = available;
-
-            if (activatedBy != null)
-            {
-                this.ActivatedBy = activatedBy;
-            }
-        }
-    }
-
-    [ProtoContract]
-    public class TeleportMsg
-    {
-        [ProtoMember(1)]
-        public BlockPos Pos;
-
-        [ProtoMember(2)]
-        public TeleportData Data;
-
-        [ProtoMember(3)]
-        public bool DoRemove;
-
-        [ProtoMember(4)]
-        public bool Synced;
-
-        public TeleportMsg()
-        {
-
-        }
-
-        public TeleportMsg(BlockPos pos, TeleportData data, bool doRemove = false, bool synced = false)
-        {
-            this.Pos = pos;
-            this.Data = data;
-            this.DoRemove = doRemove;
-            this.Synced = synced;
-        }
-    }
-
-    [ProtoContract]
-    public class ForTeleportingData
-    {
-        [ProtoMember(1)]
-        public Vec3d SourcePos;
-
-        [ProtoMember(2)]
-        public Vec3d TargetPos;
-    }
-
     public class TPNetManager : ModSystem
     {
 
         #region server
 
-        public static List<string> defNames;
+        public List<string> defNames;
 
-        static ICoreServerAPI sapi;
-        static IServerNetworkChannel serverChannel;
+        ICoreServerAPI sapi;
+        IServerNetworkChannel serverChannel;
 
         public override void StartServerSide(ICoreServerAPI api)
         {
@@ -178,7 +110,7 @@ namespace TeleportationNetwork
             }
         }
 
-        public static void TeleportTo(Vec3d targetPos, Vec3d sourcePos = null)
+        public void TeleportTo(Vec3d targetPos, Vec3d sourcePos = null)
         {
             clientChannel.SendPacket(new ForTeleportingData()
             {
@@ -234,19 +166,20 @@ namespace TeleportationNetwork
 
         #region common
 
-        private static Dictionary<BlockPos, TeleportData> Teleports = new Dictionary<BlockPos, TeleportData>();
+        private Dictionary<BlockPos, TeleportData> Teleports = new Dictionary<BlockPos, TeleportData>();
 
-        private static ICoreAPI Api => (sapi as ICoreAPI) ?? (capi as ICoreAPI);
-
+        private ICoreAPI api;
         public override void Start(ICoreAPI api)
         {
             base.Start(api);
+
+            this.api = api;
 
             defNames = api.Assets.Get(new AssetLocation(ConstantsCore.ModId, "config/names.json"))?.ToObject<List<string>>();
             if (defNames == null) defNames = new List<string>(new string[] { "null" });
         }
 
-        internal static void AddAvailableTeleport(IPlayer byPlayer, BlockPos pos)
+        internal void AddAvailableTeleport(IPlayer byPlayer, BlockPos pos)
         {
             if (byPlayer == null) throw new ArgumentNullException("byPlayer");
             if (pos == null) throw new ArgumentNullException("pos");
@@ -277,7 +210,7 @@ namespace TeleportationNetwork
             }
         }
 
-        internal static void AddTeleport(BlockPos pos, TeleportData data)
+        internal void AddTeleport(BlockPos pos, TeleportData data)
         {
             if (!Teleports.ContainsKey(pos))
             {
@@ -299,11 +232,11 @@ namespace TeleportationNetwork
                 }
 
                 string type = data.Available ? "normal" : "broken";
-                Api.World.Logger.ModNotification($"Added teleport {data.Name} ({type}) at {pos} to teleports list");
+                api.World.Logger.ModNotification($"Added teleport {data.Name} ({type}) at {pos} to teleports list");
             }
         }
 
-        internal static void SetTeleport(BlockPos pos, TeleportData data)
+        internal void SetTeleport(BlockPos pos, TeleportData data)
         {
             if (!Teleports.ContainsKey(pos))
             {
@@ -329,10 +262,10 @@ namespace TeleportationNetwork
             }
 
             string type = data.Available ? "normal" : "broken";
-            Api.World.Logger.ModNotification($"Modified teleport {data.Name} ({type}) at {pos}");
+            api.World.Logger.ModNotification($"Modified teleport {data.Name} ({type}) at {pos}");
         }
 
-        internal static void RemoveTeleport(BlockPos pos)
+        internal void RemoveTeleport(BlockPos pos)
         {
             if (Teleports.ContainsKey(pos))
             {
@@ -358,16 +291,16 @@ namespace TeleportationNetwork
 
                 Teleports.Remove(pos);
 
-                Api.World.Logger.ModNotification($"Removed teleport {name} ({type}) at {pos} from teleports list");
+                api.World.Logger.ModNotification($"Removed teleport {name} ({type}) at {pos} from teleports list");
             }
         }
 
-        internal static TeleportData GetTeleport(BlockPos pos)
+        internal TeleportData GetTeleport(BlockPos pos)
         {
             return Teleports.ContainsKey(pos) ? Teleports[pos] : null;
         }
 
-        internal static void TryCreateData(BlockPos pos, bool available = false)
+        internal void TryCreateData(BlockPos pos, bool available = false)
         {
             if (pos == null) throw new ArgumentNullException();
             if (Teleports.ContainsKey(pos)) return;
@@ -375,13 +308,13 @@ namespace TeleportationNetwork
             TeleportData data = new TeleportData()
             {
                 Available = available,
-                Name = defNames.ElementAt(Api.World.Rand.Next(defNames.Count))
+                Name = defNames.ElementAt(api.World.Rand.Next(defNames.Count))
             };
 
             AddTeleport(pos.Copy(), data);
         }
 
-        internal static Dictionary<BlockPos, TeleportData> GetAvailableTeleports(IPlayer forPlayer)
+        internal Dictionary<BlockPos, TeleportData> GetAvailableTeleports(IPlayer forPlayer)
         {
             if (forPlayer.WorldData.CurrentGameMode == EnumGameMode.Creative) return Teleports;
 
@@ -402,8 +335,8 @@ namespace TeleportationNetwork
 
         #region client
 
-        static ICoreClientAPI capi;
-        static IClientNetworkChannel clientChannel;
+        ICoreClientAPI capi;
+        IClientNetworkChannel clientChannel;
 
         public override void StartClientSide(ICoreClientAPI api)
         {
@@ -449,15 +382,48 @@ namespace TeleportationNetwork
         }
 
         #endregion
+    }
 
-        public override void Dispose()
+
+    [ProtoContract]
+    public class TeleportData
+    {
+        [ProtoMember(1)] public string Name;
+        [ProtoMember(2)] public bool Available;
+        [ProtoMember(3)] public List<string> ActivatedBy = new List<string>();
+
+        public TeleportData() { }
+        public TeleportData(string name, List<string> activatedBy = null, bool available = false)
         {
-            base.Dispose();
-
-            OnSaveGame();
-
-            capi = null;
-            sapi = null;
+            Name = name;
+            Available = available;
+            if (activatedBy != null) ActivatedBy = activatedBy;
         }
     }
+
+    [ProtoContract]
+    public class TeleportMsg
+    {
+        [ProtoMember(1)] public BlockPos Pos;
+        [ProtoMember(2)] public TeleportData Data;
+        [ProtoMember(3)] public bool DoRemove;
+        [ProtoMember(4)] public bool Synced;
+
+        public TeleportMsg() { }
+        public TeleportMsg(BlockPos pos, TeleportData data, bool doRemove = false, bool synced = false)
+        {
+            Pos = pos;
+            Data = data;
+            DoRemove = doRemove;
+            Synced = synced;
+        }
+    }
+
+    [ProtoContract]
+    public class ForTeleportingData
+    {
+        [ProtoMember(1)] public Vec3d SourcePos;
+        [ProtoMember(2)] public Vec3d TargetPos;
+    }
+
 }

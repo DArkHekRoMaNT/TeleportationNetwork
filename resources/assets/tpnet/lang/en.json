@@ -7,9 +7,12 @@
   "Not found": "Not found",
 
   "blockhelp-teleport-rename": "Rename",
+  "blockhelp-teleport-change-frame": "Change frame",
 
   "Unbreakable teleports now is on": "Unbreakable teleports now is on",
   "Unbreakable teleports now is off": "Unbreakable teleports now is off",
   "Shared teleports now is on": "Shared teleports now is on",
-  "Shared teleports now is off": "Shared teleports now is off"
+  "Shared teleports now is off": "Shared teleports now is off",
+
+  "game:tabname-tpnet": "TpNet"
 }

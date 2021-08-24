@@ -11,6 +11,8 @@ namespace TeleportationNetwork
 {
     public class GuiDialogTeleport : GuiDialogGeneric
     {
+        public TPNetManager TPNetManager { get; private set; }
+
         public bool IsDuplicate { get; }
         public override bool PrefersUngrabbedMouse => false;
         public override bool UnregisterOnClose => true;
@@ -19,6 +21,7 @@ namespace TeleportationNetwork
         public GuiDialogTeleport(ICoreClientAPI capi, BlockPos ownBEPos)
             : base(Lang.Get("Available Points"), capi)
         {
+            TPNetManager = capi.ModLoader.GetModSystem<TPNetManager>();
             IsDuplicate = capi.OpenedGuis.FirstOrDefault((object dlg) => ownBEPos != null && (dlg as GuiDialogTeleport)?.blockEntityPos == ownBEPos) != null;
             if (!IsDuplicate)
             {
@@ -125,7 +128,7 @@ namespace TeleportationNetwork
 
                 var font = CairoFont.WhiteSmallText();
 
-                stacklist.Add(new GuiElementTextButtonExt(capi,
+                stacklist.Add(new GuiElementTeleportButton(capi,
                     (nowStormActive || playerLowStability) ? tp.Value.Name.Shuffle() : tp.Value.Name,
                     tp.Key,
                     tp.Value.Available ? font : font.WithColor(ColorUtil.Hex2Doubles("#c91a1a")),
@@ -137,7 +140,7 @@ namespace TeleportationNetwork
 
                 if (tp.Key == blockEntityPos)
                 {
-                    (stacklist.Elements.Last() as GuiElementTextButtonExt).Enabled = false;
+                    (stacklist.Elements.Last() as GuiElementTeleportButton).Enabled = false;
                 }
             }
 
@@ -159,6 +162,7 @@ namespace TeleportationNetwork
 
             TPNetManager.TeleportTo(targetPos.ToVec3d(), blockEntityPos?.ToVec3d());
 
+            // TODO Fix stability consumable
             double curr = capi.World.Player?.Entity?.WatchedAttributes.GetDouble("temporalStability") ?? 1;
             capi.World.Player?.Entity?.WatchedAttributes.SetDouble("temporalStability", Math.Max(0, (double)curr - 0.1));
 
@@ -177,7 +181,7 @@ namespace TeleportationNetwork
                 if (stacklist == null) return;
 
 
-                if (stacklist.Elements.FirstOrDefault((elem) => elem.IsPositionInside(args.X, args.Y)) is GuiElementTextButtonExt button)
+                if (stacklist.Elements.FirstOrDefault((elem) => elem.IsPositionInside(args.X, args.Y)) is GuiElementTeleportButton button)
                 {
 
                     int x = button.TeleportPos.X - capi.World.DefaultSpawnPosition.XYZInt.X;
