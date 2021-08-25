@@ -105,15 +105,15 @@ namespace TeleportationNetwork
 
             TPNetManager.TryCreateData(Pos, IsNormal);
 
-            if (FrameStack == null)
+            if (_frameStack == null)
             {
-                FrameStack = new ItemStack(api.World.GetBlock(DefaultFrameCode));
+                _frameStack = new ItemStack(api.World.GetBlock(DefaultFrameCode));
             }
             else
             {
-                FrameStack.ResolveBlockOrItem(api.World);
-                UpdateFrameMesh();
+                _frameStack.ResolveBlockOrItem(api.World);
             }
+            UpdateFrameMesh();
 
             if (api.Side == EnumAppSide.Client)
             {
@@ -129,13 +129,13 @@ namespace TeleportationNetwork
 
         public override void OnLoadCollectibleMappings(IWorldAccessor worldForNewMappings, Dictionary<int, AssetLocation> oldBlockIdMapping, Dictionary<int, AssetLocation> oldItemIdMapping, int schematicSeed)
         {
-            if (FrameStack == null)
+            if (_frameStack == null)
             {
-                FrameStack = new ItemStack(worldForNewMappings.GetBlock(DefaultFrameCode));
+                _frameStack = new ItemStack(worldForNewMappings.GetBlock(DefaultFrameCode));
             }
             else
             {
-                FrameStack.FixMapping(oldBlockIdMapping, oldItemIdMapping, worldForNewMappings);
+                _frameStack.FixMapping(oldBlockIdMapping, oldItemIdMapping, worldForNewMappings);
             }
 
             base.OnLoadCollectibleMappings(worldForNewMappings, oldBlockIdMapping, oldItemIdMapping, schematicSeed);
