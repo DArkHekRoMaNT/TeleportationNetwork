@@ -38,7 +38,7 @@ namespace TeleportationNetwork
 
                             if (schematics == null || schematics.Count == 0)
                             {
-                                player.SendMessage(groupId, Lang.Get("Not found"), EnumChatType.CommandError);
+                                player.SendMessage(groupId, Lang.Get(ConstantsCore.ModId + ":tpimp-empty"), EnumChatType.CommandError);
                                 break;
                             }
 
@@ -64,7 +64,7 @@ namespace TeleportationNetwork
                             IAsset schema = api.Assets.TryGet($"{Constants.TELEPORT_SCHEMATIC_PATH}/{name}.json");
                             if (schema == null)
                             {
-                                player.SendMessage(groupId, Lang.Get("Not found"), EnumChatType.CommandError);
+                                player.SendMessage(groupId, Lang.Get(ConstantsCore.ModId + ":tpimp-empty"), EnumChatType.CommandError);
                                 break;
                             }
 
@@ -115,7 +115,7 @@ namespace TeleportationNetwork
 
                             Config.Current.SharedTeleports.Val = !Config.Current.SharedTeleports.Val;
                             api.StoreModConfig<Config>(Config.Current, api.GetWorldId() + "/" + ConstantsCore.ModId);
-                            player.SendMessage(groupId, Lang.Get("Shared teleports now is " + (Config.Current.SharedTeleports.Val ? "on" : "off")), EnumChatType.CommandSuccess);
+                            player.SendMessage(groupId, Lang.Get(ConstantsCore.ModId + ":config-shared", Config.Current.SharedTeleports.Val ? "on" : "off"), EnumChatType.CommandSuccess);
                             break;
 
 
@@ -123,7 +123,7 @@ namespace TeleportationNetwork
 
                             Config.Current.Unbreakable.Val = !Config.Current.Unbreakable.Val;
                             api.StoreModConfig<Config>(Config.Current, api.GetWorldId() + "/" + ConstantsCore.ModId);
-                            player.SendMessage(groupId, Lang.Get("Unbreakable teleports now is " + (Config.Current.Unbreakable.Val ? "on" : "off")), EnumChatType.CommandSuccess);
+                            player.SendMessage(groupId, Lang.Get(ConstantsCore.ModId + ":config-unbreakable", Config.Current.Unbreakable.Val ? "on" : "off"), EnumChatType.CommandSuccess);
                             break;
 
 

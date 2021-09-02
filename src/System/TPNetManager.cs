@@ -10,6 +10,7 @@ using Vintagestory.API.Common.Entities;
 using Vintagestory.API.MathTools;
 using Vintagestory.API.Server;
 using Vintagestory.API.Util;
+using Vintagestory.GameContent;
 
 namespace TeleportationNetwork
 {
@@ -18,7 +19,7 @@ namespace TeleportationNetwork
 
         #region server
 
-        public List<string> defNames;
+        public List<string> defaultNames;
 
         ICoreServerAPI sapi;
         IServerNetworkChannel serverChannel;
@@ -110,8 +111,13 @@ namespace TeleportationNetwork
             }
         }
 
+        //TODO Reorganize regions
         public void TeleportTo(Vec3d targetPos, Vec3d sourcePos = null)
         {
+            if (api.Side == EnumAppSide.Server) throw new NotImplementedException();
+
+            capi.World.Player.Entity.SetActivityRunning(ConstantsCore.ModId + "_teleportCooldown", Config.Current.TeleportCooldown.Val);
+
             clientChannel.SendPacket(new ForTeleportingData()
             {
                 SourcePos = sourcePos,
@@ -145,17 +151,49 @@ namespace TeleportationNetwork
 
 
             string name = Teleports[data.TargetPos.AsBlockPos]?.Name;
+            var systemTemporalStability = api.ModLoader.GetModSystem<SystemTemporalStability>();
+            bool stabilityEnabled = sapi.World.Config.GetBool("temporalStability", true);
+
             foreach (var entity in tpEntities)
             {
                 double x = data.TargetPos.X + (entity.Pos.X - currCenterPos.X) + 0.5;
                 double y = data.TargetPos.Y + (entity.Pos.Y - currCenterPos.Y) + 2;
                 double z = data.TargetPos.Z + (entity.Pos.Z - currCenterPos.Z) + 0.5;
 
-                entity.TeleportToDouble(x, y, z);
-
-                if (entity is EntityPlayer player)
+                if (entity is EntityPlayer entityPlayer)
                 {
-                    player.SetActivityRunning("teleportCooldown", 5000);
+                    entityPlayer.SetActivityRunning(ConstantsCore.ModId + "_teleportCooldown", Config.Current.TeleportCooldown.Val);
+
+                    bool unstableTeleport = Config.Current.StabilityTeleportMode.Val == "always";
+
+                    if (stabilityEnabled)
+                    {
+                        double currStability = entityPlayer.WatchedAttributes.GetDouble("temporalStability");
+                        double newStability = currStability - Config.Current.StabilityConsumable.Val;
+
+                        if (newStability < 0 || systemTemporalStability.StormData.nowStormActive)
+                        {
+                            entityPlayer.WatchedAttributes.SetDouble("temporalStability", Math.Max(0, newStability));
+                            unstableTeleport = true;
+                        }
+                        else if (0 < newStability && newStability < currStability)
+                        {
+                            entityPlayer.WatchedAttributes.SetDouble("temporalStability", newStability);
+                        }
+                    }
+
+                    if (Config.Current.StabilityTeleportMode.Val != "off" && unstableTeleport)
+                    {
+                        Commands.RandomTeleport(fromPlayer, 100);
+                    }
+                    else
+                    {
+                        entity.TeleportToDouble(x, y, z);
+                    }
+                }
+                else
+                {
+                    entity.TeleportToDouble(x, y, z);
                 }
 
                 sapi.World.Logger.ModNotification($"{entity?.GetName()} teleported to {x}, {y}, {z} ({name})");
@@ -175,8 +213,8 @@ namespace TeleportationNetwork
 
             this.api = api;
 
-            defNames = api.Assets.Get(new AssetLocation(ConstantsCore.ModId, "config/names.json"))?.ToObject<List<string>>();
-            if (defNames == null) defNames = new List<string>(new string[] { "null" });
+            defaultNames = api.Assets.Get(new AssetLocation(ConstantsCore.ModId, "config/names.json"))?.ToObject<List<string>>();
+            if (defaultNames == null) defaultNames = new List<string>(new string[] { "null" });
         }
 
         internal void AddAvailableTeleport(IPlayer byPlayer, BlockPos pos)
@@ -308,7 +346,7 @@ namespace TeleportationNetwork
             TeleportData data = new TeleportData()
             {
                 Available = available,
-                Name = defNames.ElementAt(api.World.Rand.Next(defNames.Count))
+                Name = defaultNames.ElementAt(api.World.Rand.Next(defaultNames.Count))
             };
 
             AddTeleport(pos.Copy(), data);

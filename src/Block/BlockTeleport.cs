@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using HarmonyLib;
 using SharedUtils;
@@ -92,8 +93,7 @@ namespace TeleportationNetwork
             return flag;
         }
 
-        // TODO: Need over way for prevent broke
-        // TODO: Need check
+        // TODO Need check
         public override float OnGettingBroken(IPlayer player, BlockSelection blockSel, ItemSlot itemslot, float remainingResistance, float dt, int counter)
         {
             if (Config.Current.Unbreakable.Val) remainingResistance = 1f;
@@ -152,6 +152,22 @@ namespace TeleportationNetwork
                 }
             }
             return drops;
+        }
+
+        public override void OnBlockBroken(IWorldAccessor world, BlockPos pos, IPlayer byPlayer, float dropQuantityMultiplier = 1)
+        {
+            if (world.Api.Side == EnumAppSide.Client)
+            {
+                var Core = world.Api.ModLoader.GetModSystem<Core>();
+                Core.HudCircleRenderer.CircleVisible = false;
+            }
+            else
+            {
+                var TPNetManager = world.Api.ModLoader.GetModSystem<TPNetManager>();
+                TPNetManager.RemoveTeleport(pos);
+            }
+
+            base.OnBlockBroken(world, pos, byPlayer, dropQuantityMultiplier);
         }
     }
 }

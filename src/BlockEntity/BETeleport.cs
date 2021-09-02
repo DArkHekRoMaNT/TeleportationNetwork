@@ -152,7 +152,7 @@ namespace TeleportationNetwork
 
         private void OnGameTick_Normal(float dt)
         {
-            // TODO: Move to Init and change State?
+            // TODO Move to Init and change State?
             if (Api.Side == EnumAppSide.Client && AnimUtil?.animator?.ActiveAnimationCount == 0)
             {
                 AnimUtil.StartAnimation(new AnimationMetaData()
@@ -229,6 +229,10 @@ namespace TeleportationNetwork
 
                 if (Api.Side == EnumAppSide.Client)
                 {
+                    if (playerUID == (Api as ICoreClientAPI).World.Player.PlayerUID)
+                    {
+                        Core.HudCircleRenderer.CircleVisible = false;
+                    }
                     teleportDlg?.TryClose();
                 }
             }
@@ -247,8 +251,21 @@ namespace TeleportationNetwork
             if (Api.Side == EnumAppSide.Client)
             {
                 bestSecondsPassed = Math.Min(bestSecondsPassed, 3);
+
                 AnimUtil.activeAnimationsByAnimCode["octagram"].AnimationSpeed = (float)(50f * (1 + Math.Exp(bestSecondsPassed) * 0.3f));
-                Core.HudCircleRenderer.CircleProgress = bestSecondsPassed / 3f;
+
+                string playerUID = (Api as ICoreClientAPI).World.Player.PlayerUID;
+                if (tpingPlayers.TryGetValue(playerUID, out var val))
+                {
+                    if (val.State == EnumTeleportingEntityState.Teleporting)
+                    {
+                        Core.HudCircleRenderer.CircleProgress = bestSecondsPassed / 3f;
+                    }
+                    else
+                    {
+                        Core.HudCircleRenderer.CircleVisible = false;
+                    }
+                }
             }
         }
 
@@ -256,7 +273,7 @@ namespace TeleportationNetwork
         {
             if (!IsNormal || !(entity is EntityPlayer player)) return;
 
-            if (player.IsActivityRunning("teleportCooldown")) //BUG ActivityRunning not working?
+            if (player.IsActivityRunning(ConstantsCore.ModId + "_teleportCooldown"))
             {
                 return;
             }
@@ -354,16 +371,6 @@ namespace TeleportationNetwork
 
             _frameStack = tree.GetItemstack("frameStack");
         }
-
-        public override void OnBlockBroken()
-        {
-            if (Api.Side == EnumAppSide.Client)
-            {
-                Core.HudCircleRenderer.CircleVisible = false;
-            }
-
-            base.OnBlockBroken();
-        }
     }
 
     public static class TeleportState
@@ -371,10 +378,10 @@ namespace TeleportationNetwork
         public const string Broken = "broken";
         public const string Normal = "normal";
 
-        public static string CheckValue(string value, string def = Broken)
+        public static string CheckValue(string value, string defaultValue = Broken)
         {
             if (value == Broken || value == Normal) return value;
-            else return def;
+            else return defaultValue;
         }
     }
 

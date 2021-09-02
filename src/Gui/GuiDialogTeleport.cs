@@ -16,13 +16,15 @@ namespace TeleportationNetwork
         public bool IsDuplicate { get; }
         public override bool PrefersUngrabbedMouse => false;
         public override bool UnregisterOnClose => true;
-        BlockPos blockEntityPos;
+
+        readonly BlockPos blockEntityPos;
+        private long listenerId;
 
         public GuiDialogTeleport(ICoreClientAPI capi, BlockPos ownBEPos)
-            : base(Lang.Get("Available Points"), capi)
+            : base(Lang.Get(ConstantsCore.ModId + ":tpdlg-title"), capi)
         {
             TPNetManager = capi.ModLoader.GetModSystem<TPNetManager>();
-            IsDuplicate = capi.OpenedGuis.FirstOrDefault((object dlg) => ownBEPos != null && (dlg as GuiDialogTeleport)?.blockEntityPos == ownBEPos) != null;
+            IsDuplicate = ownBEPos != null && capi.OpenedGuis.FirstOrDefault((dlg) => (dlg as GuiDialogTeleport)?.blockEntityPos == ownBEPos) != null;
             if (!IsDuplicate)
             {
                 blockEntityPos = ownBEPos;
@@ -51,7 +53,15 @@ namespace TeleportationNetwork
         }
 
         private void SetupDialog()
+
         {
+            var systemTemporalStability = capi.ModLoader.GetModSystem<SystemTemporalStability>();
+            double currStability = capi.World.Player.Entity.WatchedAttributes.GetDouble("temporalStability");
+            bool unstablePlayer = capi.World.Config.GetBool("temporalStability", true) && Config.Current.StabilityConsumable.Val > currStability;
+            bool unstableWorld = unstablePlayer || systemTemporalStability.StormData.nowStormActive || Config.Current.StabilityTeleportMode.Val == "always";
+
+
+
             var availableTeleports = TPNetManager.GetAvailableTeleports(capi.World.Player);
 
             ElementBounds[] buttons = new ElementBounds[availableTeleports?.Count() > 0 ? availableTeleports.Count() : 1];
@@ -63,8 +73,10 @@ namespace TeleportationNetwork
             }
 
 
-            ElementBounds listBounds = ElementBounds.Fixed(0, 0, 302, 400).WithFixedPadding(1);
+            ElementBounds listBounds = ElementBounds.Fixed(0, 0, 302, 400 + (unstableWorld ? 20 : 0)).WithFixedPadding(1);
             listBounds.BothSizing = ElementSizing.Fixed;
+
+            ElementBounds messageBounds = listBounds.BelowCopy(0, 10).WithFixedHeight(40);
 
             ElementBounds clipBounds = listBounds.ForkBoundingParent();
             ElementBounds insetBounds = listBounds.FlatCopy().FixedGrow(6).WithFixedOffset(-3, -3);
@@ -94,7 +106,7 @@ namespace TeleportationNetwork
             {
                 SingleComposer
                         .AddStaticText(
-                        Lang.Get("No available teleports"),
+                        Lang.Get(ConstantsCore.ModId + ":tpdlg-empty"),
                         CairoFont.WhiteSmallText(),
                         buttons[0])
                     .EndChildElements()
@@ -110,6 +122,22 @@ namespace TeleportationNetwork
                     .EndClip()
                     .AddVerticalScrollbar(OnNewScrollbarValue, scrollbarBounds, "scrollbar")
                     .AddHoverText("", CairoFont.WhiteDetailText(), 300, listBounds.FlatCopy(), "hovertext")
+            ;
+
+            if (unstableWorld)
+            {
+                SingleComposer.AddDynamicText(
+                    Lang.Get(ConstantsCore.ModId + ":tpdlg-unstable"),
+                    CairoFont.WhiteSmallText(),
+                    EnumTextOrientation.Center,
+                    messageBounds,
+                    "message"
+                );
+
+                listenerId = capi.World.RegisterGameTickListener(OnGameTick, 200);
+            }
+
+            SingleComposer
                 .EndChildElements()
             ;
 
@@ -151,6 +179,14 @@ namespace TeleportationNetwork
             );
         }
 
+        private void OnGameTick(float dt)
+        {
+            var textComponent = SingleComposer.GetDynamicText("message");
+            string newText = Lang.Get(ConstantsCore.ModId + ":tpdlg-unstable");
+            if (capi.World.Rand.Next(0, 10) == 0) newText = newText.Shuffle();
+            textComponent.SetNewText(newText, forceRedraw: true);
+        }
+
         private bool OnClickItem(BlockPos targetPos)
         {
             var data = TPNetManager.GetTeleport(targetPos);
@@ -161,10 +197,6 @@ namespace TeleportationNetwork
             }
 
             TPNetManager.TeleportTo(targetPos.ToVec3d(), blockEntityPos?.ToVec3d());
-
-            // TODO Fix stability consumable
-            double curr = capi.World.Player?.Entity?.WatchedAttributes.GetDouble("temporalStability") ?? 1;
-            capi.World.Player?.Entity?.WatchedAttributes.SetDouble("temporalStability", Math.Max(0, (double)curr - 0.1));
 
             TryClose();
 
@@ -199,6 +231,11 @@ namespace TeleportationNetwork
                     hoverTextElem.SetNewText("");
                 }
             }
+        }
+        public override bool TryClose()
+        {
+            capi.World.UnregisterGameTickListener(listenerId);
+            return base.TryClose();
         }
     }
 }
