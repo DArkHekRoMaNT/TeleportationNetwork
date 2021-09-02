@@ -23,7 +23,9 @@
   "creativeinventory": { "general": ["*"], "decorative": ["*"], "tpnet": ["*"] },
   "replaceable": 200,
   "resistance": 4,
-  "lightAbsorption": 99,
+  "lightAbsorption": 0,
+  "sideopaque": { "all": false },
+  "sidesolid": { "all": false },
   "sounds": {
     "walk": "game:walk/stone"
   },
