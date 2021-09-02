@@ -2,9 +2,11 @@
   "block-teleport-broken": "Сломанный телепорт",
   "block-teleport-normal": "Телепорт",
 
-  "Available Points": "Доступные точки",
-  "No available teleports": "Нет доступных телепортов",
-  "Not found": "Не найдено",
+  "tpdlg-title": "Доступные точки",
+  "tpdlg-empty": "Нет доступных телепортов",
+  "tpdlg-unstable": "Сеть телепортации нестабильна! Возможны ошибки!",
+
+  "tpimp-empty": "Не найдено",
 
   "blockhelp-teleport-rename": "Переименовать",
   "blockhelp-teleport-change-frame": "Сменить рамку"
