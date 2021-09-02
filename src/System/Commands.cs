@@ -150,7 +150,7 @@ namespace TeleportationNetwork
             {
                 ICoreServerAPI api = player.Entity.Api as ICoreServerAPI;
 
-                int x, y, z;
+                int x, z;
                 if (range != -1)
                 {
                     x = api.World.Rand.Next(range * 2) - range + player.Entity.Pos.XYZInt.X;
@@ -162,13 +162,16 @@ namespace TeleportationNetwork
                     z = api.World.Rand.Next(api.WorldManager.MapSizeZ);
                 }
 
-                //y = (api.WorldManager.GetSurfacePosY(x, z) ?? api.WorldManager.MapSizeY);
-                //y += 2;
-
-                y = api.WorldManager.MapSizeY;
-
-                player.SendMessageAsClient("/tp =" + x + " " + y + " =" + z);
-                player.Entity.PositionBeforeFalling = new Vec3d(x, 0, z);
+                int chunkSize = api.WorldManager.ChunkSize;
+                player.Entity.TeleportToDouble(x + 0.5f, api.WorldManager.MapSizeY + 2, z + 0.5f);
+                api.WorldManager.LoadChunkColumnPriority(x / chunkSize, z / chunkSize, new ChunkLoadOptions()
+                {
+                    OnLoaded = () =>
+                    {
+                        var y = api.WorldManager.GetSurfacePosY(x, z);
+                        player.Entity.TeleportToDouble(x + 0.5f, (int)y + 2, z + 0.5f);
+                    }
+                });
             }
             catch (Exception e)
             {
