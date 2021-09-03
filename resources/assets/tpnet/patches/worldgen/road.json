@@ -6,9 +6,26 @@
     "value": {
       "code": "tpnet_road",
       "name": "TpNet's abandoned road",
-      "schematics": ["tpnet/road/*"],
+      "schematics": ["tpnet/road/road1", "tpnet/road/road2", "tpnet/road/bridge"],
       "group": "tpnet_road",
-      "minGroupDistance": 128,
+      "minGroupDistance": 256,
+      "chance": 0.01,
+      "replacewithblocklayers": ["soil-medium-normal", "soil-medium-none"],
+      "postPass": true,
+      "placement": "surface",
+      "offsetY": -2
+    }
+  },
+  {
+    "file": "game:worldgen/structures.json",
+    "op": "add",
+    "path": "/structures/-",
+    "value": {
+      "code": "tpnet_road",
+      "name": "TpNet's abandoned road",
+      "schematics": ["tpnet/road/road-broken"],
+      "group": "tpnet_road",
+      "minGroupDistance": 256,
       "chance": 0.1,
       "replacewithblocklayers": ["soil-medium-normal", "soil-medium-none"],
       "postPass": true,
