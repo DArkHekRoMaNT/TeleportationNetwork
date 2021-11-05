@@ -157,7 +157,7 @@ namespace TeleportationNetwork
                 var font = CairoFont.WhiteSmallText();
 
                 stacklist.Add(new GuiElementTeleportButton(capi,
-                    (nowStormActive || playerLowStability) ? tp.Value.Name.Shuffle() : tp.Value.Name,
+                    (nowStormActive || playerLowStability) ? tp.Value.Name.Shuffle(capi.World.Rand) : tp.Value.Name,
                     tp.Key,
                     tp.Value.Available ? font : font.WithColor(ColorUtil.Hex2Doubles("#c91a1a")),
                     CairoFont.WhiteSmallText(),
@@ -183,7 +183,7 @@ namespace TeleportationNetwork
         {
             var textComponent = SingleComposer.GetDynamicText("message");
             string newText = Lang.Get(ConstantsCore.ModId + ":tpdlg-unstable");
-            if (capi.World.Rand.Next(0, 10) == 0) newText = newText.Shuffle();
+            if (capi.World.Rand.Next(0, 10) == 0) newText = newText.Shuffle(capi.World.Rand);
             textComponent.SetNewText(newText, forceRedraw: true);
         }
 
