@@ -93,14 +93,6 @@ namespace TeleportationNetwork
             return flag;
         }
 
-        // TODO Need check
-        public override float OnGettingBroken(IPlayer player, BlockSelection blockSel, ItemSlot itemslot, float remainingResistance, float dt, int counter)
-        {
-            if (Config.Current.Unbreakable.Val) remainingResistance = 1f;
-
-            return base.OnGettingBroken(player, blockSel, itemslot, remainingResistance, dt, counter);
-        }
-
         public override WorldInteraction[] GetPlacedBlockInteractionHelp(IWorldAccessor world, BlockSelection selection, IPlayer forPlayer)
         {
             if (LastCodePart() == TeleportState.Broken)
@@ -156,6 +148,11 @@ namespace TeleportationNetwork
 
         public override void OnBlockBroken(IWorldAccessor world, BlockPos pos, IPlayer byPlayer, float dropQuantityMultiplier = 1)
         {
+            if (Config.Current.Unbreakable.Val && byPlayer.WorldData.CurrentGameMode != EnumGameMode.Creative)
+            {
+                return;
+            }
+
             if (world.Api.Side == EnumAppSide.Client)
             {
                 var Core = world.Api.ModLoader.GetModSystem<Core>();
