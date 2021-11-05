@@ -4,8 +4,8 @@
   "name": "Teleportation Network",
   "authors": ["DArkHekRoMaNT"],
   "description": "",
-  "version": "1.4.1",
-  "dependency": {
+  "version": "1.4.2",
+  "dependencies": {
     "game": "1.15.0"
   },
   "website": "https://github.com/DArkHekRoMaNT/TeleportationNetwork"
