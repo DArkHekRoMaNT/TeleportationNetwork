@@ -184,7 +184,7 @@ namespace TeleportationNetwork
 
                     if (Config.Current.StabilityTeleportMode.Val != "off" && unstableTeleport)
                     {
-                        Commands.RandomTeleport(fromPlayer, 100);
+                        Commands.RandomTeleport(fromPlayer, Config.Current.UnstableTeleportRange.Val, new Vec3i((int)x, (int)y, (int)z));
                     }
                     else
                     {

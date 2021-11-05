@@ -39,6 +39,7 @@ namespace TeleportationNetwork
         public Part<bool> Unbreakable { get; set; } = new Part<bool>(true);
         public Part<int> TeleportCooldown { get; set; } = new Part<int>(5000, "Cooldown between teleports in milliseconds");
         public Part<string> StabilityTeleportMode { get; set; } = new Part<string>("on", "Enabling the teleport stability mode. If on, teleport will be unstable at low temporal stability (lower than StabilityConsumable) and during storms. If always, then everytime will be unstable.", new string[] { "on", "off", "always" });
-        public Part<double> StabilityConsumable { get; set; } = new Part<double>(0.1, "Consumption of stability for teleport if stability is not enough <data deleted>. Percentage values from 0 to 1");
+        public Part<double> StabilityConsumable { get; set; } = new Part<double>(0.2, "Consumption of stability for teleport if stability is not enough <data deleted>. Percentage values from 0 to 1");
+        public Part<int> UnstableTeleportRange { get; set; } = new Part<int>(500, "Range for unstable teleport <data deleted>");
     }
 }

@@ -144,17 +144,20 @@ namespace TeleportationNetwork
             blockData.Place(sapi.World.BlockAccessor, sapi.World, originPos);
         }
 
-        public static void RandomTeleport(IServerPlayer player, int range = -1)
+        public static void RandomTeleport(IServerPlayer player, int range = -1, Vec3i pos = null)
         {
             try
             {
                 ICoreServerAPI api = player.Entity.Api as ICoreServerAPI;
 
+
                 int x, z;
                 if (range != -1)
                 {
-                    x = api.World.Rand.Next(range * 2) - range + player.Entity.Pos.XYZInt.X;
-                    z = api.World.Rand.Next(range * 2) - range + player.Entity.Pos.XYZInt.Z;
+                    if (pos == null) pos = player.Entity.Pos.XYZInt;
+
+                    x = api.World.Rand.Next(range * 2) - range + pos.X;
+                    z = api.World.Rand.Next(range * 2) - range + pos.Z;
                 }
                 else
                 {
