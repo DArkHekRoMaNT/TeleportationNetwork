@@ -153,7 +153,8 @@ namespace TeleportationNetwork
         private void OnGameTick_Normal(float dt)
         {
             // TODO Move to Init and change State?
-            if (Api.Side == EnumAppSide.Client && AnimUtil?.animator?.ActiveAnimationCount == 0)
+            if (Api.Side == EnumAppSide.Client &&
+               (AnimUtil.activeAnimationsByAnimCode.Count == 0 || AnimUtil.animator.ActiveAnimationCount == 0))
             {
                 AnimUtil.StartAnimation(new AnimationMetaData()
                 {
