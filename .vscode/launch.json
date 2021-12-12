@@ -10,7 +10,7 @@
         "--playStyle",
         "preset-surviveandbuild",
         "--openWorld",
-        "modding test world",
+        "${config:testWorldName}",
         "--dataPath",
         "${env:VINTAGE_STORY_DATA}",
         "--addModPath",
@@ -25,12 +25,7 @@
       "type": "clr",
       "request": "launch",
       "program": "${env:VINTAGE_STORY}/${config:vsversion}/Vintagestory.exe",
-      "args": [
-        "--dataPath",
-        "${env:VINTAGE_STORY_DATA}",
-        "--addModPath",
-        "${workspaceFolder}/mods"
-      ],
+      "args": ["--dataPath", "${env:VINTAGE_STORY_DATA}", "--addModPath", "${workspaceFolder}/mods"],
       "console": "internalConsole",
       "internalConsoleOptions": "openOnSessionStart",
       "requireExactSource": false
@@ -40,12 +35,7 @@
       "type": "clr",
       "request": "launch",
       "program": "${env:VINTAGE_STORY}/${config:vsversion}/Vintagestory.exe",
-      "args": [
-        "--dataPath",
-        "${env:VINTAGE_STORY_DATA}2",
-        "--addModPath",
-        "${workspaceFolder}/mods"
-      ],
+      "args": ["--dataPath", "${env:VINTAGE_STORY_DATA}2", "--addModPath", "${workspaceFolder}/mods"],
       "console": "internalConsole",
       "internalConsoleOptions": "openOnSessionStart",
       "requireExactSource": false
@@ -60,7 +50,7 @@
         "--playStyle",
         "preset-surviveandbuild",
         "--openWorld",
-        "modding test world",
+        "${config:testWorldName}",
         "--dataPath",
         "${env:VINTAGE_STORY_DATA}",
         "--addModPath",
@@ -80,7 +70,7 @@
         "--playStyle",
         "preset-surviveandbuild",
         "--openWorld",
-        "modding test world",
+        "${config:testWorldName}",
         "--dataPath",
         "${env:VINTAGE_STORY_DATA}",
         "--addModPath",

@@ -128,8 +128,7 @@ namespace TeleportationNetwork
             {
                 SingleComposer.AddDynamicText(
                     Lang.Get(ConstantsCore.ModId + ":tpdlg-unstable"),
-                    CairoFont.WhiteSmallText(),
-                    EnumTextOrientation.Center,
+                    CairoFont.WhiteSmallText().WithOrientation(EnumTextOrientation.Center),
                     messageBounds,
                     "message"
                 );

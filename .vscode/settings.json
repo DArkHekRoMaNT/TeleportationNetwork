@@ -1,3 +1,4 @@
 {
-  "vsversion": "1.15.7"
+  "vsversion": "1.16.0-pre.8",
+  "testWorldName": "modding test world (tpnet)"
 }
