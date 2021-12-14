@@ -4,18 +4,15 @@
     "op": "add",
     "path": "/structures/-",
     "value": {
-      "code": "tpnet_teleport_trader",
-      "name": "TpNet's teleport (trader)",
+      "code": "tpnet_teleport_pillars",
+      "name": "TpNet's teleport (pillars)",
       "group": "tpnet_teleport",
-      "schematics": ["tpnet/teleport/trader"],
-      "chance": 2,
+      "schematics": ["tpnet/teleport/pillars"],
+      "chance": 0.1,
       "minGroupDistance": 4096,
-      "buildProtected": true,
-      "buildProtectionDesc": "Trader Perimenter",
-      "buildProtectionName": "Trader",
       "replacewithblocklayers": ["soil-medium-normal", "soil-medium-none"],
       "postPass": true,
-      "placement": "surface",
+      "placement": "surfaceRuin",
       "offsetY": -2
     }
   }

@@ -7,13 +7,12 @@
       "code": "tpnet_teleport_common",
       "name": "TpNet's teleport (common)",
       "group": "tpnet_teleport",
-      "schematics": ["tpnet/teleport/common"],
-      "chance": 10,
+      "schematics": ["tpnet/teleport/common-s"],
+      "chance": 5,
       "minGroupDistance": 4096,
       "replacewithblocklayers": ["soil-medium-normal", "soil-medium-none"],
       "postPass": true,
-      "placement": "surface",
-      "offsetY": -6
+      "placement": "surface"
     }
   }
 ]
