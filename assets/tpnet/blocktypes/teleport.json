@@ -1,6 +1,9 @@
 {
   "code": "teleport",
-  "class": "BlockTeleport",
+  "classByType": {
+    "*-normal": "BlockNormalTeleport",
+    "*-broken": "BlockBrokenTeleport"
+  },
   "entityclass": "BETeleport",
   "blockmaterial": "Stone",
   "drawtype": "json",
@@ -19,8 +22,17 @@
     "empty": { "base": "empty" },
     "seal": { "base": "block/teleport/seal2" }
   },
-  "variantgroups": [{ "code": "state", "states": ["broken", "normal"] }],
-  "creativeinventory": { "general": ["*"], "decorative": ["*"], "tpnet": ["*"] },
+  "variantgroups": [
+    {
+      "code": "state",
+      "states": [ "broken", "normal" ]
+    }
+  ],
+  "creativeinventory": {
+    "general": [ "*" ],
+    "decorative": [ "*" ],
+    "tpnet": [ "*" ]
+  },
   "replaceable": 200,
   "resistance": 4,
   "lightAbsorption": 0,
@@ -29,12 +41,20 @@
   "sounds": {
     "walk": "game:walk/stone"
   },
-  "entityBehaviors": [{ "name": "Animatable" }],
+  "entityBehaviors": [ { "name": "Animatable" } ],
   "heldTpIdleAnimation": "holdbothhandslarge",
   "heldTpUseAnimation": "twohandplaceblock",
   "tpHandTransform": {
-    "translation": { "x": -1.2, "y": -1.1, "z": -0.8 },
-    "rotation": { "x": -2, "y": 25, "z": -78 },
+    "translation": {
+      "x": -1.2,
+      "y": -1.1,
+      "z": -0.8
+    },
+    "rotation": {
+      "x": -2,
+      "y": 25,
+      "z": -78
+    },
     "scale": 0.37
   }
 }

@@ -14,9 +14,8 @@ using Vintagestory.GameContent;
 
 namespace TeleportationNetwork
 {
-    public class TPNetManager : ModSystem
+    public class TeleportsManager : ModSystem
     {
-
         #region server
 
         public List<string> defaultNames;
@@ -141,7 +140,7 @@ namespace TeleportationNetwork
             }
             else
             {
-                if (!(sapi.World.BlockAccessor.GetBlockEntity(data.SourcePos.AsBlockPos) is BlockEntityTeleport bet)) return;
+                if (!(sapi.World.BlockAccessor.GetBlockEntity(data.SourcePos.AsBlockPos) is BETeleport bet)) return;
 
                 tpEntities = bet.GetInCircleEntities();
                 currCenterPos = bet.Pos.ToVec3d().Add(0.5, 1, 0.5);

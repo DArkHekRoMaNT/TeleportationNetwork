@@ -8,7 +8,7 @@ namespace TeleportationNetwork
 {
     public class GuiDialogRenameTeleport : GuiDialogGeneric
     {
-        public TPNetManager TPNetManager { get; private set; }
+        public TeleportsManager TeleportsManager { get; private set; }
 
         private BlockPos blockEntityPos;
         public Action OnCloseCancel;
@@ -19,9 +19,9 @@ namespace TeleportationNetwork
         {
             this.blockEntityPos = blockEntityPos;
 
-            TPNetManager = capi.ModLoader.GetModSystem<TPNetManager>();
+            TeleportsManager = capi.ModLoader.GetModSystem<TeleportsManager>();
 
-            if (blockEntityPos == null || TPNetManager.GetTeleport(blockEntityPos) == null)
+            if (blockEntityPos == null || TeleportsManager.GetTeleport(blockEntityPos) == null)
             {
                 capi.Logger.ModError("Unable to rename an unregistered teleport");
                 Dispose();
@@ -45,7 +45,7 @@ namespace TeleportationNetwork
                 .EndChildElements()
                 .Compose();
 
-            SingleComposer.GetTextInput("text").SetValue(TPNetManager.GetTeleport(blockEntityPos).Name);
+            SingleComposer.GetTextInput("text").SetValue(TeleportsManager.GetTeleport(blockEntityPos).Name);
         }
 
         public override void OnGuiOpened()
@@ -62,9 +62,9 @@ namespace TeleportationNetwork
         {
             GuiElementTextInput textInput = base.SingleComposer.GetTextInput("text");
 
-            TeleportData data = TPNetManager.GetTeleport(blockEntityPos);
+            TeleportData data = TeleportsManager.GetTeleport(blockEntityPos);
             data.Name = textInput.GetText();
-            TPNetManager.SetTeleport(blockEntityPos, data);
+            TeleportsManager.SetTeleport(blockEntityPos, data);
 
             didSave = true;
             TryClose();

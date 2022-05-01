@@ -11,7 +11,7 @@ namespace TeleportationNetwork
 {
     public class GuiDialogTeleport : GuiDialogGeneric
     {
-        public TPNetManager TPNetManager { get; private set; }
+        public TeleportsManager TeleportsManager { get; private set; }
 
         public bool IsDuplicate { get; }
         public override bool PrefersUngrabbedMouse => false;
@@ -23,7 +23,7 @@ namespace TeleportationNetwork
         public GuiDialogTeleport(ICoreClientAPI capi, BlockPos ownBEPos)
             : base(Lang.Get(ConstantsCore.ModId + ":tpdlg-title"), capi)
         {
-            TPNetManager = capi.ModLoader.GetModSystem<TPNetManager>();
+            TeleportsManager = capi.ModLoader.GetModSystem<TeleportsManager>();
             IsDuplicate = ownBEPos != null && capi.OpenedGuis.FirstOrDefault((dlg) => (dlg as GuiDialogTeleport)?.blockEntityPos == ownBEPos) != null;
             if (!IsDuplicate)
             {
@@ -62,7 +62,7 @@ namespace TeleportationNetwork
 
 
 
-            var availableTeleports = TPNetManager.GetAvailableTeleports(capi.World.Player);
+            var availableTeleports = TeleportsManager.GetAvailableTeleports(capi.World.Player);
 
             ElementBounds[] buttons = new ElementBounds[availableTeleports?.Count() > 0 ? availableTeleports.Count() : 1];
 
@@ -188,14 +188,14 @@ namespace TeleportationNetwork
 
         private bool OnClickItem(BlockPos targetPos)
         {
-            var data = TPNetManager.GetTeleport(targetPos);
+            var data = TeleportsManager.GetTeleport(targetPos);
             if (data == null)
             {
                 TryClose();
                 return false;
             }
 
-            TPNetManager.TeleportTo(targetPos.ToVec3d(), blockEntityPos?.ToVec3d());
+            TeleportsManager.TeleportTo(targetPos.ToVec3d(), blockEntityPos?.ToVec3d());
 
             TryClose();
 

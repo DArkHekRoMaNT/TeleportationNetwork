@@ -12,47 +12,22 @@ using Vintagestory.GameContent;
 
 namespace TeleportationNetwork
 {
-    public class BlockEntityTeleport : BlockEntity
+    public class BETeleport : BlockEntity
     {
+        public static AssetLocation DefaultFrameCode => new AssetLocation("game:stonebricks-granite");
 
         public Core Core { get; private set; }
-        public TPNetManager TPNetManager { get; private set; }
+        public TeleportsManager TeleportsManager { get; private set; }
 
         GuiDialogTeleport teleportDlg;
         GuiDialogRenameTeleport renameDlg;
 
         Dictionary<string, TeleportingPlayer> tpingPlayers;
 
-        long? listenerid;
+        long? animListenerId;
 
-        public string State
-        {
-            get
-            {
-                if (Block.Variant.TryGetValue("state", out string state)) return state;
-                else
-                {
-                    State = TeleportState.Broken;
-                    return TeleportState.Broken;
-                }
-            }
-            set
-            {
-                string state = TeleportState.CheckValue(value, TeleportState.Broken);
-
-                if (state == TeleportState.Broken) RemoveGameTickers();
-                else if (state == TeleportState.Normal) SetupGameTickers();
-
-                Block block = Api.World.GetBlock(Block.CodeWithVariant("state", state));
-                Api.World.BlockAccessor.SetBlock(block.BlockId, Pos);
-            }
-        }
-
-        public bool IsNormal => State == TeleportState.Normal;
+        public bool IsNormal => Block is BlockNormalTeleport;
         public bool Active { get; set; }
-
-
-        public AssetLocation DefaultFrameCode => new AssetLocation(Block.Attributes?["frame"]?.AsString() ?? "game:stonebricks-granite");
 
         private MeshData _frameMesh;
         private ItemStack _frameStack;
@@ -99,11 +74,11 @@ namespace TeleportationNetwork
             base.Initialize(api);
 
             Core = api.ModLoader.GetModSystem<Core>();
-            TPNetManager = api.ModLoader.GetModSystem<TPNetManager>();
+            TeleportsManager = api.ModLoader.GetModSystem<TeleportsManager>();
             tpingPlayers = new Dictionary<string, TeleportingPlayer>();
 
 
-            TPNetManager.TryCreateData(Pos, IsNormal);
+            TeleportsManager.TryCreateData(Pos, IsNormal);
 
             if (_frameStack == null)
             {
@@ -143,11 +118,11 @@ namespace TeleportationNetwork
 
         private void SetupGameTickers()
         {
-            listenerid = RegisterGameTickListener(OnGameTick_Normal, 50);
+            animListenerId = RegisterGameTickListener(OnGameTick_Normal, 50);
         }
         private void RemoveGameTickers()
         {
-            if (listenerid != null) UnregisterGameTickListener((long)listenerid);
+            if (animListenerId != null) UnregisterGameTickListener((long)animListenerId);
         }
 
         private void OnGameTick_Normal(float dt)
@@ -194,7 +169,7 @@ namespace TeleportationNetwork
                     if (Api.Side == EnumAppSide.Server)
                     {
                         IServerPlayer player = Api.World.PlayerByUid(val.Key) as IServerPlayer;
-                        TPNetManager.AddAvailableTeleport(player, Pos);
+                        TeleportsManager.AddAvailableTeleport(player, Pos);
                     }
                     val.Value.State = EnumTeleportingEntityState.Teleporting;
                 }
@@ -298,7 +273,7 @@ namespace TeleportationNetwork
 
             if (Api.Side == EnumAppSide.Server)
             {
-                TPNetManager.RemoveTeleport(Pos);
+                TeleportsManager.RemoveTeleport(Pos);
             }
         }
 
@@ -329,7 +304,7 @@ namespace TeleportationNetwork
 
             if (IsNormal)
             {
-                dsc.AppendLine(TPNetManager.GetTeleport(Pos)?.Name);
+                dsc.AppendLine(TeleportsManager.GetTeleport(Pos)?.Name);
             }
         }
 
@@ -371,18 +346,6 @@ namespace TeleportationNetwork
             base.FromTreeAttributes(tree, worldAccessForResolve);
 
             _frameStack = tree.GetItemstack("frameStack");
-        }
-    }
-
-    public static class TeleportState
-    {
-        public const string Broken = "broken";
-        public const string Normal = "normal";
-
-        public static string CheckValue(string value, string defaultValue = Broken)
-        {
-            if (value == Broken || value == Normal) return value;
-            else return defaultValue;
         }
     }
 

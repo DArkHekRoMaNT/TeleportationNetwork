@@ -9,11 +9,18 @@ namespace TeleportationNetwork
 {
     public class Core : ModSystem
     {
+        public static string ModId { get; private set; }
+        public static ILogger ModLogger { get; private set; }
+
         public HudCircleRenderer HudCircleRenderer { get; private set; }
+
+        ICoreAPI api;
+
         public override void Start(ICoreAPI api)
         {
-            api.RegisterBlockClass("BlockTeleport", typeof(BlockTeleport));
-            api.RegisterBlockEntityClass("BETeleport", typeof(BlockEntityTeleport));
+            this.api = api;
+
+            ClassRegister();
 
             TreeAttribute.RegisterAttribute(Constants.ATTRIBUTES_ID + 1, typeof(BlockPosArrayAttribute));
 
@@ -24,5 +31,13 @@ namespace TeleportationNetwork
         {
             HudCircleRenderer = new HudCircleRenderer(api, new HudCircleSettings() { Color = 0x23cca2 });
         }
+
+        private void ClassRegister()
+        {
+            api.RegisterBlockClass("BlockBrokenTeleport", typeof(BlockBrokenTeleport));
+            api.RegisterBlockClass("BlockNormalTeleport", typeof(BlockNormalTeleport));
+            api.RegisterBlockEntityClass("BETeleport", typeof(BETeleport));
+        }
+
     }
 }
