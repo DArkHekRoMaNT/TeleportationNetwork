@@ -69,7 +69,7 @@ namespace TeleportationNetwork
                             string error = null;
 
                             BlockSchematic schematic = BlockSchematic.LoadFromFile(
-                                schema.Origin.OriginPath + "/" + "game" + "/" + schema.Location.Path, ref error);
+                                schema.Origin.OriginPath + "/" + schema.Location.Path, ref error);
 
                             if (error != null)
                             {
