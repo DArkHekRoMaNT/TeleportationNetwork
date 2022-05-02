@@ -48,7 +48,7 @@ namespace TeleportationNetwork
 
         public int GetAttributeId()
         {
-            return Constants.ATTRIBUTES_ID + 1;
+            return Constants.AttributesId + 1;
         }
 
         public override string ToJsonToken()

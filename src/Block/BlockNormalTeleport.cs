@@ -1,8 +1,6 @@
 ﻿using System.Linq;
-using SharedUtils;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
-using Vintagestory.API.Server;
 
 namespace TeleportationNetwork
 {
@@ -18,13 +16,13 @@ namespace TeleportationNetwork
             WorldInteractions = new WorldInteraction[]{
                 new WorldInteraction()
                 {
-                    ActionLangCode = ConstantsCore.ModId + ":blockhelp-teleport-rename",
+                    ActionLangCode = Core.ModId + ":blockhelp-teleport-rename",
                     MouseButton = EnumMouseButton.Right,
                     HotKeyCode = "sneak"
                 },
                 new WorldInteraction()
                 {
-                    ActionLangCode = ConstantsCore.ModId + ":blockhelp-teleport-change-frame",
+                    ActionLangCode = Core.ModId + ":blockhelp-teleport-change-frame",
                     MouseButton = EnumMouseButton.Right,
                     HotKeyCode = "sprint",
                     Itemstacks = frames
@@ -42,7 +40,8 @@ namespace TeleportationNetwork
                 {
                     if (api.World.BlockAccessor.GetBlockEntity(blockSel.Position) is BETeleport be)
                     {
-                        be.TeleportsManager.AddAvailableTeleport(byPlayer as IServerPlayer, blockSel.Position);
+                        ITeleport teleport = be.TeleportManager.GetTeleport(blockSel.Position);
+                        be.TeleportManager.ActivateTeleport(teleport, byPlayer);
                     }
                 }
             }

@@ -70,8 +70,12 @@ namespace TeleportationNetwork
             }
             else
             {
-                var teleportsManager = world.Api.ModLoader.GetModSystem<TeleportsManager>();
-                teleportsManager.RemoveTeleport(pos);
+                var teleportManager = world.Api.ModLoader.GetModSystem<TeleportSystem>().Manager;
+                ITeleport teleport = teleportManager.GetTeleport(pos);
+                if (teleport != null)
+                {
+                    teleportManager.RemoveTeleport(teleport);
+                }
             }
 
             base.OnBlockBroken(world, pos, byPlayer, dropQuantityMultiplier);

@@ -1,5 +1,4 @@
 using System;
-using SharedUtils.Extensions;
 using Vintagestory.API.Client;
 using Vintagestory.API.Config;
 using Vintagestory.API.MathTools;
@@ -8,22 +7,23 @@ namespace TeleportationNetwork
 {
     public class GuiDialogRenameTeleport : GuiDialogGeneric
     {
-        public TeleportsManager TeleportsManager { get; private set; }
-
-        private BlockPos blockEntityPos;
         public Action OnCloseCancel;
-        private bool didSave;
 
-        public GuiDialogRenameTeleport(BlockPos blockEntityPos, ICoreClientAPI capi, CairoFont font)
+        ITeleportManager TeleportManager { get; }
+
+        readonly BlockPos blockEntityPos;
+        bool didSave;
+
+        public GuiDialogRenameTeleport(BlockPos blockEntityPos, ICoreClientAPI capi)
             : base(Lang.Get("Rename"), capi)
         {
             this.blockEntityPos = blockEntityPos;
 
-            TeleportsManager = capi.ModLoader.GetModSystem<TeleportsManager>();
+            TeleportManager = capi.ModLoader.GetModSystem<TeleportSystem>().Manager;
 
-            if (blockEntityPos == null || TeleportsManager.GetTeleport(blockEntityPos) == null)
+            if (blockEntityPos == null || TeleportManager.GetTeleport(blockEntityPos) == null)
             {
-                capi.Logger.ModError("Unable to rename an unregistered teleport");
+                Core.ModLogger.Error("Unable to rename an unregistered teleport");
                 Dispose();
                 return;
             }
@@ -45,7 +45,7 @@ namespace TeleportationNetwork
                 .EndChildElements()
                 .Compose();
 
-            SingleComposer.GetTextInput("text").SetValue(TeleportsManager.GetTeleport(blockEntityPos).Name);
+            SingleComposer.GetTextInput("text").SetValue(TeleportManager.GetTeleport(blockEntityPos).Name);
         }
 
         public override void OnGuiOpened()
@@ -62,9 +62,9 @@ namespace TeleportationNetwork
         {
             GuiElementTextInput textInput = base.SingleComposer.GetTextInput("text");
 
-            TeleportData data = TeleportsManager.GetTeleport(blockEntityPos);
-            data.Name = textInput.GetText();
-            TeleportsManager.SetTeleport(blockEntityPos, data);
+            Teleport teleport = TeleportManager.GetTeleport(blockEntityPos) as Teleport;
+            teleport.Name = textInput.GetText();
+            TeleportManager.SetTeleport(teleport);
 
             didSave = true;
             TryClose();

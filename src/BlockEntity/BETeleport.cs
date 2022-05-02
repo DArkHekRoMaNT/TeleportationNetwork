@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using SharedUtils;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
 using Vintagestory.API.Common.Entities;
@@ -16,18 +15,33 @@ namespace TeleportationNetwork
     {
         public static AssetLocation DefaultFrameCode => new AssetLocation("game:stonebricks-granite");
 
+        static readonly SimpleParticleProperties props = new SimpleParticleProperties()
+        {
+            MinQuantity = 0.3f,
+            AddQuantity = 1.0f,
+            Color = ColorUtil.ColorFromRgba(255, 215, 1, 255),
+            MinPos = new Vec3d(),
+            AddPos = new Vec3d(),
+            MinVelocity = new Vec3f(),
+            AddVelocity = new Vec3f(),
+            LifeLength = 1f,
+            GravityEffect = -0.1f,
+            MinSize = 0.05f,
+            MaxSize = 0.2f,
+            ParticleModel = EnumParticleModel.Quad
+        };
+
+
         public Core Core { get; private set; }
-        public TeleportsManager TeleportsManager { get; private set; }
+        public ITeleportManager TeleportManager { get; private set; }
 
         GuiDialogTeleport teleportDlg;
         GuiDialogRenameTeleport renameDlg;
 
         Dictionary<string, TeleportingPlayer> tpingPlayers;
 
-        long? animListenerId;
-
-        public bool IsNormal => Block is BlockNormalTeleport;
         public bool Active { get; set; }
+        public bool Enabled => Block is BlockNormalTeleport;
 
         private MeshData _frameMesh;
         private ItemStack _frameStack;
@@ -48,37 +62,28 @@ namespace TeleportationNetwork
         {
             if (Api is ICoreClientAPI capi)
             {
-                AssetLocation shapeCode = new AssetLocation(ConstantsCore.ModId, "shapes/block/teleport/frame.json");
+                AssetLocation shapeCode = new AssetLocation(Core.ModId, "shapes/block/teleport/frame.json");
                 Shape frameShape = Api.Assets.Get<Shape>(shapeCode);
                 capi.Tesselator.TesselateShape(_frameStack.Collectible, frameShape, out _frameMesh);
             }
         }
 
-        BlockEntityAnimationUtil AnimUtil => GetBehavior<BEBehaviorAnimatable>()?.animUtil;
 
-        static readonly SimpleParticleProperties props = new SimpleParticleProperties(
-            minQuantity: 0.3f,
-            maxQuantity: 1.3f,
-            color: ColorUtil.ColorFromRgba(255, 215, 1, 255),
-            minPos: new Vec3d(), maxPos: new Vec3d(),
-            minVelocity: new Vec3f(), maxVelocity: new Vec3f(),
-            lifeLength: 1f,
-            gravityEffect: -0.1f,
-            minSize: 0.05f,
-            maxSize: 0.2f,
-            model: EnumParticleModel.Quad
-        );
+        long? animListenerId;
+        BlockEntityAnimationUtil AnimUtil => GetBehavior<BEBehaviorAnimatable>()?.animUtil;
 
         public override void Initialize(ICoreAPI api)
         {
             base.Initialize(api);
 
             Core = api.ModLoader.GetModSystem<Core>();
-            TeleportsManager = api.ModLoader.GetModSystem<TeleportsManager>();
+            TeleportManager = api.ModLoader.GetModSystem<TeleportSystem>().Manager;
             tpingPlayers = new Dictionary<string, TeleportingPlayer>();
 
-
-            TeleportsManager.TryCreateData(Pos, IsNormal);
+            if (api.Side == EnumAppSide.Server)
+            {
+                TeleportManager.GetOrCreateTeleport(Pos, Enabled);
+            }
 
             if (_frameStack == null)
             {
@@ -90,13 +95,14 @@ namespace TeleportationNetwork
             }
             UpdateFrameMesh();
 
+
             if (api.Side == EnumAppSide.Client)
             {
                 float rotY = Block.Shape.rotateY;
-                AnimUtil?.InitializeAnimator(ConstantsCore.ModId + "-teleport", new Vec3f(0, rotY, 0));
+                AnimUtil?.InitializeAnimator(Core.ModId + "-teleport", new Vec3f(0, rotY, 0));
             }
 
-            if (IsNormal)
+            if (Enabled)
             {
                 SetupGameTickers();
             }
@@ -120,6 +126,7 @@ namespace TeleportationNetwork
         {
             animListenerId = RegisterGameTickListener(OnGameTick_Normal, 50);
         }
+
         private void RemoveGameTickers()
         {
             if (animListenerId != null) UnregisterGameTickListener((long)animListenerId);
@@ -168,8 +175,9 @@ namespace TeleportationNetwork
                 {
                     if (Api.Side == EnumAppSide.Server)
                     {
-                        IServerPlayer player = Api.World.PlayerByUid(val.Key) as IServerPlayer;
-                        TeleportsManager.AddAvailableTeleport(player, Pos);
+                        var player = Api.World.PlayerByUid(val.Key) as IServerPlayer;
+                        ITeleport teleport = TeleportManager.GetTeleport(Pos);
+                        TeleportManager.ActivateTeleport(teleport, player);
                     }
                     val.Value.State = EnumTeleportingEntityState.Teleporting;
                 }
@@ -247,9 +255,9 @@ namespace TeleportationNetwork
 
         public void OnEntityCollide(Entity entity)
         {
-            if (!IsNormal || !(entity is EntityPlayer player)) return;
+            if (!Enabled || !(entity is EntityPlayer player)) return;
 
-            if (player.IsActivityRunning(ConstantsCore.ModId + "_teleportCooldown"))
+            if (player.IsActivityRunning(Core.ModId + "_teleportCooldown"))
             {
                 return;
             }
@@ -273,7 +281,11 @@ namespace TeleportationNetwork
 
             if (Api.Side == EnumAppSide.Server)
             {
-                TeleportsManager.RemoveTeleport(Pos);
+                ITeleport teleport = TeleportManager.GetTeleport(Pos);
+                if (teleport != null)
+                {
+                    TeleportManager.RemoveTeleport(teleport);
+                }
             }
         }
 
@@ -291,7 +303,7 @@ namespace TeleportationNetwork
             {
                 if (renameDlg == null)
                 {
-                    renameDlg = new GuiDialogRenameTeleport(Pos, Api as ICoreClientAPI, CairoFont.WhiteSmallText());
+                    renameDlg = new GuiDialogRenameTeleport(Pos, Api as ICoreClientAPI);
                 }
 
                 if (!renameDlg.IsOpened()) renameDlg.TryOpen();
@@ -302,9 +314,31 @@ namespace TeleportationNetwork
         {
             base.GetBlockInfo(forPlayer, dsc);
 
-            if (IsNormal)
+            if (Enabled)
             {
-                dsc.AppendLine(TeleportsManager.GetTeleport(Pos)?.Name);
+                ITeleport teleport = TeleportManager.GetTeleport(Pos);
+                if (teleport != null)
+                {
+                    dsc.AppendLine(teleport.Name);
+
+                    if (forPlayer.WorldData.CurrentGameMode == EnumGameMode.Creative)
+                    {
+                        dsc.AppendLine("Neighbours:");
+                        foreach (BlockPos nodePos in teleport.Neighbours)
+                        {
+                            string name = "null";
+                            if (nodePos != null)
+                            {
+                                ITeleport node = TeleportManager.GetTeleport(nodePos);
+                                if (node != null)
+                                {
+                                    name = node.Name;
+                                }
+                            }
+                            dsc.AppendLine("*** " + name);
+                        }
+                    }
+                }
             }
         }
 
@@ -358,9 +392,9 @@ namespace TeleportationNetwork
 
     public class TeleportingPlayer
     {
-        public EntityPlayer Player;
-        public long LastCollideMs;
-        public float SecondsPassed;
-        public EnumTeleportingEntityState State;
+        public EntityPlayer Player { get; set; }
+        public long LastCollideMs { get; set; }
+        public float SecondsPassed { get; set; }
+        public EnumTeleportingEntityState State { get; set; }
     }
 }

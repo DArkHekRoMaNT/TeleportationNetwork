@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using SharedUtils;
 using SharedUtils.Extensions;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
@@ -20,7 +19,7 @@ namespace TeleportationNetwork
 
             sapi = api;
 
-            api.RegisterCommand("tpimp", ConstantsCore.ModPrefix + "Import teleport schematic", "[list|paste]",
+            api.RegisterCommand("tpimp", Core.ModPrefix + "Import teleport schematic", "[list|paste]",
                 (IServerPlayer player, int groupId, CmdArgs args) =>
                 {
                     switch (args?.PopWord())
@@ -33,11 +32,11 @@ namespace TeleportationNetwork
 
                         case "list":
 
-                            List<IAsset> schematics = api.Assets.GetMany(Constants.TELEPORT_SCHEMATIC_PATH);
+                            List<IAsset> schematics = api.Assets.GetMany(Constants.TeleportSchematicPath);
 
                             if (schematics == null || schematics.Count == 0)
                             {
-                                player.SendMessage(groupId, Lang.Get(ConstantsCore.ModId + ":tpimp-empty"), EnumChatType.CommandError);
+                                player.SendMessage(groupId, Lang.Get(Core.ModId + ":tpimp-empty"), EnumChatType.CommandError);
                                 break;
                             }
 
@@ -60,10 +59,10 @@ namespace TeleportationNetwork
                                 break;
                             }
 
-                            IAsset schema = api.Assets.TryGet($"{Constants.TELEPORT_SCHEMATIC_PATH}/{name}.json");
+                            IAsset schema = api.Assets.TryGet($"{Constants.TeleportSchematicPath}/{name}.json");
                             if (schema == null)
                             {
-                                player.SendMessage(groupId, Lang.Get(ConstantsCore.ModId + ":tpimp-empty"), EnumChatType.CommandError);
+                                player.SendMessage(groupId, Lang.Get(Core.ModId + ":tpimp-empty"), EnumChatType.CommandError);
                                 break;
                             }
 
@@ -91,7 +90,7 @@ namespace TeleportationNetwork
                 Privilege.controlserver
             );
 
-            api.RegisterCommand("rndtp", ConstantsCore.ModPrefix + "Teleport player to random location", "[range]",
+            api.RegisterCommand("rndtp", Core.ModPrefix + "Teleport player to random location", "[range]",
                 (IServerPlayer player, int groupId, CmdArgs args) =>
                 {
                     RandomTeleport(player, (int)args.PopInt(-1));
@@ -99,7 +98,7 @@ namespace TeleportationNetwork
                 Privilege.tp
             );
 
-            api.RegisterCommand("tpnetconfig", ConstantsCore.ModPrefix + "Config for TPNet", "[shared|unbreakable]",
+            api.RegisterCommand("tpnetconfig", Core.ModPrefix + "Config for TPNet", "[shared|unbreakable]",
                 (IServerPlayer player, int groupId, CmdArgs args) =>
                 {
                     switch (args?.PopWord())
@@ -112,17 +111,17 @@ namespace TeleportationNetwork
 
                         case "shared":
 
-                            Config.Current.SharedTeleports.Val = !Config.Current.SharedTeleports.Val;
-                            api.StoreModConfig<Config>(Config.Current, api.GetWorldId() + "/" + ConstantsCore.ModId);
-                            player.SendMessage(groupId, Lang.Get(ConstantsCore.ModId + ":config-shared", Config.Current.SharedTeleports.Val ? "on" : "off"), EnumChatType.CommandSuccess);
+                            Config.Current.LegacySharedTeleports.Val = !Config.Current.LegacySharedTeleports.Val;
+                            api.StoreModConfig<Config>(Config.Current, api.GetWorldId() + "/" + Core.ModId);
+                            player.SendMessage(groupId, Lang.Get(Core.ModId + ":config-shared", Config.Current.LegacySharedTeleports.Val ? "on" : "off"), EnumChatType.CommandSuccess);
                             break;
 
 
                         case "unbreakable":
 
                             Config.Current.Unbreakable.Val = !Config.Current.Unbreakable.Val;
-                            api.StoreModConfig<Config>(Config.Current, api.GetWorldId() + "/" + ConstantsCore.ModId);
-                            player.SendMessage(groupId, Lang.Get(ConstantsCore.ModId + ":config-unbreakable", Config.Current.Unbreakable.Val ? "on" : "off"), EnumChatType.CommandSuccess);
+                            api.StoreModConfig<Config>(Config.Current, api.GetWorldId() + "/" + Core.ModId);
+                            player.SendMessage(groupId, Lang.Get(Core.ModId + ":config-unbreakable", Config.Current.Unbreakable.Val ? "on" : "off"), EnumChatType.CommandSuccess);
                             break;
 
 
@@ -177,14 +176,14 @@ namespace TeleportationNetwork
             }
             catch (Exception e)
             {
-                player?.Entity?.Api?.Logger?.ModError("Failed to teleport player to random location.");
-                player?.Entity?.Api?.Logger?.ModError(e.Message);
+                Core.ModLogger.Error("Failed to teleport player to random location.");
+                Core.ModLogger.Error(e.Message);
             }
         }
 
         public override void StartClientSide(ICoreClientAPI api)
         {
-            api.RegisterCommand("tpdlg", ConstantsCore.ModPrefix + "Open teleport dialog", "", (int groupId, CmdArgs args) =>
+            api.RegisterCommand("tpdlg", Core.ModPrefix + "Open teleport dialog", "", (int groupId, CmdArgs args) =>
             {
                 if (api.World.Player.WorldData.CurrentGameMode != EnumGameMode.Creative) return;
                 GuiDialogTeleport dialog = new GuiDialogTeleport(api, null);

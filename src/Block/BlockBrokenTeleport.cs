@@ -1,8 +1,6 @@
 ﻿using System.Linq;
-using SharedUtils;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
-using Vintagestory.API.Server;
 using Vintagestory.GameContent;
 
 namespace TeleportationNetwork
@@ -25,7 +23,7 @@ namespace TeleportationNetwork
                 },
                 new WorldInteraction()
                 {
-                    ActionLangCode = ConstantsCore.ModId + ":blockhelp-teleport-change-frame",
+                    ActionLangCode = Core.ModId + ":blockhelp-teleport-change-frame",
                     MouseButton = EnumMouseButton.Right,
                     HotKeyCode = "sprint",
                     Itemstacks = frames
@@ -51,7 +49,8 @@ namespace TeleportationNetwork
 
                     if (api.Side == EnumAppSide.Server)
                     {
-                        be.TeleportsManager.AddAvailableTeleport(byPlayer as IServerPlayer, be.Pos);
+                        ITeleport teleport = be.TeleportManager.GetTeleport(be.Pos);
+                        be.TeleportManager.ActivateTeleport(teleport, byPlayer);
                     }
 
                     world.PlaySoundAt(new AssetLocation("sounds/effect/latch"), blockSel.Position.X + 0.5, blockSel.Position.Y, blockSel.Position.Z + 0.5, byPlayer, true, 16);

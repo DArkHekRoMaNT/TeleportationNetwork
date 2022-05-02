@@ -1,4 +1,3 @@
-using SharedUtils;
 using SharedUtils.Extensions;
 using SharedUtils.Gui;
 using Vintagestory.API.Client;
@@ -9,12 +8,22 @@ namespace TeleportationNetwork
 {
     public class Core : ModSystem
     {
-        public static string ModId { get; private set; }
-        public static ILogger ModLogger { get; private set; }
+        public Core() => Instance = this;
+        public static Core Instance { get; private set; }
+
+        public static ILogger ModLogger => Instance.Mod.Logger;
+        public static string ModId => Instance.Mod.Info.ModID;
+        public static string ModPrefix => $"[{ModId}] ";
+
 
         public HudCircleRenderer HudCircleRenderer { get; private set; }
 
-        ICoreAPI api;
+        private ICoreAPI api;
+
+        public override void StartPre(ICoreAPI api)
+        {
+            Config.Current = api.LoadOrCreateConfig<Config>(ModId + ".json");
+        }
 
         public override void Start(ICoreAPI api)
         {
@@ -22,9 +31,7 @@ namespace TeleportationNetwork
 
             ClassRegister();
 
-            TreeAttribute.RegisterAttribute(Constants.ATTRIBUTES_ID + 1, typeof(BlockPosArrayAttribute));
-
-            Config.Current = api.LoadOrCreateConfig<Config>(ConstantsCore.ModId + ".json");
+            TreeAttribute.RegisterAttribute(Constants.AttributesId + 1, typeof(BlockPosArrayAttribute));
         }
 
         public override void StartClientSide(ICoreClientAPI api)
@@ -39,5 +46,10 @@ namespace TeleportationNetwork
             api.RegisterBlockEntityClass("BETeleport", typeof(BETeleport));
         }
 
+        public override void Dispose()
+        {
+            base.Dispose();
+            Instance = null;
+        }
     }
 }
