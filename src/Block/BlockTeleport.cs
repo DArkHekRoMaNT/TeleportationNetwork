@@ -40,7 +40,7 @@ namespace TeleportationNetwork
                 }
 
                 ItemSlot activeSlot = byPlayer.InventoryManager.ActiveHotbarSlot;
-                if (activeSlot.Empty)
+                if (!activeSlot.Empty)
                 {
                     if (byPlayer.Entity.Controls.Sprint &&
                         activeSlot.Itemstack.Class == EnumItemClass.Block &&
