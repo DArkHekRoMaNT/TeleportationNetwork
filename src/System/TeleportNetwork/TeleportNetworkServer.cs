@@ -91,10 +91,10 @@ namespace TeleportationNetwork
             }
             else
             {
-                if (ServerApi.World.BlockAccessor.GetBlockEntity(data.SourcePos.AsBlockPos) is BETeleport bet)
+                if (ServerApi.World.BlockAccessor.GetBlockEntity(data.SourcePos.AsBlockPos) is BETeleport be)
                 {
-                    tpEntities = bet.GetInCircleEntities();
-                    currCenterPos = bet.Pos.ToVec3d().Add(0.5, 1, 0.5);
+                    currCenterPos = be.Pos.ToVec3d().Add(0.5, 1, 0.5);
+                    tpEntities = MathUtil.GetInCircleEntities(Api, Constants.SealRadius, currCenterPos);
                 }
             }
 

@@ -714,48 +714,9 @@
 					}
 				}
 			]
-		},
-		{
-			"name": "seal",
-			"from": [ -32.0, 16.1, -32.0 ], 
-			"to": [ 48.0, 16.1, 48.0 ], 
-			"shade": false,
-			"renderPass": 3,
-			"rotationOrigin": [ 8.0, 16.1, 8.0 ],
-			"rotationY": 0.0,
-			"faces": {
-				"north": { "texture": "#seal", "uv": [ 20.0, 53.0, 100.0, 53.5 ], "enabled": false },
-				"east": { "texture": "#seal", "uv": [ 46.5, 36.5, 126.5, 37.0 ], "enabled": false },
-				"south": { "texture": "#seal", "uv": [ 76.0, 23.0, 156.0, 23.5 ], "enabled": false },
-				"west": { "texture": "#seal", "uv": [ 77.5, 53.0, 157.5, 53.5 ], "enabled": false },
-				"up": { "texture": "#seal", "uv": [ 0.0, 0.0, 80.0, 80.0 ], "glow": 127 },
-				"down": { "texture": "#seal", "uv": [ 0.0, 0.0, 80.0, 80.0 ], "glow": 127 }
-			}
 		}
 	],
 	"animations": [
-		{
-			"name": "octagram",
-			"code": "octagram",
-			"quantityframes": 30000,
-			"onActivityStopped": "Stop",
-			"onAnimationEnd": "Repeat",
-			"keyframes": [
-				{
-					"frame": 0,
-					"elements": {
-						"seal": { "rotationX": 0.0, "rotationY": 0.0, "rotationZ": 0.0 }
-					}
-				},
-				{
-					"frame": 29999,
-					"elements": {
-						"seal": { "rotationX": 0.0, "rotationY": 360.0, "rotationZ": 0.0 }
-					}
-				}
-			]
-		},
-
 		{
 			"name": "largegears",
 			"code": "largegears",
