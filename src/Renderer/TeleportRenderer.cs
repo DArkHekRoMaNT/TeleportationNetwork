@@ -76,9 +76,8 @@ namespace TeleportationNetwork
 
             data.SetUv(uv);
 
-            //if (progressCircleModelRef != null) api.Render.UpdateMesh(progressCircleModelRef, data);
-            //else progressCircleModelRef = api.Render.UploadMesh(data);
-            progressCircleModelRef = api.Render.UploadMesh(data);
+            if (progressCircleModelRef != null) api.Render.UpdateMesh(progressCircleModelRef, data);
+            else progressCircleModelRef = api.Render.UploadMesh(data);
         }
 
         public void OnRenderFrame(float deltaTime, EnumRenderStage stage)
