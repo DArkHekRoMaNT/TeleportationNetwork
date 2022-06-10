@@ -2,11 +2,11 @@
   "type": "code",
   "modid": "tpnet",
   "name": "Teleportation Network",
-  "authors": ["DArkHekRoMaNT"],
+  "authors": [ "DArkHekRoMaNT" ],
   "description": "Adds a network of surface teleports",
-  "version": "1.5.1",
+  "version": "1.6.0",
   "dependencies": {
-    "game": "1.16.0-pre.8"
+    "game": "1.16.1"
   },
   "website": "https://github.com/DArkHekRoMaNT/TeleportationNetwork"
 }
