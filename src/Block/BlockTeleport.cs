@@ -47,6 +47,7 @@ namespace TeleportationNetwork
                         activeSlot.Itemstack.Block.DrawType == EnumDrawType.Cube &&
                         !activeSlot.Itemstack.Collectible.Equals(activeSlot.Itemstack, be.FrameStack))
                     {
+                        api.World.SpawnItemEntity(be.FrameStack, blockSel.Position.ToVec3d().Add(TopMiddlePos));
                         be.FrameStack = activeSlot.TakeOut(1);
                         return true;
                     }

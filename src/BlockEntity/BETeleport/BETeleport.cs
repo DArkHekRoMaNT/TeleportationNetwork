@@ -38,7 +38,6 @@ namespace TeleportationNetwork
             get => _frameStack;
             set
             {
-                Api.World.SpawnItemEntity(_frameStack, Pos.ToVec3d().Add(Block.TopMiddlePos));
                 _frameStack = value;
 
                 UpdateFrameMesh();
@@ -215,11 +214,11 @@ namespace TeleportationNetwork
             base.OnLoadCollectibleMappings(worldForNewMappings, oldBlockIdMapping, oldItemIdMapping, schematicSeed);
         }
 
-        private void UpdateFrameMesh()
+        public void UpdateFrameMesh()
         {
             if (Api is ICoreClientAPI capi)
             {
-                AssetLocation shapeCode = new AssetLocation(Core.ModId, "shapes/block/teleport/frame.json");
+                var shapeCode = new AssetLocation(Core.ModId, "shapes/block/teleport/frame.json");
                 Shape frameShape = Api.Assets.Get<Shape>(shapeCode);
                 capi.Tesselator.TesselateShape(_frameStack.Collectible, frameShape, out frameMesh);
             }

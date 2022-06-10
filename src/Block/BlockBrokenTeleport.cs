@@ -41,6 +41,13 @@ namespace TeleportationNetwork
                     Block newBlock = world.GetBlock(CodeWithVariant("state", "normal"));
                     world.BlockAccessor.SetBlock(newBlock.BlockId, blockSel.Position);
 
+                    if (api.World.BlockAccessor.GetBlockEntity(blockSel.Position) is BETeleport newBE)
+                    {
+                        newBE.FrameStack = be.FrameStack.Clone();
+                        newBE.UpdateFrameMesh();
+                        newBE.MarkDirty(true);
+                    }
+
                     if (byPlayer.WorldData.CurrentGameMode != EnumGameMode.Creative)
                     {
                         activeSlot.TakeOut(1);
