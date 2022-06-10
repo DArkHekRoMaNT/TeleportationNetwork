@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ProtoBuf;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Vintagestory.API.Common;
@@ -58,10 +59,36 @@ namespace TeleportationNetwork
 
                 var list = new List<ITeleport>();
 
-                if (data != null) list = SerializerUtil
-                        .Deserialize<List<Teleport>>(data)
-                        .Select(t => t as ITeleport)
-                        .ToList();
+                if (data != null)
+                {
+                    try
+                    {
+                        list = SerializerUtil
+                            .Deserialize<List<Teleport>>(data)
+                            .Select(t => t as ITeleport)
+                            .ToList();
+                    }
+                    catch (ProtoException e)
+                    {
+                        try
+                        {
+                            Core.ModLogger.Debug("Old world? Trying legacy loader");
+                            var legacyData = SerializerUtil.Deserialize<Dictionary<BlockPos, LegacyTeleportData>>(data);
+                            foreach (var el in legacyData)
+                            {
+                                var tp = (Teleport)Manager.GetOrCreateTeleport(el.Key, el.Value.Available);
+                                tp.Name = el.Value.Name;
+                                tp.ActivatedByPlayers = el.Value.ActivatedBy;
+                                Manager.SetTeleport(tp);
+                            }
+                        }
+                        catch (Exception e2)
+                        {
+                            Core.ModLogger.Debug("Failed loading data:\n{0}, failed legacy loading:\n{1}", e, e2);
+                            throw e;
+                        }
+                    }
+                }
 
                 foreach (var teleport in list)
                 {
@@ -72,7 +99,7 @@ namespace TeleportationNetwork
             }
             catch (Exception e)
             {
-                Core.ModLogger.Error($"Failed loading data: {e}");
+                Core.ModLogger.Error("Failed loading data:\n{0}", e);
             }
         }
 
@@ -214,4 +241,11 @@ namespace TeleportationNetwork
         }
     }
 
+    [ProtoContract]
+    public class LegacyTeleportData
+    {
+        [ProtoMember(1)] public string Name = "";
+        [ProtoMember(2)] public bool Available = false;
+        [ProtoMember(3)] public List<string> ActivatedBy = new();
+    }
 }
