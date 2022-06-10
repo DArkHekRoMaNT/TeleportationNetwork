@@ -59,7 +59,7 @@ namespace TeleportationNetwork
     [ProtoContract(ImplicitFields = ImplicitFields.AllPublic)]
     public struct TeleportingData
     {
-        public Vec3d SourcePos { get; set; }
+        public Vec3d? SourcePos { get; set; }
         public Vec3d TargetPos { get; set; }
     }
 }

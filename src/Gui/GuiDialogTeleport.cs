@@ -10,7 +10,7 @@ using Vintagestory.GameContent;
 
 namespace TeleportationNetwork
 {
-    public class GuiDialogTeleport : GuiDialogGeneric
+    public class GuiDialogTeleportList : GuiDialogGeneric
     {
         public ITeleportManager TeleportManager { get; private set; }
 
@@ -18,24 +18,25 @@ namespace TeleportationNetwork
         public override bool PrefersUngrabbedMouse => false;
         public override bool UnregisterOnClose => true;
 
-        readonly BlockPos blockEntityPos;
+        BlockPos? Pos { get; }
         private long? listenerId;
 
         private bool unstableWorld;
-        private List<ITeleport> allPoints;
-        private List<ITeleport> availablePoints;
+        private List<ITeleport>? allPoints;
+        private List<ITeleport>? availablePoints;
 
-        public GuiDialogTeleport(ICoreClientAPI capi, BlockPos ownBEPos)
+        public GuiDialogTeleportList(ICoreClientAPI capi, BlockPos? ownBEPos)
             : base(Lang.Get(Core.ModId + ":tpdlg-title"), capi)
         {
             TeleportManager = capi.ModLoader.GetModSystem<TeleportSystem>().Manager;
 
-            IsDuplicate = ownBEPos != null && capi.OpenedGuis
-                .FirstOrDefault((dlg) => (dlg as GuiDialogTeleport)?.blockEntityPos == ownBEPos) != null;
+            IsDuplicate = ownBEPos != null &&
+                capi.OpenedGuis
+                    .FirstOrDefault((dlg) => (dlg as GuiDialogTeleportList)?.Pos == ownBEPos) != null;
 
             if (!IsDuplicate)
             {
-                blockEntityPos = ownBEPos;
+                Pos = ownBEPos;
             }
         }
 
@@ -50,18 +51,10 @@ namespace TeleportationNetwork
             return base.TryOpen();
         }
 
-        private void OnNewScrollbarValue(float value)
-        {
-            ElementBounds bounds = SingleComposer.GetContainer("stacklist").Bounds;
-
-            bounds.fixedY = 3 - value;
-            bounds.CalcWorldBounds();
-        }
-
         private void SetupDialog()
-
         {
             GetStability();
+
             if (!TryGetAvailablePoints())
             {
                 TryClose();
@@ -114,40 +107,40 @@ namespace TeleportationNetwork
                             CairoFont.WhiteSmallText(), buttons[0])
                     .EndChildElements()
                     .Compose();
-                return;
             }
-
-            SingleComposer
-                .BeginClip(clipBounds)
-                    .AddInset(insetBounds, 3)
-                    .AddContainer(listBounds, "stacklist")
-                .EndClip()
-                .AddVerticalScrollbar(OnNewScrollbarValue, scrollbarBounds, "scrollbar")
-                .AddHoverText("", CairoFont.WhiteDetailText(), 300, listBounds.FlatCopy(), "hovertext");
-
-            if (unstableWorld)
+            else
             {
                 SingleComposer
-                    .AddDynamicText(Lang.Get(Core.ModId + ":tpdlg-unstable"),
-                        CairoFont.WhiteSmallText().WithOrientation(EnumTextOrientation.Center),
-                        messageBounds, "message");
+                    .BeginClip(clipBounds)
+                        .AddInset(insetBounds, 3)
+                        .AddContainer(listBounds, "stacklist")
+                    .EndClip()
+                    .AddVerticalScrollbar(OnNewScrollbarValue, scrollbarBounds, "scrollbar")
+                    .AddHoverText("", CairoFont.WhiteDetailText(), 300, listBounds.FlatCopy(), "hovertext");
 
-                listenerId = capi.World.RegisterGameTickListener(OnTextUpdateTick, 200);
+                if (unstableWorld)
+                {
+                    SingleComposer
+                        .AddDynamicText(Lang.Get(Core.ModId + ":tpdlg-unstable"),
+                            CairoFont.WhiteSmallText().WithOrientation(EnumTextOrientation.Center),
+                            messageBounds, "message");
+
+                    listenerId = capi.World.RegisterGameTickListener(OnTextUpdateTick, 200);
+                }
+
+                SingleComposer
+                    .EndChildElements();
+
+                var hoverTextElem = SingleComposer.GetHoverText("hovertext");
+                hoverTextElem.SetAutoWidth(true);
+
+                SetupTargetButtons(buttons);
+
+                SingleComposer.Compose();
+                SingleComposer.GetScrollbar("scrollbar").SetHeights(
+                    (float)insetBounds.fixedHeight,
+                    (float)Math.Max(insetBounds.fixedHeight, listBounds.fixedHeight));
             }
-
-            SingleComposer
-                .EndChildElements();
-
-            var hoverTextElem = SingleComposer.GetHoverText("hovertext");
-            hoverTextElem.SetAutoWidth(true);
-
-            SetupTargetButtons(buttons);
-
-            SingleComposer.Compose();
-            SingleComposer.GetScrollbar("scrollbar").SetHeights(
-                (float)insetBounds.fixedHeight,
-                (float)Math.Max(insetBounds.fixedHeight, listBounds.fixedHeight)
-            );
         }
 
         private void SetupTargetButtons(ElementBounds[] buttons)
@@ -180,9 +173,12 @@ namespace TeleportationNetwork
                     nameFont = nameFont.WithSlant(Cairo.FontSlant.Oblique);
                 }
 
-                stacklist.Add(new GuiElementTeleportButton(capi, name, tp.Pos,
-                     nameFont, CairoFont.WhiteSmallText(), () => OnTeleportButtonClick(tp.Pos),
-                     buttons[i], EnumButtonStyle.Normal)
+                stacklist.Add(new GuiElementTeleportButton(capi,
+                    name, tp.Pos, nameFont,
+                    CairoFont.WhiteSmallText(),
+                    () => OnTeleportButtonClick(tp.Pos),
+                    buttons[i],
+                    EnumButtonStyle.Normal)
                 {
                     Enabled = availablePoints.Contains(tp)
                 });
@@ -193,7 +189,7 @@ namespace TeleportationNetwork
         {
             allPoints = null;
             availablePoints = null;
-            ITeleport teleport = TeleportManager.GetTeleport(blockEntityPos);
+            ITeleport teleport = TeleportManager.GetTeleport(Pos);
 
             if (capi.World.Player.WorldData.CurrentGameMode == EnumGameMode.Creative)
             {
@@ -248,6 +244,14 @@ namespace TeleportationNetwork
             unstableWorld = unstablePlayer || systemTemporalStability.StormData.nowStormActive || Config.Current.StabilityTeleportMode.Val == "always";
         }
 
+        private void OnNewScrollbarValue(float value)
+        {
+            ElementBounds bounds = SingleComposer.GetContainer("stacklist").Bounds;
+
+            bounds.fixedY = 3 - value;
+            bounds.CalcWorldBounds();
+        }
+
         private void OnTextUpdateTick(float dt)
         {
             var textComponent = SingleComposer.GetDynamicText("message");
@@ -258,20 +262,13 @@ namespace TeleportationNetwork
 
         private bool OnTeleportButtonClick(BlockPos targetPos)
         {
-            var data = TeleportManager.GetTeleport(targetPos);
-            if (data == null)
-            {
-                TryClose();
-                return false;
-            }
+            ITeleport data = TeleportManager.GetTeleport(targetPos);
 
             var teleportSystem = capi.ModLoader.GetModSystem<TeleportSystem>();
-            var teleportClientNetwork = teleportSystem.Network as ITeleportNetworkClient;
-            teleportClientNetwork.TeleportTo(targetPos.ToVec3d(), blockEntityPos?.ToVec3d());
+            var teleportClientNetwork = (ITeleportNetworkClient)teleportSystem.Network;
+            teleportClientNetwork.TeleportTo(targetPos.ToVec3d(), Pos?.ToVec3d());
 
-            TryClose();
-
-            return true;
+            return TryClose();
         }
 
         public override void OnMouseMove(MouseEvent args)

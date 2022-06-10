@@ -15,7 +15,7 @@ namespace TeleportationNetwork
 
     public interface ITeleportNetworkClient : ITeleportNetwork
     {
-        void TeleportTo(Vec3d targetPos, Vec3d sourcePos = null);
+        void TeleportTo(Vec3d targetPos, Vec3d? sourcePos = null);
     }
 
     public interface ITeleportNetworkServer : ITeleportNetwork

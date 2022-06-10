@@ -186,7 +186,7 @@ namespace TeleportationNetwork
             api.RegisterCommand("tpdlg", Core.ModPrefix + "Open teleport dialog", "", (int groupId, CmdArgs args) =>
             {
                 if (api.World.Player.WorldData.CurrentGameMode != EnumGameMode.Creative) return;
-                GuiDialogTeleport dialog = new GuiDialogTeleport(api, null);
+                GuiDialogTeleportList dialog = new GuiDialogTeleportList(api, null);
                 dialog.TryOpen();
             });
         }

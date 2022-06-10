@@ -25,7 +25,7 @@ namespace TeleportationNetwork
         float activeStage;
         Dictionary<string, TeleportingPlayer> activePlayers;
 
-        GuiDialogTeleport teleportDlg;
+        GuiDialogTeleportList teleportDlg;
         GuiDialogRenameTeleport renameDlg;
 
         long? animListenerId;
@@ -179,7 +179,7 @@ namespace TeleportationNetwork
                     {
                         if (teleportDlg != null) teleportDlg.Dispose();
 
-                        teleportDlg = new GuiDialogTeleport(Api as ICoreClientAPI, Pos);
+                        teleportDlg = new GuiDialogTeleportList(Api as ICoreClientAPI, Pos);
                         teleportDlg.TryOpen();
                     }
                 }
@@ -235,6 +235,23 @@ namespace TeleportationNetwork
                 }
 
                 if (!renameDlg.IsOpened()) renameDlg.TryOpen();
+            }
+        }
+
+        public override void OnReceivedClientPacket(IPlayer fromPlayer, int packetid, byte[] data)
+        {
+            base.OnReceivedClientPacket(fromPlayer, packetid, data);
+
+            if (packetid == Constants.ChangeTeleportNamePacketId)
+            {
+                if (Api.World.Claims.TryAccess(fromPlayer, Pos, EnumBlockAccessFlags.Use))
+                {
+                    Teleport teleport = TeleportManager.GetTeleport(Pos) as Teleport
+                            ?? new Teleport() { Pos = Pos, Enabled = Enabled };
+
+                    teleport.Name = Encoding.UTF8.GetString(data);
+                    TeleportManager.SetTeleport(teleport);
+                }
             }
         }
 

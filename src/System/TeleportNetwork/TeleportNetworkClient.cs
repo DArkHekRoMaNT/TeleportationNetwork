@@ -6,8 +6,8 @@ namespace TeleportationNetwork
 {
     public class TeleportNetworkClient : TeleportNetwork, ITeleportNetworkClient
     {
-        ICoreClientAPI ClientApi => Api as ICoreClientAPI;
-        IClientNetworkChannel ClientChannel => Channel as IClientNetworkChannel;
+        ICoreClientAPI ClientApi => (ICoreClientAPI)Api;
+        IClientNetworkChannel ClientChannel => (IClientNetworkChannel)Channel;
 
         public override void Init(ICoreAPI api, ITeleportManager manager)
         {
@@ -31,7 +31,7 @@ namespace TeleportationNetwork
             }
         }
 
-        public void TeleportTo(Vec3d targetPos, Vec3d sourcePos = null)
+        public void TeleportTo(Vec3d targetPos, Vec3d? sourcePos = null)
         {
             ClientApi.World.Player.Entity.SetActivityRunning(
                 Core.ModId + "_teleportCooldown",

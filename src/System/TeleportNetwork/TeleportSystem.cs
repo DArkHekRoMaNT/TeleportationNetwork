@@ -15,9 +15,8 @@ namespace TeleportationNetwork
 
         public override void Start(ICoreAPI api)
         {
-            Manager = new TeleportManager(
-                api.Assets.Get(new AssetLocation(Core.ModId, "config/names.json"))
-                ?.ToObject<List<string>>());
+            IAsset defaultNames = api.Assets.Get(new AssetLocation(Core.ModId, "config/names.json"));
+            Manager = new TeleportManager(defaultNames?.ToObject<List<string>>());
         }
 
         public override void StartClientSide(ICoreClientAPI api)
