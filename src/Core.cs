@@ -8,9 +8,17 @@ namespace TeleportationNetwork
 {
     public class Core : ModSystem
     {
-        public Core() => Instance = this;
+        public Core()
+        {
+            Instance = this;
+        }
+
         public static Core Instance { get; private set; }
 
+        /// <summary>
+        /// Common ModLogger. For blocks, items, ui and other.
+        /// In other mod system use inner Mod.Logger instead
+        /// </summary>
         public static ILogger ModLogger => Instance.Mod.Logger;
         public static string ModId => Instance.Mod.Info.ModID;
         public static string ModPrefix => $"[{ModId}] ";

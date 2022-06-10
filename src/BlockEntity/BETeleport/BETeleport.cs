@@ -68,28 +68,31 @@ namespace TeleportationNetwork
                 renderer = new TeleportRenderer(Pos, api as ICoreClientAPI);
                 UpdateFrameMesh();
 
-                float rotY = Block.Shape.rotateY;
-                AnimUtil?.InitializeAnimator(Core.ModId + "-teleport", new Vec3f(0, rotY, 0));
-
-                if (AnimUtil.activeAnimationsByAnimCode.Count == 0 ||
-                    AnimUtil.animator.ActiveAnimationCount == 0)
+                if (AnimUtil != null)
                 {
-                    AnimUtil.StartAnimation(new AnimationMetaData()
+                    float rotY = Block.Shape.rotateY;
+                    AnimUtil.InitializeAnimator(Core.ModId + "-teleport", new Vec3f(0, rotY, 0));
+
+                    if (AnimUtil.activeAnimationsByAnimCode.Count == 0 ||
+                        AnimUtil.animator.ActiveAnimationCount == 0)
                     {
-                        Animation = "largegears",
-                        Code = "largegears",
-                        AnimationSpeed = 25f,
-                        EaseInSpeed = float.MaxValue,
-                        EaseOutSpeed = float.MaxValue
-                    });
-                    AnimUtil.StartAnimation(new AnimationMetaData()
-                    {
-                        Animation = "smallgears",
-                        Code = "smallgears",
-                        AnimationSpeed = 50f,
-                        EaseInSpeed = float.MaxValue,
-                        EaseOutSpeed = float.MaxValue
-                    });
+                        AnimUtil.StartAnimation(new AnimationMetaData()
+                        {
+                            Animation = "largegears",
+                            Code = "largegears",
+                            AnimationSpeed = 25f,
+                            EaseInSpeed = float.MaxValue,
+                            EaseOutSpeed = float.MaxValue
+                        });
+                        AnimUtil.StartAnimation(new AnimationMetaData()
+                        {
+                            Animation = "smallgears",
+                            Code = "smallgears",
+                            AnimationSpeed = 50f,
+                            EaseInSpeed = float.MaxValue,
+                            EaseOutSpeed = float.MaxValue
+                        });
+                    }
                 }
             }
 

@@ -38,12 +38,12 @@ namespace TeleportationNetwork
             sealModelRef = api.Render.UploadMesh(modelData);
 
             tgearTextureId = api.Render.GetOrLoadTexture(new AssetLocation("game", "textures/item/resource/temporalgear.png"));
-            UpdateCirceMesh(Progress);
+            UpdateCircleMesh(Progress);
 
             api.Event.RegisterRenderer(this, EnumRenderStage.Opaque, Core.ModId + "-teleport");
         }
 
-        private void UpdateCirceMesh(float progress)
+        private void UpdateCircleMesh(float progress)
         {
             int maxSteps = 48;
 
@@ -53,7 +53,7 @@ namespace TeleportationNetwork
             var steps = 1 + (int)Math.Ceiling(maxSteps * progress);
             var data = new MeshData(steps * 2, steps * 6, false, false, true, false);
 
-            float[] uvpart = new float[] { 0, 0, 1/32f, 0, 1 / 32f, 1 / 32f, 0, 1 / 32f };
+            float[] uvpart = new float[] { 0, 0, 1 / 32f, 0, 1 / 32f, 1 / 32f, 0, 1 / 32f };
             float[] uv = new float[8 * steps];
 
             for (var i = 0; i < steps; i++)
@@ -76,14 +76,22 @@ namespace TeleportationNetwork
 
             data.SetUv(uv);
 
-            if (progressCircleModelRef != null) api.Render.UpdateMesh(progressCircleModelRef, data);
-            else progressCircleModelRef = api.Render.UploadMesh(data);
+            // Need fix
+            if (false && progressCircleModelRef != null)
+            {
+                api.Render.UpdateMesh(progressCircleModelRef, data);
+            }
+            else
+            {
+                progressCircleModelRef?.Dispose();
+                progressCircleModelRef = api.Render.UploadMesh(data);
+            }
         }
 
         public void OnRenderFrame(float deltaTime, EnumRenderStage stage)
         {
             timePassed += deltaTime * 0.5f * Speed;
-            UpdateCirceMesh(Progress);
+            UpdateCircleMesh(Progress);
 
             IRenderAPI rpi = api.Render;
             Vec3d camPos = api.World.Player.Entity.CameraPos;
