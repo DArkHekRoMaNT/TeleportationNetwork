@@ -49,7 +49,7 @@ namespace TeleportationNetwork
         public Config()
         {
             SubNetworks = true;
-            MaxNetworkDistance = 1000;
+            MaxNetworkDistance = 10000;
             SharedTeleports = false;
             TeleportCooldown = 5000;
         }
