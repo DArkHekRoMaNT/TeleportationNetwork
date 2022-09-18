@@ -48,7 +48,7 @@ namespace TeleportationNetwork
 
         public Config()
         {
-            SubNetworks = true;
+            SubNetworks = false;
             MaxNetworkDistance = 10000;
             SharedTeleports = false;
             TeleportCooldown = 5000;
