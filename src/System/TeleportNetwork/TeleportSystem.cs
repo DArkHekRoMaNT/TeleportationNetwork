@@ -13,7 +13,7 @@ namespace TeleportationNetwork
         private ITeleportNetworkClient _clientNetwork;
         private ITeleportNetworkServer _serverNetwork;
 
-        public override void Start(ICoreAPI api)
+        public override void AssetsLoaded(ICoreAPI api)
         {
             IAsset defaultNames = api.Assets.Get(new AssetLocation(Core.ModId, "config/names.json"));
             Manager = new TeleportManager(defaultNames?.ToObject<List<string>>());

@@ -1,8 +1,10 @@
 using System.IO;
+using System.Linq;
 using System.Text;
 using Vintagestory.API.Config;
 using Vintagestory.API.Datastructures;
 using Vintagestory.API.MathTools;
+using Vintagestory.GameContent;
 
 namespace TeleportationNetwork
 {
@@ -71,6 +73,9 @@ namespace TeleportationNetwork
             return sb.ToString();
         }
 
-
+        public IAttribute Clone()
+        {
+            return new BlockPosArrayAttribute(value.Select(pos => pos.Copy()).ToArray());
+        }
     }
 }

@@ -10,10 +10,26 @@
 		<LangVersion>latest</LangVersion>
 		<Nullable>enable</Nullable>
 	</PropertyGroup>
+	<Choose>
+		<When Condition=" '$(Configuration)' == 'Debug' ">
+			<PropertyGroup>
+				<DebugSymbols>true</DebugSymbols>
+				<DebugType>full</DebugType>
+				<Optimize>false</Optimize>
+			</PropertyGroup>
+		</When>
+		<Otherwise>
+			<PropertyGroup>
+				<DebugSymbols>true</DebugSymbols>
+				<DebugType>pdbonly</DebugType>
+				<Optimize>true</Optimize>
+			</PropertyGroup>
+		</Otherwise>
+	</Choose>
 
 	<PropertyGroup>
-		<MinGameVersion>1.16.1</MinGameVersion>
-		<RunGameVersion>1.16.5</RunGameVersion>
+		<MinGameVersion>1.17.0</MinGameVersion>
+		<RunGameVersion>1.17.3</RunGameVersion>
 	</PropertyGroup>
 
 	<ItemGroup Label="Game Refs">
