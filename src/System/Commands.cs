@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using SharedUtils.Extensions;
 using Vintagestory.API.Client;
@@ -67,9 +68,8 @@ namespace TeleportationNetwork
                             }
 
                             string error = null;
-
-                            BlockSchematic schematic = BlockSchematic.LoadFromFile(
-                                schema.Origin.OriginPath + "/" + schema.Location.Path, ref error);
+                            string fullpath = Path.Combine(schema.Origin.OriginPath + schema.Location.Path);
+                            BlockSchematic schematic = BlockSchematic.LoadFromFile(fullpath, ref error);
 
                             if (error != null)
                             {
