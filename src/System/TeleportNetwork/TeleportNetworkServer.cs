@@ -92,6 +92,7 @@ namespace TeleportationNetwork
 
                 foreach (var teleport in list)
                 {
+                    Manager.SetTeleport(teleport);
                     Core.ModLogger.Debug($"Loaded teleport data for {teleport.Name} at {teleport.Pos}");
                 }
 
