@@ -6,7 +6,6 @@ using Vintagestory.API.Common;
 using Vintagestory.API.Common.Entities;
 using Vintagestory.API.Datastructures;
 using Vintagestory.API.MathTools;
-using Vintagestory.API.Server;
 using Vintagestory.GameContent;
 
 namespace TeleportationNetwork
@@ -146,33 +145,30 @@ namespace TeleportationNetwork
 
         private void CheckActivePlayers(float dt)
         {
-            List<string> toRemove = new List<string>();
+            var toRemove = new List<string>();
 
             float maxSecondsPassed = 0;
-            foreach (var val in activePlayers)
+            foreach (var activePlayer in activePlayers)
             {
-                if (val.Value.State == EnumTeleportingEntityState.None)
+                if (activePlayer.Value.State == EnumTeleportingEntityState.None)
                 {
-                    if (Api.Side == EnumAppSide.Server)
-                    {
-                        var player = Api.World.PlayerByUid(val.Key) as IServerPlayer;
-                        ITeleport teleport = TeleportManager.GetTeleport(Pos);
-                        TeleportManager.ActivateTeleport(teleport, player);
-                    }
-                    val.Value.State = EnumTeleportingEntityState.Teleporting;
+                    var player = Api.World.PlayerByUid(activePlayer.Key);
+                    ITeleport teleport = TeleportManager.GetTeleport(Pos);
+                    TeleportManager.ActivateTeleport(teleport, player);
+                    activePlayer.Value.State = EnumTeleportingEntityState.Teleporting;
                 }
 
-                val.Value.SecondsPassed += Math.Min(0.5f, dt);
+                activePlayer.Value.SecondsPassed += Math.Min(0.5f, dt);
 
-                if (Api.World.ElapsedMilliseconds - val.Value.LastCollideMs > 300)
+                if (Api.World.ElapsedMilliseconds - activePlayer.Value.LastCollideMs > 300)
                 {
-                    toRemove.Add(val.Key);
+                    toRemove.Add(activePlayer.Key);
                     continue;
                 }
 
-                if (val.Value.SecondsPassed > Constants.BeforeTeleportShowGUITime && val.Value.State == EnumTeleportingEntityState.Teleporting)
+                if (activePlayer.Value.SecondsPassed > Constants.BeforeTeleportShowGUITime && activePlayer.Value.State == EnumTeleportingEntityState.Teleporting)
                 {
-                    val.Value.State = EnumTeleportingEntityState.UI;
+                    activePlayer.Value.State = EnumTeleportingEntityState.UI;
 
                     if (Api.Side == EnumAppSide.Client && teleportDlg?.IsOpened() != true)
                     {
@@ -183,7 +179,7 @@ namespace TeleportationNetwork
                     }
                 }
 
-                maxSecondsPassed = Math.Max(val.Value.SecondsPassed, maxSecondsPassed);
+                maxSecondsPassed = Math.Max(activePlayer.Value.SecondsPassed, maxSecondsPassed);
             }
 
             foreach (var playerUID in toRemove)
