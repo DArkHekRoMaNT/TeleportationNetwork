@@ -46,6 +46,8 @@ namespace TeleportationNetwork
         public bool SharedTeleports { get; set; }
         public int TeleportCooldown { get; set; }
 
+        public int MinTeleportSeparation { get; set; } = 4096;
+
         public Config()
         {
             SubNetworks = false;
