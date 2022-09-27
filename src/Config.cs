@@ -46,7 +46,7 @@ namespace TeleportationNetwork
         public bool SharedTeleports { get; set; }
         public int TeleportCooldown { get; set; }
 
-        public int MinTeleportSeparation { get; set; } = 4096;
+        public int MinTeleportDistance { get; set; }
 
         public Config()
         {
@@ -54,6 +54,7 @@ namespace TeleportationNetwork
             MaxNetworkDistance = 10000;
             SharedTeleports = false;
             TeleportCooldown = 5000;
+            MinTeleportDistance = 4096;
         }
     }
 

@@ -59,13 +59,14 @@ namespace TeleportationNetwork
 
         public override void AssetsLoaded(ICoreAPI api)
         {
-            if (Config.Current.MinTeleportSeparation != 4096)
+            // Don't patch for default distance
+            if (Config.Current.MinTeleportDistance != 4096)
             {
-                UpdateMinTeleportSeparation();
+                UpdateMinTeleportDistance();
             }
         }
 
-        private void UpdateMinTeleportSeparation()
+        private void UpdateMinTeleportDistance()
         {
             // Get the patched structures.json file
             IAsset asset = api.Assets.Get("worldgen/structures.json");
@@ -88,7 +89,7 @@ namespace TeleportationNetwork
                     Op = EnumJsonPatchOp.Replace,
                     File = new AssetLocation("game:worldgen/structures.json"),
                     Path = "/structures/" + teleportIndex + "/minGroupDistance",
-                    Value = JsonObject.FromJson(Config.Current.MinTeleportSeparation.ToString())
+                    Value = JsonObject.FromJson(Config.Current.MinTeleportDistance.ToString())
                 });
             }
             api.ApplyJsonPatches(patches);
