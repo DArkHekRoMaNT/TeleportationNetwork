@@ -68,7 +68,7 @@ namespace TeleportationNetwork
                             }
 
                             string error = null;
-                            string fullpath = Path.Combine(schema.Origin.OriginPath + schema.Location.Path);
+                            string fullpath = Path.Combine(schema.Origin.OriginPath, schema.Location.Path);
                             BlockSchematic schematic = BlockSchematic.LoadFromFile(fullpath, ref error);
 
                             if (error != null)
