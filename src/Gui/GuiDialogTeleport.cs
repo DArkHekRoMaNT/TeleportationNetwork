@@ -22,8 +22,8 @@ namespace TeleportationNetwork
         private long? listenerId;
 
         private bool unstableWorld;
-        private List<ITeleport>? allPoints;
-        private List<ITeleport>? availablePoints;
+        private List<ITeleport> allPoints;
+        private List<ITeleport> availablePoints;
 
         public GuiDialogTeleportList(ICoreClientAPI capi, BlockPos? ownBEPos)
             : base(Lang.Get(Core.ModId + ":tpdlg-title"), capi)
@@ -38,6 +38,9 @@ namespace TeleportationNetwork
             {
                 Pos = ownBEPos;
             }
+
+            allPoints = new();
+            availablePoints = new();
         }
 
         public override bool TryOpen()
@@ -61,7 +64,7 @@ namespace TeleportationNetwork
                 return;
             }
 
-            ElementBounds[] buttons = new ElementBounds[allPoints?.Count > 0 ? allPoints.Count : 1];
+            ElementBounds[] buttons = new ElementBounds[allPoints.Count > 0 ? allPoints.Count : 1];
 
             buttons[0] = ElementBounds.Fixed(0, 0, 300, 40);
             for (int i = 1; i < buttons.Length; i++)
@@ -100,7 +103,7 @@ namespace TeleportationNetwork
                 .AddDialogBG(bgBounds, false)
                 .BeginChildElements(bgBounds);
 
-            if (allPoints == null || allPoints.Count == 0)
+            if (allPoints.Count == 0)
             {
                 SingleComposer
                         .AddStaticText(Lang.Get(Core.ModId + ":tpdlg-empty"),
@@ -150,11 +153,7 @@ namespace TeleportationNetwork
             {
                 var tp = allPoints.ElementAt(i);
 
-                string name = tp.Name;
-                if (name == null)
-                {
-                    name = "null";
-                }
+                string name = tp.Name ?? "null";
 
                 bool playerLowStability = capi.World.Player?.Entity?.GetBehavior<EntityBehaviorTemporalStabilityAffected>()?.OwnStability < 0.2;
                 bool nowStormActive = capi.ModLoader.GetModSystem<SystemTemporalStability>().StormData.nowStormActive;
@@ -187,14 +186,14 @@ namespace TeleportationNetwork
 
         private bool TryGetAvailablePoints()
         {
-            allPoints = null;
-            availablePoints = null;
+            allPoints.Clear();
+            availablePoints.Clear();
             ITeleport teleport = TeleportManager.GetTeleport(Pos);
 
             if (capi.World.Player.WorldData.CurrentGameMode == EnumGameMode.Creative)
             {
                 allPoints = TeleportManager.GetAllTeleports();
-                availablePoints = allPoints.ToList();
+                availablePoints = allPoints.ToList(); // Clone
 
                 if (teleport != null)
                 {
