@@ -59,44 +59,40 @@ namespace TeleportationNetwork
 
         public override void AssetsLoaded(ICoreAPI api)
         {
-            System.Diagnostics.Debug.WriteLine("(TPNet) [AssetsLoaded]  config: {0}", Config.Current.MinTeleportSeparation);
+            if (Config.Current.MinTeleportSeparation != 4096)
+            {
+                UpdateMinTeleportSeparation();
+            }
+        }
 
+        private void UpdateMinTeleportSeparation()
+        {
             // Get the patched structures.json file
             IAsset asset = api.Assets.Get("worldgen/structures.json");
-            WorldGenStructuresConfig scfg = asset.ToObject<WorldGenStructuresConfig>();
-            List<int> teleport_structures = new List<int>();
+            var structuresConfig = asset.ToObject<WorldGenStructuresConfig>();
+            var teleportStructures = new List<int>();
 
             // Loop through the patches structures, save the indices of the teleports
-            for (var i = 0; i < scfg.Structures.Length; i++) 
+            for (var i = 0; i < structuresConfig.Structures.Length; i++)
             {
-                WorldGenStructure wgstruct = scfg.Structures[i];
-                // System.Diagnostics.Debug.WriteLine("(TPNet) [AssetsLoaded]  code:{0} - distance:{1}", wgstruct.Code, wgstruct.MinGroupDistance);
-                if (wgstruct.Code.StartsWith("tpnet_teleport")) { teleport_structures.Add(i); }
+                WorldGenStructure wgstruct = structuresConfig.Structures[i];
+                if (wgstruct.Code.StartsWith("tpnet_teleport")) { teleportStructures.Add(i); }
             }
-            List<JsonPatch> patches = new List<JsonPatch>();
+
             // Construct a patch for each of the teleport structures; the path is /structures/index/minGroupDistance
-            foreach (int teleport_index in teleport_structures) 
+            var patches = new List<JsonPatch>();
+            foreach (int teleportIndex in teleportStructures)
             {
                 patches.Add(new JsonPatch
                 {
                     Op = EnumJsonPatchOp.Replace,
                     File = new AssetLocation("game:worldgen/structures.json"),
-                    Path = "/structures/" + teleport_index + "/minGroupDistance",
+                    Path = "/structures/" + teleportIndex + "/minGroupDistance",
                     Value = JsonObject.FromJson(Config.Current.MinTeleportSeparation.ToString())
                 });
             }
             api.ApplyJsonPatches(patches);
         }
-
-        /*public override void AssetsFinalize(ICoreAPI api)
-        {
-            IAsset asset = api.Assets.Get("worldgen/structures.json");
-            WorldGenStructuresConfig scfg = asset.ToObject<WorldGenStructuresConfig>();
-            foreach (WorldGenStructure wgstruct in scfg.Structures)
-            {
-                System.Diagnostics.Debug.WriteLine("(TPNet) [AssetsFinalize]  code:{0} - distance:{1}", wgstruct.Code, wgstruct.MinGroupDistance);
-            }
-        }*/
 
         public override void Dispose()
         {
