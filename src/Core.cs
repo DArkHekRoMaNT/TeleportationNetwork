@@ -11,36 +11,34 @@ namespace TeleportationNetwork
 {
     public class Core : ModSystem
     {
-        public Core()
-        {
-            Instance = this;
-        }
-
-        public static Core Instance { get; private set; }
-
         /// <summary>
         /// Common ModLogger. For blocks, items, ui and other.
         /// In other mod system use inner Mod.Logger instead
         /// </summary>
-        public static ILogger ModLogger => Instance.Mod.Logger;
-        public static string ModId => Instance.Mod.Info.ModID;
+        public static ILogger ModLogger { get; private set; } = null!;
+        public static string ModId { get; private set; } = null!;
         public static string ModPrefix => $"[{ModId}] ";
 
 
-        public HudCircleRenderer HudCircleRenderer { get; private set; }
+        public HudCircleRenderer? HudCircleRenderer { get; private set; }
 
-        private ICoreAPI api;
+        private ICoreAPI _api = null!;
 
         public override void StartPre(ICoreAPI api)
         {
+            _api = api;
+
+            ModLogger = Mod.Logger;
+            ModId = Mod.Info.ModID;
+
             Config.Current = api.LoadOrCreateConfig<Config>(ModId + ".json");
         }
 
         public override void Start(ICoreAPI api)
         {
-            this.api = api;
-
-            ClassRegister();
+            _api.RegisterBlockClass("BlockBrokenTeleport", typeof(BlockTeleport));
+            _api.RegisterBlockClass("BlockNormalTeleport", typeof(BlockTeleport));
+            _api.RegisterBlockEntityClass("BETeleport", typeof(BETeleport));
 
             TreeAttribute.RegisterAttribute(Constants.AttributesId + 1, typeof(BlockPosArrayAttribute));
         }
@@ -48,13 +46,6 @@ namespace TeleportationNetwork
         public override void StartClientSide(ICoreClientAPI api)
         {
             HudCircleRenderer = new HudCircleRenderer(api, new HudCircleSettings() { Color = 0x23cca2 });
-        }
-
-        private void ClassRegister()
-        {
-            api.RegisterBlockClass("BlockBrokenTeleport", typeof(BlockBrokenTeleport));
-            api.RegisterBlockClass("BlockNormalTeleport", typeof(BlockNormalTeleport));
-            api.RegisterBlockEntityClass("BETeleport", typeof(BETeleport));
         }
 
         public override void AssetsLoaded(ICoreAPI api)
@@ -69,7 +60,7 @@ namespace TeleportationNetwork
         private void UpdateMinTeleportDistance()
         {
             // Get the patched structures.json file
-            IAsset asset = api.Assets.Get("worldgen/structures.json");
+            IAsset asset = _api.Assets.Get("worldgen/structures.json");
             var structuresConfig = asset.ToObject<WorldGenStructuresConfig>();
             var teleportStructures = new List<int>();
 
@@ -92,13 +83,7 @@ namespace TeleportationNetwork
                     Value = JsonObject.FromJson(Config.Current.MinTeleportDistance.ToString())
                 });
             }
-            api.ApplyJsonPatches(patches);
-        }
-
-        public override void Dispose()
-        {
-            base.Dispose();
-            Instance = null;
+            _api.ApplyJsonPatches(patches);
         }
     }
 }

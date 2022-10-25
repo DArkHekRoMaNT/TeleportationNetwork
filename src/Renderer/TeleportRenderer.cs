@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
 using Vintagestory.API.MathTools;
@@ -7,6 +7,7 @@ namespace TeleportationNetwork
 {
     public class TeleportRenderer : IRenderer
     {
+        public bool Enabled { get; set; }
         public float Speed { get; set; }
         public float Progress { get; set; }
 
@@ -90,6 +91,11 @@ namespace TeleportationNetwork
 
         public void OnRenderFrame(float deltaTime, EnumRenderStage stage)
         {
+            if(!Enabled)
+            {
+                return;
+            }
+
             timePassed += deltaTime * 0.5f * Speed;
             UpdateCircleMesh(Progress);
 

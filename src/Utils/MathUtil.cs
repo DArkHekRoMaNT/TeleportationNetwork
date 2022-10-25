@@ -7,13 +7,13 @@ namespace TeleportationNetwork
 {
     public static class MathUtil
     {
-        static Random rand;
+        static Random? _rand;
 
         public static Vec3d RandomPosOnCircleEdge(float radius, Vec3d center)
         {
-            if (rand == null) rand = new Random();
+            _rand ??= new Random();
 
-            double angle = rand.NextDouble() * Math.PI * 2;
+            double angle = _rand.NextDouble() * Math.PI * 2;
             return new Vec3d(
                 center.X + Math.Cos(angle) * (radius - 1 / 16),
                 center.Y,

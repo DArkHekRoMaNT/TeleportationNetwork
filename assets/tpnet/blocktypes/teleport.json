@@ -6,7 +6,6 @@
   },
   "entityclass": "BETeleport",
   "blockmaterial": "Stone",
-  "drawtype": "json",
   "shapeByType": {
     "*-broken": { "base": "block/teleport/broken" },
     "*-normal": { "base": "block/teleport/normal" }
@@ -36,6 +35,7 @@
   "replaceable": 200,
   "resistance": 4,
   "lightAbsorption": 0,
+  "lightHsv": [ 34, 7, 7 ],
   "sideopaque": { "all": false },
   "sidesolid": { "all": false },
   "sounds": {

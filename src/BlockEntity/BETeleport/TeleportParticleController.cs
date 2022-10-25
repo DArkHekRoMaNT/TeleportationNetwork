@@ -1,11 +1,11 @@
-﻿using Vintagestory.API.Client;
+using Vintagestory.API.Client;
 using Vintagestory.API.Common;
 using Vintagestory.API.Common.Entities;
 using Vintagestory.API.MathTools;
 
 namespace TeleportationNetwork
 {
-    public class TeleportParticleManager
+    public class TeleportParticleController
     {
         readonly ICoreClientAPI api;
         readonly BlockPos teleportPos;
@@ -15,15 +15,15 @@ namespace TeleportationNetwork
 
         Vec3d SealCenter => teleportPos.ToVec3d().Add(0.5, 1, 0.5);
 
-        public TeleportParticleManager(ICoreClientAPI api, BlockPos teleportPos)
+        public TeleportParticleController(ICoreClientAPI api, BlockPos teleportPos)
         {
             this.api = api;
             this.teleportPos = teleportPos;
 
             particles = new SimpleParticleProperties()
             {
-                MinQuantity = 1,//0.3f,
-                AddQuantity = 0,//1.0f,
+                MinQuantity = 1f,
+                AddQuantity = 0f,
                 MinPos = new Vec3d(),
                 AddPos = new Vec3d(),
                 MinVelocity = new Vec3f(),
@@ -62,6 +62,7 @@ namespace TeleportationNetwork
         private void SpawnParticle()
         {
             particles.Color = temporalGear.GetRandomColor(api, new ItemStack(temporalGear));
+            particles.VertexFlags = 20 & VertexFlags.GlowLevelBitMask;
             api.World.SpawnParticles(particles);
         }
 
@@ -79,6 +80,7 @@ namespace TeleportationNetwork
             }
         }
 
+        //delete it 
         public void SpawnSealEdgeParticle(int quantity)
         {
             for (int i = 0; i < quantity; i++)
@@ -87,6 +89,6 @@ namespace TeleportationNetwork
             }
         }
 
-        public void SpawnSealEdgeParticle() => SpawnEdgeParticle(Constants.SealRadius, SealCenter);
+        public void SpawnSealEdgeParticle() => SpawnEdgeParticle(Constants.SealRadius, SealCenter, 3);
     }
 }
