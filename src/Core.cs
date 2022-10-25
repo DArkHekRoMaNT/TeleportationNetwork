@@ -6,6 +6,7 @@ using Vintagestory.API.Datastructures;
 using Vintagestory.ServerMods;
 using Vintagestory.ServerMods.NoObf;
 using System.Collections.Generic;
+using Vintagestory.API.Server;
 
 namespace TeleportationNetwork
 {
@@ -36,16 +37,25 @@ namespace TeleportationNetwork
 
         public override void Start(ICoreAPI api)
         {
-            _api.RegisterBlockClass("BlockBrokenTeleport", typeof(BlockTeleport));
-            _api.RegisterBlockClass("BlockNormalTeleport", typeof(BlockTeleport));
-            _api.RegisterBlockEntityClass("BETeleport", typeof(BETeleport));
+            api.RegisterBlockClass("BlockBrokenTeleport", typeof(BlockTeleport));
+            api.RegisterBlockClass("BlockNormalTeleport", typeof(BlockTeleport));
+            api.RegisterBlockEntityClass("BETeleport", typeof(BETeleport));
 
             TreeAttribute.RegisterAttribute(Constants.AttributesId + 1, typeof(BlockPosArrayAttribute));
         }
 
         public override void StartClientSide(ICoreClientAPI api)
         {
-            HudCircleRenderer = new HudCircleRenderer(api, new HudCircleSettings() { Color = 0x23cca2 });
+            HudCircleRenderer = new HudCircleRenderer(api, new HudCircleSettings()
+            {
+                Color = 0x23cca2
+            });
+        }
+
+        public override void StartServerSide(ICoreServerAPI api)
+        {
+            api.RegisterCommand(new ImportSchematicCommand());
+            api.RegisterCommand(new RandomTeleportCommand());
         }
 
         public override void AssetsLoaded(ICoreAPI api)
@@ -71,7 +81,8 @@ namespace TeleportationNetwork
                 if (wgstruct.Code.StartsWith("tpnet_teleport")) { teleportStructures.Add(i); }
             }
 
-            // Construct a patch for each of the teleport structures; the path is /structures/index/minGroupDistance
+            // Construct a patch for each of the teleport structures;
+            // the path is /structures/index/minGroupDistance
             var patches = new List<JsonPatch>();
             foreach (int teleportIndex in teleportStructures)
             {
