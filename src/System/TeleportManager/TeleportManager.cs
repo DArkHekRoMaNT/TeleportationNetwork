@@ -80,6 +80,32 @@ namespace TeleportationNetwork
             fromPlayer.Entity?.StabilityRelatedTeleportTo(msg.Pos.ToVec3d());
         }
 
+        public void CheckAllTeleport()
+        {
+            if (_api is ICoreServerAPI sapi)
+            {
+                foreach (var teleport in Points.GetAll())
+                {
+                    int chunkSize = sapi.WorldManager.ChunkSize;
+                    int chunkX = teleport.Pos.X / chunkSize;
+                    int chunkZ = teleport.Pos.Z / chunkSize;
+
+                    sapi.WorldManager.LoadChunkColumnPriority(chunkX, chunkZ, new ChunkLoadOptions()
+                    {
+                        OnLoaded = delegate
+                        {
+                            BlockEntity be = sapi.World.BlockAccessor.GetBlockEntity(teleport.Pos);
+                            if (be is not BETeleport)
+                            {
+                                Points.Remove(teleport.Pos);
+                                Mod.Logger.Notification("Removed unknown teleport {0} at {1}",
+                                    teleport.Name, teleport.Pos);
+                            }
+                        }
+                    });
+                }
+            }
+        }
 
         [ProtoContract(ImplicitFields = ImplicitFields.AllPublic)]
         private class RemoveTeleportMessage

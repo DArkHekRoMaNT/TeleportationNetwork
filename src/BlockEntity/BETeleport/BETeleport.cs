@@ -337,7 +337,7 @@ namespace TeleportationNetwork
             }
         }
 
-        private void InitAnimator(bool force = false)
+        private void InitAnimator()
         {
             if (AnimUtil != null && Api.Side == EnumAppSide.Client)
             {

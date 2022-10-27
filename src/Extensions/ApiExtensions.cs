@@ -21,7 +21,7 @@ namespace TeleportationNetwork
             }
             catch (Exception e)
             {
-                Core.ModLogger?.Error("Failed loading file ({0}), error {1}. Will initialize new one", file, e);
+                Core.ModLogger?.Error("Failed loading file ({0}), error {1}. Will initialize new one", file, e.Message);
             }
 
             var newConfig = defaultConfig?.Equals(default(T)) == true ? defaultConfig : new T();
