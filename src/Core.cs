@@ -46,6 +46,7 @@ namespace TeleportationNetwork
 
         public override void StartClientSide(ICoreClientAPI api)
         {
+            api.RegisterCommand("tpdlg", ModPrefix + "Open teleport dialog (creative only)", "", (int groupId, CmdArgs args) =>
             HudCircleRenderer = new HudCircleRenderer(api, new HudCircleSettings()
             {
                 Color = 0x23cca2
