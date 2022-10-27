@@ -28,11 +28,11 @@ namespace TeleportationNetwork
         public override void StartPre(ICoreAPI api)
         {
             _api = api;
-
             ModLogger = Mod.Logger;
             ModId = Mod.Info.ModID;
 
-            Config = api.LoadOrCreateConfig<Config>(ModId + ".json");
+            var configManager = api.ModLoader.GetModSystem<ConfigManager>();
+            Config = configManager.GetConfig<Config>();
         }
 
         public override void Start(ICoreAPI api)
@@ -60,8 +60,9 @@ namespace TeleportationNetwork
 
         public override void AssetsLoaded(ICoreAPI api)
         {
-            // Don't patch for default distance
-            if (Config.MinTeleportDistance != 4096)
+            // Don't patch for default distance or on client
+            if (Config.MinTeleportDistance != 4096 &&
+                api.Side == EnumAppSide.Server)
             {
                 UpdateMinTeleportDistance();
             }
