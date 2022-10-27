@@ -14,6 +14,9 @@ namespace TeleportationNetwork
         public List<Teleport> Neighbours { get; private set; }
         public List<string> ActivatedByPlayers { get; private set; }
 
+        public string Icon { get; set; }
+        public int Color { get; set; }
+
         private Teleport()
         {
             Name = "null";
@@ -21,6 +24,9 @@ namespace TeleportationNetwork
             Pos = new BlockPos();
             Neighbours = new List<Teleport>();
             ActivatedByPlayers = new List<string>();
+
+            Icon = "spiral";
+            Color = ColorUtil.Hex2Int("#FF23cca2");
         }
 
         public Teleport(BlockPos pos) : this()

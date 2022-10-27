@@ -2,6 +2,7 @@ using MonoMod.Utils;
 using ProtoBuf;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Vintagestory.API.MathTools;
 
@@ -11,10 +12,12 @@ namespace TeleportationNetwork
     public class TeleportList
     {
         [ProtoMember(1)]
+        [SuppressMessage("Style", "IDE0044:Add readonly modifier", Justification = "Used by ProtoBuf")]
         private Dictionary<BlockPos, Teleport> _teleports = new();
 
-        public event Action<Teleport>? OnValueChanged;
-        public event Action<BlockPos>? OnValueRemoved;
+        public event Action? Changed;
+        public event Action<Teleport>? ValueChanged;
+        public event Action<BlockPos>? ValueRemoved;
 
         public Teleport? this[BlockPos pos]
         {
@@ -33,7 +36,8 @@ namespace TeleportationNetwork
                         _teleports.Add(value.Pos, value);
                     }
 
-                    OnValueChanged?.Invoke(value);
+                    ValueChanged?.Invoke(value);
+                    Changed?.Invoke();
                 }
                 else
                 {
@@ -47,16 +51,18 @@ namespace TeleportationNetwork
             var list = _teleports.Values.ToList();
             return predicate == null ? list : list.FindAll(predicate);
         }
+
         public void Set(Teleport teleport)
         {
-            _teleports[teleport.Pos] = teleport;
+            this[teleport.Pos] = teleport;
         }
 
         public bool Remove(BlockPos pos)
         {
             if (_teleports.Remove(pos))
             {
-                OnValueRemoved?.Invoke(pos);
+                ValueRemoved?.Invoke(pos);
+                Changed?.Invoke();
                 return true;
             }
             return false;
@@ -72,7 +78,7 @@ namespace TeleportationNetwork
             Teleport? value = this[pos];
             if (value != null)
             {
-                OnValueChanged?.Invoke(value);
+                ValueChanged?.Invoke(value);
             }
         }
 
@@ -80,15 +86,17 @@ namespace TeleportationNetwork
         {
             _teleports.Clear();
             _teleports.AddRange(points._teleports);
+            Changed?.Invoke();
         }
 
         public void SetFrom(IEnumerable<Teleport> points)
         {
             _teleports.Clear();
-            foreach(var teleport in points)
+            foreach (var teleport in points)
             {
                 _teleports.Add(teleport.Pos, teleport);
             }
+            Changed?.Invoke();
         }
     }
 }

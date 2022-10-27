@@ -1,3 +1,4 @@
+using Cairo;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -163,17 +164,25 @@ namespace TeleportationNetwork
                 bool nowStormActive = capi.ModLoader.GetModSystem<SystemTemporalStability>().StormData.nowStormActive;
                 name = (nowStormActive || playerLowStability) ? name.Shuffle(capi.World.Rand) : name;
 
-
                 var nameFont = CairoFont.WhiteSmallText();
+                bool activated = tp.ActivatedByPlayers.Contains(capi.World.Player!.PlayerUID);
+                bool enabled = tp.Enabled;
 
-                if (!tp.Enabled)
+                if (!enabled)
                 {
-                    nameFont = nameFont.WithColor(ColorUtil.Hex2Doubles("#c91a1a"));
+                    if (!activated)
+                    {
+                        nameFont = nameFont.WithColor(ColorUtil.Hex2Doubles("#c91a1a"));
+                    }
+                    else
+                    {
+
+                        nameFont = nameFont.WithColor(ColorUtil.Hex2Doubles("#c95a5a"));
+                    }
                 }
-
-                if (!tp.ActivatedByPlayers.Contains(capi.World.Player!.PlayerUID))
+                else if (!activated)
                 {
-                    nameFont = nameFont.WithSlant(Cairo.FontSlant.Oblique);
+                    nameFont = nameFont.WithColor(ColorUtil.Hex2Doubles("#555555"));
                 }
 
                 stacklist.Add(new GuiElementTeleportButton(capi,

@@ -1,9 +1,11 @@
 using ProtoBuf;
 using System.Collections.Generic;
+using System.Numerics;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
 using Vintagestory.API.MathTools;
 using Vintagestory.API.Server;
+using Vintagestory.GameContent;
 
 namespace TeleportationNetwork
 {
@@ -42,10 +44,16 @@ namespace TeleportationNetwork
                     .RegisterMessageType<TeleportPlayerMessage>()
                     .SetMessageHandler<TeleportPlayerMessage>(OnReceiveTeleportPlayerMessage);
 
-                Points.OnValueChanged += teleport => _serverChannel.BroadcastPacket(new SyncTeleportMessage(teleport));
-                Points.OnValueRemoved += pos => _serverChannel.BroadcastPacket(new RemoveTeleportMessage(pos));
+                Points.ValueChanged += teleport => _serverChannel.BroadcastPacket(new SyncTeleportMessage(teleport));
+                Points.ValueRemoved += pos => _serverChannel.BroadcastPacket(new RemoveTeleportMessage(pos));
                 sapi.Event.PlayerJoin += player => _serverChannel.SendPacket(new SyncTeleportListMessage(Points), player);
             }
+        }
+
+        public override void StartClientSide(ICoreClientAPI api)
+        {
+            var mapManager = api.ModLoader.GetModSystem<WorldMapManager>();
+            mapManager.RegisterMapLayer<TeleportMapLayer>(Mod.Info.ModID);
         }
 
         public override void AssetsLoaded(ICoreAPI api)
