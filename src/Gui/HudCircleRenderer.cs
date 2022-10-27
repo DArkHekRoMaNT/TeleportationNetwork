@@ -6,7 +6,7 @@ using System;
 using Vintagestory.API.Client;
 using Vintagestory.API.MathTools;
 
-namespace SharedUtils.Gui
+namespace TeleportationNetwork
 {
     public class HudCircleRenderer : IRenderer
     {
@@ -83,11 +83,11 @@ namespace SharedUtils.Gui
                 + deltaTime / (CircleVisible ? Settings.AlphaIn : -Settings.AlphaOut)));
 
             // TODO: Do some smoothing between frames?
-            if ((CircleProgress <= 0.0F) || (_circleAlpha <= 0.0F)) return;
+            if (CircleProgress <= 0.0F || _circleAlpha <= 0.0F) return;
             UpdateCirceMesh(CircleProgress);
 
-            var r = ((Settings.Color >> 16) & 0xFF) / 255.0F;
-            var g = ((Settings.Color >> 8) & 0xFF) / 255.0F;
+            var r = (Settings.Color >> 16 & 0xFF) / 255.0F;
+            var g = (Settings.Color >> 8 & 0xFF) / 255.0F;
             var b = (Settings.Color & 0xFF) / 255.0F;
             var color = new Vec4f(r, g, b, _circleAlpha);
 

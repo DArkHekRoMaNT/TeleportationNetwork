@@ -9,8 +9,8 @@ namespace TeleportationNetwork
 {
     public class TeleportManager : ModSystem
     {
-        private IServerNetworkChannel _serverChannel = null!;
-        private IClientNetworkChannel _clientChannel = null!;
+        private IServerNetworkChannel? _serverChannel;
+        private IClientNetworkChannel? _clientChannel;
         private ICoreAPI _api = null!;
 
         public List<string> DefaultNames { get; private set; } = new() { "null" };

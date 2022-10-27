@@ -1,5 +1,3 @@
-using SharedUtils.Extensions;
-using SharedUtils.Gui;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
 using Vintagestory.API.Datastructures;
@@ -20,6 +18,8 @@ namespace TeleportationNetwork
         public static string ModId { get; private set; } = null!;
         public static string ModPrefix => $"[{ModId}] ";
 
+        public static Config Config { get; private set; } = null!;
+
 
         public HudCircleRenderer? HudCircleRenderer { get; private set; }
 
@@ -32,7 +32,7 @@ namespace TeleportationNetwork
             ModLogger = Mod.Logger;
             ModId = Mod.Info.ModID;
 
-            Config.Current = api.LoadOrCreateConfig<Config>(ModId + ".json");
+            Config = api.LoadOrCreateConfig<Config>(ModId + ".json");
         }
 
         public override void Start(ICoreAPI api)
@@ -61,7 +61,7 @@ namespace TeleportationNetwork
         public override void AssetsLoaded(ICoreAPI api)
         {
             // Don't patch for default distance
-            if (Config.Current.MinTeleportDistance != 4096)
+            if (Config.MinTeleportDistance != 4096)
             {
                 UpdateMinTeleportDistance();
             }
@@ -91,7 +91,7 @@ namespace TeleportationNetwork
                     Op = EnumJsonPatchOp.Replace,
                     File = new AssetLocation("game:worldgen/structures.json"),
                     Path = "/structures/" + teleportIndex + "/minGroupDistance",
-                    Value = JsonObject.FromJson(Config.Current.MinTeleportDistance.ToString())
+                    Value = JsonObject.FromJson(Config.MinTeleportDistance.ToString())
                 });
             }
             _api.ApplyJsonPatches(patches);

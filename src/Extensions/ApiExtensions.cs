@@ -1,13 +1,12 @@
 using System;
 using System.IO;
-using TeleportationNetwork;
 using Vintagestory.API.Common;
 
-namespace SharedUtils.Extensions
+namespace TeleportationNetwork
 {
     public static class ApiExtensions
     {
-        public static string GetWorldId(this ICoreAPI api) => api?.World?.SavegameIdentifier;
+        public static string GetWorldId(this ICoreAPI api) => api?.World?.SavegameIdentifier ?? "null";
 
         public static T LoadOrCreateConfig<T>(this ICoreAPI api, string file, T defaultConfig = default) where T : new()
         {
@@ -22,7 +21,7 @@ namespace SharedUtils.Extensions
             }
             catch (Exception e)
             {
-                Core.ModLogger.Error("Failed loading file ({0}), error {1}. Will initialize new one", file, e);
+                Core.ModLogger?.Error("Failed loading file ({0}), error {1}. Will initialize new one", file, e);
             }
 
             var newConfig = defaultConfig?.Equals(default(T)) == true ? defaultConfig : new T();
@@ -47,6 +46,7 @@ namespace SharedUtils.Extensions
 
             return default;
         }
+
 
         public static T LoadOrCreateDataFile<T>(this ICoreAPI api, string file) where T : new()
         {

@@ -29,7 +29,7 @@ namespace TeleportationNetwork
             => GetBehavior<BEBehaviorAnimatable>()?.animUtil;
 
         public TeleportManager TeleportManager { get; private set; } = null!;
-        private TeleportRenderer Renderer { get; set; } = null!;
+        private SealRenderer SealRenderer { get; set; } = null!;
         private TeleportParticleController ParticleController { get; set; } = null!;
 
 
@@ -78,7 +78,7 @@ namespace TeleportationNetwork
             if (api.Side == EnumAppSide.Client)
             {
                 ParticleController = new TeleportParticleController((ICoreClientAPI)api, Pos);
-                Renderer = new TeleportRenderer(Pos, (ICoreClientAPI)api);
+                SealRenderer = new SealRenderer(Pos, (ICoreClientAPI)api);
 
                 UpdateFrameMesh();
                 InitAnimator();
@@ -113,9 +113,9 @@ namespace TeleportationNetwork
                 if (Api.Side == EnumAppSide.Client)
                 {
                     ParticleController.SpawnSealEdgeParticle();
-                    Renderer.Enabled = true;
-                    Renderer.Speed = (float)(1 + Math.Exp(_activeStage) * 1f);
-                    Renderer.Progress = _activeStage;
+                    SealRenderer.Enabled = true;
+                    SealRenderer.Speed = (float)(1 + Math.Exp(_activeStage) * 1f);
+                    SealRenderer.Progress = _activeStage;
                 }
 
                 if (Active)
@@ -132,7 +132,7 @@ namespace TeleportationNetwork
             {
                 if (Api.Side == EnumAppSide.Client)
                 {
-                    Renderer.Enabled = false;
+                    SealRenderer.Enabled = false;
                 }
             }
         }
@@ -284,7 +284,7 @@ namespace TeleportationNetwork
         public override void OnBlockUnloaded()
         {
             base.OnBlockUnloaded();
-            Renderer?.Dispose();
+            SealRenderer?.Dispose();
         }
 
         public override void OnBlockRemoved()
@@ -296,7 +296,7 @@ namespace TeleportationNetwork
                 TeleportManager.Points.Remove(Pos);
             }
 
-            Renderer?.Dispose();
+            SealRenderer?.Dispose();
         }
 
         public override void ToTreeAttributes(ITreeAttribute tree)

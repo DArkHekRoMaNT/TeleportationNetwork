@@ -49,20 +49,20 @@ namespace TeleportationNetwork
 
             var stabilitySystem = sapi.ModLoader.GetModSystem<SystemTemporalStability>();
             bool stabilityEnabled = sapi.World.Config.GetBool("temporalStability", true);
-            entity.SetActivityRunning(Core.ModId + "_teleportCooldown", Config.Current.TeleportCooldown);
+            entity.SetActivityRunning(Core.ModId + "_teleportCooldown", Core.Config.TeleportCooldown);
 
             bool unstableTeleport = false;
 
             if (stabilityEnabled)
             {
-                if (Config.Current.StabilityTeleportMode.Val == "always")
+                if (Core.Config.StabilityTeleportMode == "always")
                 {
                     unstableTeleport = true;
                 }
                 else
                 {
                     double currStability = entity.WatchedAttributes.GetDouble("temporalStability");
-                    double nextStability = currStability - Config.Current.StabilityConsumable.Val;
+                    double nextStability = currStability - Core.Config.StabilityConsumable;
 
                     if (nextStability < 0 || stabilitySystem.StormData.nowStormActive)
                     {
@@ -76,9 +76,9 @@ namespace TeleportationNetwork
                 }
             }
 
-            if (Config.Current.StabilityTeleportMode.Val != "off" && unstableTeleport)
+            if (Core.Config.StabilityTeleportMode != "off" && unstableTeleport)
             {
-                RandomTeleport((IServerPlayer)entity.Player, Config.Current.UnstableTeleportRange.Val, pos.AsBlockPos.ToVec3i());
+                RandomTeleport((IServerPlayer)entity.Player, Core.Config.UnstableTeleportRange, pos.AsBlockPos.ToVec3i());
             }
             else
             {

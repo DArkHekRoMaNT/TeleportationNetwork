@@ -126,7 +126,7 @@ namespace TeleportationNetwork
         public override void OnBlockBroken(IWorldAccessor world, BlockPos pos, IPlayer byPlayer, float dropQuantityMultiplier = 1)
 
         {
-            if (Config.Current.Unbreakable.Val && byPlayer.WorldData.CurrentGameMode != EnumGameMode.Creative)
+            if (Core.Config.Unbreakable && byPlayer.WorldData.CurrentGameMode != EnumGameMode.Creative)
             {
                 return;
             }

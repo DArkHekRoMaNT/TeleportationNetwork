@@ -5,7 +5,7 @@ using Vintagestory.API.MathTools;
 
 namespace TeleportationNetwork
 {
-    public class TeleportRenderer : IRenderer
+    public class SealRenderer : IRenderer
     {
         public bool Enabled { get; set; }
         public float Speed { get; set; }
@@ -23,7 +23,7 @@ namespace TeleportationNetwork
         private MeshRef sealModelRef;
         private MeshRef progressCircleModelRef;
 
-        public TeleportRenderer(BlockPos pos, ICoreClientAPI api)
+        public SealRenderer(BlockPos pos, ICoreClientAPI api)
         {
             this.api = api;
             this.pos = pos;
@@ -91,7 +91,7 @@ namespace TeleportationNetwork
 
         public void OnRenderFrame(float deltaTime, EnumRenderStage stage)
         {
-            if(!Enabled)
+            if (!Enabled)
             {
                 return;
             }

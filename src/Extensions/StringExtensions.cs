@@ -1,6 +1,6 @@
 using System;
 
-namespace SharedUtils.Extensions
+namespace TeleportationNetwork
 {
     public static class StringExtensions
     {

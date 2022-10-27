@@ -1,4 +1,3 @@
-using SharedUtils.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -239,8 +238,8 @@ namespace TeleportationNetwork
         {
             var systemTemporalStability = capi.ModLoader.GetModSystem<SystemTemporalStability>();
             double currStability = capi.World.Player.Entity.WatchedAttributes.GetDouble("temporalStability");
-            bool unstablePlayer = capi.World.Config.GetBool("temporalStability", true) && Config.Current.StabilityConsumable.Val > currStability;
-            IsUnstableWorld = unstablePlayer || systemTemporalStability.StormData.nowStormActive || Config.Current.StabilityTeleportMode.Val == "always";
+            bool unstablePlayer = capi.World.Config.GetBool("temporalStability", true) && Core.Config.StabilityConsumable > currStability;
+            IsUnstableWorld = unstablePlayer || systemTemporalStability.StormData.nowStormActive || Core.Config.StabilityTeleportMode == "always";
         }
 
         private void OnNewScrollbarValue(float value)
