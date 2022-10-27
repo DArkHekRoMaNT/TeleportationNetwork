@@ -80,7 +80,7 @@ namespace TeleportationNetwork
             }
         }
 
-        //delete it 
+        //delete it
         public void SpawnSealEdgeParticle(int quantity)
         {
             for (int i = 0; i < quantity; i++)

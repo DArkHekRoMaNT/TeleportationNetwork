@@ -1,4 +1,4 @@
-/* 
+/*
     Based on https://github.com/copygirl/CarryCapacity/blob/master/src/Client/HudOverlayRenderer.cs
 */
 
