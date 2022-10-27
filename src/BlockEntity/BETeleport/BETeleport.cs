@@ -8,6 +8,7 @@ using Vintagestory.API.Common.Entities;
 using Vintagestory.API.Datastructures;
 using Vintagestory.API.MathTools;
 using Vintagestory.API.Server;
+using Vintagestory.Client.NoObf;
 using Vintagestory.GameContent;
 
 namespace TeleportationNetwork
@@ -154,8 +155,14 @@ namespace TeleportationNetwork
 
                 if (Api.World.ElapsedMilliseconds - activePlayer.Value.LastCollideMs > 300)
                 {
-                    toRemove.Add(activePlayer.Key);
-                    continue;
+                    // Make sure its not just server lag (from BlockEntity/BETeleporter.cs)
+                    Block block = Api.World.CollisionTester.GetCollidingBlock(Api.World.BlockAccessor,
+                        activePlayer.Value.Player.SelectionBox, activePlayer.Value.Player.Pos.XYZ, true);
+                    if (block is not BlockTeleport)
+                    {
+                        toRemove.Add(activePlayer.Key);
+                        continue;
+                    }
                 }
 
                 if (activePlayer.Value.SecondsPassed > Constants.BeforeTeleportShowGUITime &&
