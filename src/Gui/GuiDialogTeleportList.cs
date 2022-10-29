@@ -1,4 +1,3 @@
-using Cairo;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -275,11 +274,11 @@ namespace TeleportationNetwork
                 using var writer = new BinaryWriter(ms);
                 writer.Write(capi.World.Player.PlayerUID);
                 targetPoint.ToBytes(writer);
-                capi.Network.SendBlockEntityPacket(Pos, Constants.TeleportToPacketId, ms.ToArray());
+                capi.Network.SendBlockEntityPacket(Pos, Constants.TeleportPlayerPacketId, ms.ToArray());
             }
             else
             {
-                TeleportManager.TeleportPlayerTo(capi.World.Player, targetPoint);
+                TeleportManager.TeleportPlayerTo(targetPoint);
             }
 
             return TryClose();

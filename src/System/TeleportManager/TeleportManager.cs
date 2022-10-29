@@ -1,6 +1,5 @@
 using ProtoBuf;
 using System.Collections.Generic;
-using System.Numerics;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
 using Vintagestory.API.MathTools;
@@ -78,14 +77,14 @@ namespace TeleportationNetwork
             return DefaultNames[index];
         }
 
-        public void TeleportPlayerTo(IClientPlayer player, BlockPos pos)
+        public void TeleportPlayerTo(BlockPos pos)
         {
             _clientChannel?.SendPacket(new TeleportPlayerMessage(pos));
         }
 
         private void OnReceiveTeleportPlayerMessage(IServerPlayer fromPlayer, TeleportPlayerMessage msg)
         {
-            fromPlayer.Entity?.StabilityRelatedTeleportTo(msg.Pos.ToVec3d().AddCopy(0.5, 1, 0.5));
+            fromPlayer.Entity?.StabilityRelatedTeleportTo(msg.Pos.ToVec3d().AddCopy(0.5, 1.5, 0.5));
         }
 
         public void CheckAllTeleport()

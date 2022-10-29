@@ -19,11 +19,13 @@ namespace TeleportationNetwork
         public bool IsBroken => LastCodePart() == "broken";
         public bool IsNormal => LastCodePart() == "normal";
 
+        public TeleportParticleController? ParticleController { get; private set; }
 
         public override void OnLoaded(ICoreAPI api)
         {
             base.OnLoaded(api);
             InitWorldInteractions();
+            ParticleController = new TeleportParticleController(api);
         }
 
         private void InitWorldInteractions()
@@ -90,7 +92,7 @@ namespace TeleportationNetwork
                     {
                         Block newBlock = world.GetBlock(CodeWithVariant("state", "normal"));
                         world.BlockAccessor.ExchangeBlock(newBlock.BlockId, blockSel.Position);
-                        be.MarkDirty(true);
+                        be.Update();
 
                         if (byPlayer.WorldData.CurrentGameMode != EnumGameMode.Creative)
                         {

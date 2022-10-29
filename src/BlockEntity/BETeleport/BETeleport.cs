@@ -8,7 +8,6 @@ using Vintagestory.API.Common.Entities;
 using Vintagestory.API.Datastructures;
 using Vintagestory.API.MathTools;
 using Vintagestory.API.Server;
-using Vintagestory.Client.NoObf;
 using Vintagestory.GameContent;
 
 namespace TeleportationNetwork
@@ -19,7 +18,7 @@ namespace TeleportationNetwork
 
         public bool Active { get; set; }
         private Dictionary<string, TeleportingPlayerData> ActivePlayers { get; } = new();
-        private float _activeStage;
+        private float _activeTime;
 
         public bool Repaired => (Block as BlockTeleport)?.IsNormal ?? false;
 
@@ -31,7 +30,12 @@ namespace TeleportationNetwork
 
         public TeleportManager TeleportManager { get; private set; } = null!;
         private SealRenderer SealRenderer { get; set; } = null!;
-        private TeleportParticleController ParticleController { get; set; } = null!;
+        private TeleportParticleController? ParticleController =>
+            (Block as BlockTeleport)?.ParticleController;
+
+        private ILoadedSound? _sound;
+        private float _soundVolume;
+        private float _soundPith;
 
 
         private MeshData? _frameMesh;
@@ -42,8 +46,7 @@ namespace TeleportationNetwork
             set
             {
                 _frameStack = value;
-                UpdateFrameMesh();
-                MarkDirty(true);
+                Update();
             }
         }
 
@@ -76,13 +79,22 @@ namespace TeleportationNetwork
                 CreateTeleport();
             }
 
-            if (api.Side == EnumAppSide.Client)
+            if (api is ICoreClientAPI capi)
             {
-                ParticleController = new TeleportParticleController((ICoreClientAPI)api, Pos);
-                SealRenderer = new SealRenderer(Pos, (ICoreClientAPI)api);
+                SealRenderer = new SealRenderer(Pos, capi);
+
+                _sound = capi.World.LoadSound(new SoundParams()
+                {
+                    Location = new AssetLocation("sounds/effect/translocate-idle.ogg"),
+                    ShouldLoop = true,
+                    Position = Pos.ToVec3f().AddCopy(.5f, 1, .5f),
+                    RelativePosition = false,
+                    DisposeOnFinish = false,
+                    Volume = 0
+                });
 
                 UpdateFrameMesh();
-                InitAnimator();
+                UpdateAnimator();
             }
 
             RegisterGameTickListener(OnGameTick, 50);
@@ -109,30 +121,45 @@ namespace TeleportationNetwork
 
         private void OnGameTick(float dt)
         {
-            if (Repaired)
+
+            if (Repaired && Active)
             {
-                if (Api.Side == EnumAppSide.Client)
-                {
-                    ParticleController.SpawnSealEdgeParticle();
-                    SealRenderer.Enabled = true;
-                    SealRenderer.Speed = (float)(1 + Math.Exp(_activeStage) * 1f);
-                }
-
-                if (Active)
-                {
-                    CheckActivePlayers(dt);
-
-                    if (Api.Side == EnumAppSide.Client)
-                    {
-                        ParticleController.SpawnActiveParticles();
-                    }
-                }
+                CheckActivePlayers(dt);
             }
-            else
+
+            if (Api.Side == EnumAppSide.Client)
             {
-                if (Api.Side == EnumAppSide.Client)
+                if (Repaired)
+                {
+                    if (_sound?.IsPlaying == false)
+                    {
+                        _sound.Start();
+                    }
+
+                    ParticleController?.SpawnSealEdgeParticle(Pos);
+                    SealRenderer.Enabled = true;
+                    SealRenderer.Speed = (float)(1 + Math.Exp(_activeTime) * 1f);
+
+                    if (Active)
+                    {
+                        ParticleController?.SpawnActiveParticles(Pos, _activeTime);
+
+                        _soundVolume = Math.Min(1f, _soundVolume + dt / 3);
+                        _soundPith = Math.Min(1.5f, _soundPith + dt / 3);
+                    }
+                    else
+                    {
+                        _soundVolume = Math.Max(0.5f, _soundVolume - dt);
+                        _soundPith = Math.Max(0.5f, _soundPith - dt);
+                    }
+
+                    _sound?.SetVolume(_soundVolume);
+                    _sound?.SetPitch(_soundPith);
+                }
+                else
                 {
                     SealRenderer.Enabled = false;
+                    _sound?.Stop();
                 }
             }
         }
@@ -196,7 +223,7 @@ namespace TeleportationNetwork
             }
 
             Active = ActivePlayers.Count > 0;
-            _activeStage = Math.Min(1, maxSecondsPassed / Constants.BeforeTeleportShowGUITime);
+            _activeTime = Math.Min(1, maxSecondsPassed / Constants.BeforeTeleportShowGUITime);
         }
 
         public void ActivateTeleportByPlayer(string playerUID)
@@ -255,7 +282,7 @@ namespace TeleportationNetwork
                 }
             }
 
-            if (packetid == Constants.TeleportToPacketId)
+            if (packetid == Constants.TeleportPlayerPacketId)
             {
                 using var ms = new MemoryStream(data);
                 using var reader = new BinaryReader(ms);
@@ -265,8 +292,17 @@ namespace TeleportationNetwork
 
                     if (Api.World.PlayerByUid(playerUID) is IServerPlayer player)
                     {
-                        Vec3d startPoint = Pos.ToVec3d().AddCopy(.5, -1, .5);
-                        TeleportUtil.AreaTeleportTo(player, startPoint, targetPoint, Constants.SealRadius);
+                        Vec3d startPoint = Pos.ToVec3d().AddCopy(.5, 1, .5);
+                        TeleportUtil.AreaTeleportTo(player, startPoint, targetPoint, Constants.SealRadius, (entity) =>
+                        {
+                            // one per tp
+                            if (entity is EntityPlayer entityPlayer && entityPlayer.PlayerUID == player.PlayerUID)
+                            {
+                                var soundLoc = new AssetLocation("sounds/effect/translocate-breakdimension.ogg");
+                                entity.World.PlaySoundAt(soundLoc, entity, null, true, 32, .5f);
+                            }
+                            ParticleController?.SpawnTeleportParticles(entity);
+                        });
                     }
                 }
             }
@@ -295,6 +331,7 @@ namespace TeleportationNetwork
         {
             base.OnBlockUnloaded();
             SealRenderer?.Dispose();
+            _sound?.Dispose();
         }
 
         public override void OnBlockRemoved()
@@ -307,6 +344,7 @@ namespace TeleportationNetwork
             }
 
             SealRenderer?.Dispose();
+            _sound?.Dispose();
         }
 
         public override void ToTreeAttributes(ITreeAttribute tree)
@@ -347,7 +385,7 @@ namespace TeleportationNetwork
             }
         }
 
-        private void InitAnimator()
+        private void UpdateAnimator()
         {
             if (AnimUtil != null && Api.Side == EnumAppSide.Client)
             {
@@ -357,47 +395,49 @@ namespace TeleportationNetwork
                     GetBehavior<BEBehaviorAnimatable>().animUtil = new(Api, this);
                 }
 
-                float rotY = Block.Shape.rotateY;
-                AnimUtil.InitializeAnimator(Core.ModId + "-teleport", new Vec3f(0, rotY, 0));
-
-                if (AnimUtil.activeAnimationsByAnimCode.Count == 0 ||
-                    AnimUtil.animator!.ActiveAnimationCount == 0)
+                if (Repaired)
                 {
-                    AnimUtil.StartAnimation(new AnimationMetaData()
+                    float rotY = Block.Shape.rotateY;
+                    AnimUtil.InitializeAnimator(Core.ModId + "-teleport", new Vec3f(0, rotY, 0));
+
+                    if (AnimUtil.activeAnimationsByAnimCode.Count == 0 ||
+                        AnimUtil.animator!.ActiveAnimationCount == 0)
                     {
-                        Animation = "largegears",
-                        Code = "largegears",
-                        AnimationSpeed = 25f,
-                        EaseInSpeed = float.MaxValue,
-                        EaseOutSpeed = float.MaxValue
-                    });
-                    AnimUtil.StartAnimation(new AnimationMetaData()
-                    {
-                        Animation = "smallgears",
-                        Code = "smallgears",
-                        AnimationSpeed = 50f,
-                        EaseInSpeed = float.MaxValue,
-                        EaseOutSpeed = float.MaxValue
-                    });
+                        AnimUtil.StartAnimation(new AnimationMetaData()
+                        {
+                            Animation = "largegears",
+                            Code = "largegears",
+                            AnimationSpeed = 25f,
+                            EaseInSpeed = float.MaxValue,
+                            EaseOutSpeed = float.MaxValue
+                        });
+
+                        AnimUtil.StartAnimation(new AnimationMetaData()
+                        {
+                            Animation = "smallgears",
+                            Code = "smallgears",
+                            AnimationSpeed = 50f,
+                            EaseInSpeed = float.MaxValue,
+                            EaseOutSpeed = float.MaxValue
+                        });
+                    }
                 }
             }
         }
 
-        // hack, not call then BlockEntity.MarkDirty calls!
-        /// <inheritdoc cref="BlockEntity.MarkDirty(bool, IPlayer)"/>
-        public new void MarkDirty(bool redrawOnClient = false, IPlayer? skipPlayer = null)
+        public void Update()
         {
-            if (redrawOnClient)
+            if (Api.Side == EnumAppSide.Client)
             {
                 UpdateFrameMesh();
-                InitAnimator();
+                UpdateAnimator();
             }
 
             CreateTeleport();
             Teleport.Enabled = Repaired;
             TeleportManager.Points.MarkDirty(Pos);
 
-            base.MarkDirty(redrawOnClient, skipPlayer);
+            MarkDirty(true);
         }
     }
 }

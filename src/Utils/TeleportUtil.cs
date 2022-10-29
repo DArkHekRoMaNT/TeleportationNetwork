@@ -1,5 +1,6 @@
 using System;
 using Vintagestory.API.Common;
+using Vintagestory.API.Common.Entities;
 using Vintagestory.API.MathTools;
 using Vintagestory.API.Server;
 using Vintagestory.GameContent;
@@ -9,7 +10,8 @@ namespace TeleportationNetwork
     public static class TeleportUtil
     {
         // Constants.SealRadius, add .5 1 .5
-        public static void AreaTeleportTo(IServerPlayer player, Vec3d startPoint, BlockPos targetPoint, float radius)
+        public static void AreaTeleportTo(IServerPlayer player, Vec3d startPoint, BlockPos targetPoint,
+            float radius, Action<Entity>? onTeleported = null)
         {
             var sapi = (ICoreServerAPI)player.Entity.Api;
             var manager = sapi.ModLoader.GetModSystem<TeleportManager>();
@@ -20,27 +22,29 @@ namespace TeleportationNetwork
             {
                 Vec3d point = targetPoint.ToVec3d();
                 point += entity.Pos.XYZ - startPoint;
-                point += new Vec3d(0.5, 2, 0.5);
+                point += new Vec3d(0.5, 1.5, 0.5);
 
                 if (entity is EntityPlayer entityPlayer)
                 {
-                    StabilityRelatedTeleportTo(entityPlayer, point);
+                    StabilityRelatedTeleportTo(entityPlayer, point, () => onTeleported?.Invoke(entity));
                 }
                 else
                 {
-                    entity.TeleportTo(point);
+                    entity.TeleportTo(point, () => onTeleported?.Invoke(entity));
                 }
 
                 Core.ModLogger.Notification($"{entity?.GetName()} teleported to {point} ({targetName})");
             }
         }
 
-        public static void AreaTeleportTo(IServerPlayer player, BlockPos targetPoint, float radius)
+        public static void AreaTeleportTo(IServerPlayer player, BlockPos targetPoint, float radius,
+            Action<Entity>? onTeleported = null)
         {
-            AreaTeleportTo(player, player.Entity.Pos.XYZ, targetPoint, radius);
+            AreaTeleportTo(player, player.Entity.Pos.XYZ, targetPoint, radius, onTeleported);
         }
 
-        public static void StabilityRelatedTeleportTo(this EntityPlayer entity, Vec3d pos)
+        public static void StabilityRelatedTeleportTo(this EntityPlayer entity, Vec3d pos,
+            Action? onTeleported = null)
         {
             if (entity.Api is not ICoreServerAPI sapi)
             {
@@ -82,11 +86,12 @@ namespace TeleportationNetwork
             }
             else
             {
-                entity.TeleportTo(pos);
+                entity.TeleportTo(pos, onTeleported);
             }
         }
 
-        public static void RandomTeleport(IServerPlayer player, int range = -1, Vec3i? pos = null)
+        public static void RandomTeleport(IServerPlayer player, int range = -1, Vec3i? pos = null,
+            Action? onTeleported = null)
         {
             try
             {
@@ -113,7 +118,7 @@ namespace TeleportationNetwork
                     OnLoaded = () =>
                     {
                         int y = (int)sapi.WorldManager.GetSurfacePosY(x, z)!;
-                        player.Entity.TeleportToDouble(x + 0.5f, y + 2, z + 0.5f);
+                        player.Entity.TeleportToDouble(x + 0.5f, y + 2, z + 0.5f, onTeleported);
                     }
                 });
             }
@@ -122,6 +127,13 @@ namespace TeleportationNetwork
                 Core.ModLogger.Error("Failed to teleport player to random location.");
                 Core.ModLogger.Error(e.Message);
             }
+        }
+
+        public static void TeleportTo(this Entity entity, Vec3d pos, Action? onTeleported = null)
+        {
+            var entityPos = entity.Pos.Copy();
+            entityPos.SetPos(pos);
+            entity.TeleportTo(entityPos, onTeleported);
         }
     }
 }
