@@ -157,7 +157,11 @@ namespace TeleportationNetwork
                     // Make sure its not just server lag (from BlockEntity/BETeleporter.cs)
                     Block block = Api.World.CollisionTester.GetCollidingBlock(Api.World.BlockAccessor,
                         activePlayer.Value.Player.SelectionBox, activePlayer.Value.Player.Pos.XYZ, true);
-                    if (block is not BlockTeleport)
+
+                    // Check what is not other teleport
+                    bool otherTp = activePlayer.Value.Player.Pos.AsBlockPos.DistanceTo(Pos) > 2;
+
+                    if (block is not BlockTeleport || otherTp)
                     {
                         toRemove.Add(activePlayer.Key);
                         continue;
