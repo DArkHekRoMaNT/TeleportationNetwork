@@ -93,6 +93,8 @@ namespace TeleportationNetwork
                     rpi.RenderMesh(_sealModelRef);
                 }
             }
+
+            prog.Stop();
         }
 
         public void Dispose()
