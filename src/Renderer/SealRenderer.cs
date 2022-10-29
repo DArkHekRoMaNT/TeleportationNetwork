@@ -16,7 +16,7 @@ namespace TeleportationNetwork
 
         private float timePassed;
 
-        private int sealTextureId;
+        private int[] sealTextureId;
         private int tgearTextureId;
         private readonly Matrixf modelMatrix;
 
@@ -34,7 +34,15 @@ namespace TeleportationNetwork
             Speed = 1;
             Progress = 0;
 
-            sealTextureId = api.Render.GetOrLoadTexture(new AssetLocation(Core.ModId, "textures/block/teleport/seal2.png"));
+            sealTextureId = new int[25];
+            for (int i = 0; i < 5; i++)
+            {
+                for (int j = 0; j < 5; j++)
+                {
+                    var loc = new AssetLocation(Core.ModId, $"textures/block/teleport/seal-{i}-{j}.png");
+                    sealTextureId[i * 5 + j] = api.Render.GetOrLoadTexture(loc);
+                }
+            }
             MeshData modelData = QuadMeshUtil.GetCustomQuadHorizontal(0, 0, 0, 1, 1, 255, 255, 255, 255);
             sealModelRef = api.Render.UploadMesh(modelData);
 
@@ -120,19 +128,26 @@ namespace TeleportationNetwork
 
 
             // Seal render
-            rpi.BindTexture2d(sealTextureId);
+
+            for (int i = 0; i < 5; i++)
+            {
+                for (int j = 0; j < 5; j++)
+                {
+                    rpi.BindTexture2d(sealTextureId[i * 5 + j]);
 
             prog.ModelMatrix = modelMatrix
                 .Identity()
                 .Translate(cx, cy + 0.01f, cz)
-                .Translate(-Constants.SealRadius, 0, -Constants.SealRadius)
-                .Scale(5, 0, 5)
+                        .Translate(-Constants.SealRadius + i, 0, -Constants.SealRadius + j)
                 .Values;
 
             prog.ViewMatrix = rpi.CameraMatrixOriginf;
             prog.ProjectionMatrix = rpi.CurrentProjectionMatrix;
 
             rpi.RenderMesh(sealModelRef);
+                }
+            }
+
 
             // Progress circle render
             rpi.BindTexture2d(tgearTextureId);

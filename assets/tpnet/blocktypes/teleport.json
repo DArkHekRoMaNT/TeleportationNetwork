@@ -19,7 +19,7 @@
     "lead": { "base": "game:block/metal/ingot/lead" },
 
     "empty": { "base": "empty" },
-    "seal": { "base": "block/teleport/seal2" }
+    "seal": { "base": "block/teleport/seal" }
   },
   "variantgroups": [
     {
