@@ -116,7 +116,6 @@ namespace TeleportationNetwork
                     ParticleController.SpawnSealEdgeParticle();
                     SealRenderer.Enabled = true;
                     SealRenderer.Speed = (float)(1 + Math.Exp(_activeStage) * 1f);
-                    SealRenderer.Progress = _activeStage;
                 }
 
                 if (Active)
