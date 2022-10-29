@@ -53,7 +53,7 @@ namespace TeleportationNetwork
 
             bool unstableTeleport = false;
 
-            if (stabilityEnabled)
+            if (stabilityEnabled && Core.Config.StabilityTeleportMode != "off")
             {
                 if (Core.Config.StabilityTeleportMode == "always")
                 {
