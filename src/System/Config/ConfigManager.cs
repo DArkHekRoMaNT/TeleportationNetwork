@@ -91,6 +91,7 @@ namespace TeleportationNetwork
             if (Configs.TryGetValue(type, out object config))
             {
                 config = ConfigUtil.CheckConfig(type, config);
+                ConfigUtil.SaveConfig(_api, type, config);
                 if (_serverChannel != null)
                 {
                     byte[] data = ConfigUtil.Serialize(config);
