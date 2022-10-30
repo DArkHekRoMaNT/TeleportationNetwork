@@ -17,7 +17,7 @@ namespace TeleportationNetwork
         {
             Command = "tpimp";
             Description = Core.ModPrefix + "Import teleport schematic";
-            Syntax = "/tpimp [list] or  /tpimp [paste|import] name";
+            Syntax = "/tpimp [list] or  /tpimp [paste|import|pasteraw] name";
             RequiredPrivilege = Privilege.gamemode;
             handler = Handler;
         }
@@ -27,14 +27,11 @@ namespace TeleportationNetwork
             switch (args?.PopWord())
             {
                 case "help":
-
-                    player.SendMessage(groupId, "/tpimp [list|paste|import]",
-                        EnumChatType.CommandError);
+                    player.SendMessage(groupId, Syntax, EnumChatType.CommandSuccess);
                     break;
 
 
                 case "list":
-
                     List<IAsset> schematics = player.Entity.Api.Assets
                         .GetMany(Constants.TeleportSchematicPath);
 
@@ -66,10 +63,14 @@ namespace TeleportationNetwork
                         (schema) => ImportSchematic(schema, player));
                     break;
 
+                case "pasteraw":
+                    BlockPos pos2 = player.Entity.Pos.AsBlockPos.Add(0, 3, 0);
+                    LoadSchematic(player, groupId, args, "/tpimp pasteraw [name]",
+                        (schema) => PasteSchematic(schema, player.Entity.World, pos2, false));
+                    break;
 
                 default:
-                    player.SendMessage(groupId, "/tpimp [list|paste|import]",
-                        EnumChatType.CommandError);
+                    player.SendMessage(groupId, Syntax, EnumChatType.CommandError);
                     break;
             }
         }
@@ -107,10 +108,10 @@ namespace TeleportationNetwork
             action.Invoke(schematic);
         }
 
-        private static void PasteSchematic(BlockSchematic schematic, IWorldAccessor world, BlockPos startPos, EnumOrigin origin = EnumOrigin.BottomCenter)
+        private static void PasteSchematic(BlockSchematic schematic, IWorldAccessor world, BlockPos startPos, bool replaceMetaBlocks = true, EnumOrigin origin = EnumOrigin.BottomCenter)
         {
             BlockPos originPos = schematic.GetStartPos(startPos, origin);
-            schematic.Place(world.BlockAccessor, world, originPos);
+            schematic.Place(world.BlockAccessor, world, originPos, replaceMetaBlocks);
         }
 
         private static void ImportSchematic(BlockSchematic schematic, IServerPlayer player)
