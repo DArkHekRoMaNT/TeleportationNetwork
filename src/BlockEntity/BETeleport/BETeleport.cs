@@ -301,9 +301,26 @@ namespace TeleportationNetwork
                                 var soundLoc = new AssetLocation("sounds/effect/translocate-breakdimension.ogg");
                                 entity.World.PlaySoundAt(soundLoc, entity, null, true, 32, .5f);
                             }
-                            ParticleController?.SpawnTeleportParticles(entity);
+                           ((ICoreServerAPI)Api).Network.BroadcastBlockEntityPacket(
+                               targetPoint.X, targetPoint.Y, targetPoint.Z,
+                               Constants.EntityTeleportedPacketId,
+                               BitConverter.GetBytes(entity.EntityId));
                         });
                     }
+                }
+            }
+        }
+
+        public override void OnReceivedServerPacket(int packetid, byte[] data)
+        {
+            base.OnReceivedServerPacket(packetid, data);
+
+            if(packetid == Constants.EntityTeleportedPacketId)
+            {
+                Entity entity = Api.World.GetEntityById(BitConverter.ToInt64(data, 0));
+                if (entity != null)
+                {
+                    ParticleController?.SpawnTeleportParticles(entity);
                 }
             }
         }

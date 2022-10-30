@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using Vintagestory.API.Client;
 using Vintagestory.API.Common;
 using Vintagestory.API.Common.Entities;
 using Vintagestory.API.MathTools;
@@ -10,12 +11,12 @@ namespace TeleportationNetwork
 {
     public class TeleportParticleController
     {
-        private readonly ICoreAPI _api;
+        private readonly ICoreClientAPI _api;
         private readonly SimpleParticleProperties _circleParticles;
         private readonly SimpleParticleProperties _teleportParticles;
-        private readonly int[] _colors;
+        private readonly Item _temporalGear;
 
-        public TeleportParticleController(ICoreAPI api)
+        public TeleportParticleController(ICoreClientAPI api)
         {
             _api = api;
 
@@ -55,7 +56,7 @@ namespace TeleportationNetwork
                 SizeEvolve = EvolvingNatFloat.create(EnumTransformFunction.LINEARNULLIFY, -0.5f)
             };
 
-            _colors = GetColorsFromPNG(api, "game:textures/item/resource/temporalgear.png");
+            _temporalGear = api.World.GetItem(new AssetLocation("gear-temporal"));
         }
         private void SpawnCircleEdgeParticle(float radius, Vec3d pos)
         {
@@ -107,8 +108,7 @@ namespace TeleportationNetwork
 
         public int GetRandomColor()
         {
-            int id = _api.World.Rand.Next(0, _colors.Length);
-            return _colors[id];
+            return _temporalGear.GetRandomColor(_api, null);
         }
 
         private static int[] GetColorsFromPNG(ICoreAPI api, string path)

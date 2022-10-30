@@ -25,7 +25,10 @@ namespace TeleportationNetwork
         {
             base.OnLoaded(api);
             InitWorldInteractions();
-            ParticleController = new TeleportParticleController(api);
+            if (api is ICoreClientAPI capi)
+            {
+                ParticleController = new TeleportParticleController(capi);
+            }
         }
 
         private void InitWorldInteractions()
