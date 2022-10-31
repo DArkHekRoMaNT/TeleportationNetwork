@@ -1,6 +1,7 @@
 using System;
 using System.Text;
 using Vintagestory.API.Client;
+using Vintagestory.API.Common;
 using Vintagestory.API.MathTools;
 using Vintagestory.GameContent;
 
@@ -97,6 +98,17 @@ namespace TeleportationNetwork
             {
                 string text = Teleport.Name;
                 hoverText.AppendLine(text);
+            }
+        }
+
+        public override void OnMouseUpOnElement(MouseEvent args, GuiElementMap mapElem)
+        {
+            base.OnMouseUpOnElement(args, mapElem);
+
+            if (_mouseOver && capi.World.Player.WorldData.CurrentGameMode == EnumGameMode.Creative)
+            {
+                capi.ModLoader.GetModSystem<TeleportManager>().
+                    TeleportPlayerTo(Teleport.Pos);
             }
         }
     }

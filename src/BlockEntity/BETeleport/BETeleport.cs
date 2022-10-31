@@ -287,10 +287,8 @@ namespace TeleportationNetwork
                 using var ms = new MemoryStream(data);
                 using var reader = new BinaryReader(ms);
                 {
-                    string playerUID = reader.ReadString();
                     BlockPos targetPoint = BlockPos.CreateFromBytes(reader);
-
-                    if (Api.World.PlayerByUid(playerUID) is IServerPlayer player)
+                    if (fromPlayer is IServerPlayer player)
                     {
                         Vec3d startPoint = Pos.ToVec3d().AddCopy(.5, 1, .5);
                         TeleportUtil.AreaTeleportTo(player, startPoint, targetPoint, Constants.SealRadius, (entity) =>

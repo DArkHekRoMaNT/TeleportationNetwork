@@ -119,5 +119,13 @@ namespace TeleportationNetwork
                 component.OnMouseMove(args, mapElem, hoverText);
             }
         }
+
+        public override void OnMouseUpClient(MouseEvent args, GuiElementMap mapElem)
+        {
+            foreach (var component in _components)
+            {
+                component.OnMouseUpOnElement(args, mapElem);
+            }
+        }
     }
 }
