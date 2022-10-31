@@ -1,0 +1,29 @@
+[
+  {
+    "code": "tpnet_teleport_common",
+    "name": "TpNet's teleport (common)",
+    "schematics": [ "tpnet/teleport/common" ],
+    "replacewithblocklayers": [ "game:soil-medium-normal", "game:soil-medium-none" ],
+    "chance": 5,
+    "offsetY": 0
+  },
+  {
+    "code": "tpnet_teleport_locust",
+    "name": "TpNet's teleport (locust)",
+    "schematics": [ "tpnet/teleport/locust" ],
+    "replacewithblocklayers": [ "game:soil-medium-normal", "game:soil-medium-none" ],
+    "chance": 1,
+    "offsetY": 0
+  },
+  {
+    "code": "tpnet_teleport_trader",
+    "name": "TpNet's teleport (trader)",
+    "schematics": [ "tpnet/teleport/trader" ],
+    "replacewithblocklayers": [ "game:soil-medium-normal", "game:soil-medium-none" ],
+    "buildProtected": true,
+    "buildProtectionDesc": "Trader Perimenter",
+    "buildProtectionName": "Trader",
+    "chance": 2,
+    "offsetY": -2
+  }
+]

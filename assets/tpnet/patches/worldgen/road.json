@@ -13,7 +13,7 @@
       "replacewithblocklayers": ["soil-medium-normal", "soil-medium-none"],
       "postPass": true,
       "placement": "surface",
-      "offsetY": -2
+      "offsetY": -1
     }
   },
   {
@@ -30,7 +30,7 @@
       "replacewithblocklayers": ["soil-medium-normal", "soil-medium-none"],
       "postPass": true,
       "placement": "surface",
-      "offsetY": -2
+      "offsetY": -1
     }
   }
 ]
