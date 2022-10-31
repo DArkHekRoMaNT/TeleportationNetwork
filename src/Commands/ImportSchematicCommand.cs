@@ -4,7 +4,9 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 using Vintagestory.API.Common;
+using Vintagestory.API.Common.Entities;
 using Vintagestory.API.Config;
+using Vintagestory.API.Datastructures;
 using Vintagestory.API.MathTools;
 using Vintagestory.API.Server;
 using Vintagestory.ServerMods.WorldEdit;
@@ -108,10 +110,86 @@ namespace TeleportationNetwork
             action.Invoke(schematic);
         }
 
-        private static void PasteSchematic(BlockSchematic schematic, IWorldAccessor world, BlockPos startPos, bool replaceMetaBlocks = true, EnumOrigin origin = EnumOrigin.BottomCenter)
+        private static void PasteSchematic(BlockSchematic schematic, IWorldAccessor world,
+            BlockPos startPos, bool replaceMetaBlocks = true, EnumOrigin origin = EnumOrigin.BottomCenter)
         {
             BlockPos originPos = schematic.GetStartPos(startPos, origin);
-            schematic.Place(world.BlockAccessor, world, originPos, replaceMetaBlocks);
+            if (replaceMetaBlocks)
+            {
+                schematic.Place(world.BlockAccessor, world, originPos, replaceMetaBlocks);
+            }
+            else
+            {
+                schematic.Place(world.BulkBlockAccessor, world, originPos, replaceMetaBlocks);
+                world.BulkBlockAccessor.Commit();
+                PlaceEntitiesAndBlockEntitiesRaw(schematic, world.BlockAccessor, world, originPos);
+            }
+        }
+
+        private static void PlaceEntitiesAndBlockEntitiesRaw(BlockSchematic schematic,
+            IBlockAccessor blockAccessor, IWorldAccessor worldForCollectibleResolve, BlockPos startPos)
+        {
+            var blockPos = new BlockPos();
+            foreach (KeyValuePair<uint, string> blockEntity2 in schematic.BlockEntities)
+            {
+                uint key = blockEntity2.Key;
+                int num = (int)(key & 0x1FF);
+                int num2 = (int)((key >> 20) & 0x1FF);
+                int num3 = (int)((key >> 10) & 0x1FF);
+                blockPos.Set(num + startPos.X, num2 + startPos.Y, num3 + startPos.Z);
+                BlockEntity blockEntity = blockAccessor.GetBlockEntity(blockPos);
+                if (blockEntity == null && blockAccessor is IWorldGenBlockAccessor)
+                {
+                    Block block = blockAccessor.GetBlock(blockPos, 1);
+                    if (block.EntityClass != null)
+                    {
+                        blockAccessor.SpawnBlockEntity(block.EntityClass, blockPos);
+                        blockEntity = blockAccessor.GetBlockEntity(blockPos);
+                    }
+                }
+
+                if (blockEntity != null)
+                {
+                    Block block2 = blockAccessor.GetBlock(blockPos, 1);
+                    var beClass = worldForCollectibleResolve.ClassRegistry
+                        .GetBlockEntityClass(blockEntity.GetType());
+                    if (block2.EntityClass != beClass)
+                    {
+                        worldForCollectibleResolve.Logger.Warning("Could not import block" +
+                            " entity data for schematic at {0}. There is already {1}, expected {2}." +
+                            " Probably overlapping ruins.", blockPos, blockEntity.GetType(),
+                            block2.EntityClass);
+                    }
+                    else
+                    {
+                        ITreeAttribute treeAttribute = schematic.DecodeBlockEntityData(blockEntity2.Value);
+                        treeAttribute.SetInt("posx", blockPos.X);
+                        treeAttribute.SetInt("posy", blockPos.Y);
+                        treeAttribute.SetInt("posz", blockPos.Z);
+                        blockEntity.FromTreeAttributes(treeAttribute, worldForCollectibleResolve);
+                        blockEntity.Pos = blockPos.Copy();
+                    }
+                }
+            }
+
+            Entity entity;
+            foreach (string entity2 in schematic.Entities)
+            {
+                using MemoryStream input = new MemoryStream(Ascii85.Decode(entity2));
+                BinaryReader binaryReader = new BinaryReader(input);
+                string entityClass = binaryReader.ReadString();
+                entity = worldForCollectibleResolve.ClassRegistry.CreateEntity(entityClass);
+                entity.FromBytes(binaryReader, isSync: false);
+                entity.DidImportOrExport(startPos);
+                if (blockAccessor is IWorldGenBlockAccessor worldGenBlockAccessor)
+                {
+                    worldGenBlockAccessor.AddEntity(entity);
+                }
+                else
+                {
+                    worldForCollectibleResolve.SpawnEntity(entity);
+                }
+            }
         }
 
         private static void ImportSchematic(BlockSchematic schematic, IServerPlayer player)
