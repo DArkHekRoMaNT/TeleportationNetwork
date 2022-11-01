@@ -20,7 +20,7 @@ namespace TeleportationNetwork
         private TeleportStructure[] _shuffledStructures = null!;
         private IWorldGenBlockAccessor _worldgenBlockAccessor = null!;
 
-        public override double ExecuteOrder() => 0.51;
+        public override double ExecuteOrder() => 0.51; // vanilla structures is 0.5
 
         public override void StartServerSide(ICoreServerAPI api)
         {
