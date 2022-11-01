@@ -442,17 +442,20 @@ namespace TeleportationNetwork
 
         public void Update()
         {
-            if (Api.Side == EnumAppSide.Client)
+            if (Api != null)
             {
-                UpdateFrameMesh();
-                UpdateAnimator();
+                if (Api.Side == EnumAppSide.Client)
+                {
+                    UpdateFrameMesh();
+                    UpdateAnimator();
+                }
+
+                CreateTeleport();
+                Teleport.Enabled = Repaired;
+                TeleportManager.Points.MarkDirty(Pos);
+
+                MarkDirty(true);
             }
-
-            CreateTeleport();
-            Teleport.Enabled = Repaired;
-            TeleportManager.Points.MarkDirty(Pos);
-
-            MarkDirty(true);
         }
     }
 }

@@ -64,5 +64,15 @@ namespace TeleportationNetwork
             MinValue = 0,
             Description = "Minimal distance between teleport structures")]
         public int MinTeleportDistance { get; set; }
+
+        [ConfigItem(typeof(bool),
+            false,
+            Description = "Remove all paper and metal lanterns from teleport structures if True")]
+        public bool DarknessMode { get; set; }
+
+        [ConfigItem(typeof(bool),
+            false,
+            Description = "Create only standard teleports with granite and aged wood")]
+        public bool BiomlessTeleports { get; set; }
     }
 }

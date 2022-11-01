@@ -14,14 +14,13 @@ namespace TeleportationNetwork
 
         private int _worldheight;
         private int _chunksize;
-        private int _regionChunkSize;
 
         private LCGRandom _strucRand = null!; // Deterministic random
         private TeleportStructure[] _structures = null!;
         private TeleportStructure[] _shuffledStructures = null!;
         private IWorldGenBlockAccessor _worldgenBlockAccessor = null!;
 
-        public override double ExecuteOrder() => 0.5;
+        public override double ExecuteOrder() => 0.51;
 
         public override void StartServerSide(ICoreServerAPI api)
         {
@@ -42,9 +41,7 @@ namespace TeleportationNetwork
         {
             _chunksize = _api.WorldManager.ChunkSize;
             _worldheight = _api.WorldManager.MapSizeY;
-            _regionChunkSize = _api.WorldManager.RegionSize / _chunksize;
-
-            _strucRand = new LCGRandom(_api.WorldManager.Seed + 1091);
+            _strucRand = new LCGRandom(_api.World.Seed + 1091);
 
             IAsset asset = _api.Assets.Get("tpnet:worldgen/teleports.json");
             _structures = asset.ToObject<TeleportStructure[]>();
@@ -74,16 +71,6 @@ namespace TeleportationNetwork
             _shuffledStructures.Shuffle(_strucRand);
 
             IMapRegion region = chunks[0].MapChunk.MapRegion;
-            var climateMap = region.ClimateMap;
-            int rlX = chunkX % _regionChunkSize;
-            int rlZ = chunkZ % _regionChunkSize;
-
-            float facC = (float)climateMap.InnerSize / _regionChunkSize;
-            var climateUpLeft = climateMap.GetUnpaddedInt((int)(rlX * facC), (int)(rlZ * facC));
-            var climateUpRight = climateMap.GetUnpaddedInt((int)(rlX * facC + facC), (int)(rlZ * facC));
-            var climateBotLeft = climateMap.GetUnpaddedInt((int)(rlX * facC), (int)(rlZ * facC + facC));
-            var climateBotRight = climateMap.GetUnpaddedInt((int)(rlX * facC + facC), (int)(rlZ * facC + facC));
-
             ushort[] heightMap = chunks[0].MapChunk.WorldGenTerrainHeightMap;
 
             for (int i = 0; i < _shuffledStructures.Length; i++)
@@ -101,8 +88,7 @@ namespace TeleportationNetwork
 
                     pos.Set(chunkX * _chunksize + dx, ySurface, chunkZ * _chunksize + dz);
 
-                    if (struc.TryGenerate(_worldgenBlockAccessor, _api.World, pos,
-                        climateUpLeft, climateUpRight, climateBotLeft, climateBotRight))
+                    if (struc.TryGenerate(_worldgenBlockAccessor, _api.World, pos))
                     {
                         Cuboidi loc = struc.LastPlacedSchematicLocation;
 

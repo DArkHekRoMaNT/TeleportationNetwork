@@ -9,5 +9,18 @@
   "tpimp-empty": "Не найдено",
 
   "blockhelp-teleport-rename": "Переименовать",
-  "blockhelp-teleport-change-frame": "Сменить рамку"
+  "blockhelp-teleport-change-frame": "Сменить рамку",
+
+  "block-brokenlantern-copper-*": "Сломанный медный фонарь",
+  "block-brokenlantern-brass-*": "Сломанный латунный фонарь",
+  "block-brokenlantern-blackbronze-*": "Сломанный фонарь из черной бронзы",
+  "block-brokenlantern-bismuth-*": "Сломанный висмутовый фонарь",
+  "block-brokenlantern-tinbronze-*": "Сломанный фонарь из оловянной бронзы",
+  "block-brokenlantern-bismuthbronze-*": "Сломанный фонарь из висмутовой бронзы",
+  "block-brokenlantern-iron-*": "Сломанный железный фонарь",
+  "block-brokenlantern-molybdochalkos-*": "Сломанный фонарь из молибдохалка",
+  "block-brokenlantern-silver-*": "Сломанный серебрянный фонарь",
+  "block-brokenlantern-gold-*": "Сломанный золотой фонарь",
+  "block-brokenlantern-steel-*": "Сломанный стальной фонарь",
+  "block-brokenlantern-meteoriciron-*": "Сломанный фонарь из метеоритного железа"
 }

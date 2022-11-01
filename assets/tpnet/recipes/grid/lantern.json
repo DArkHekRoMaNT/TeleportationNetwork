@@ -1,0 +1,60 @@
+[
+  {
+    "ingredientPattern": "QCQ,_P_",
+    "ingredients": {
+      "P": {
+        "type": "block",
+        "code": "brokenlantern-*-up",
+        "name": "material"
+      },
+      "Q": {
+        "type": "item",
+        "code": "game:clearquartz"
+      },
+      "C": {
+        "type": "item",
+        "code": "game:candle"
+      }
+    },
+    "width": 3,
+    "height": 2,
+    "output": {
+      "type": "block",
+      "code": "game:lantern-up",
+      "attributes": {
+        "material": "{material}",
+        "lining": "plain",
+        "glass": "quartz"
+      }
+    }
+  },
+  {
+    "ingredientPattern": "QCQ,_P_",
+    "ingredients": {
+      "P": {
+        "type": "block",
+        "code": "brokenlantern-*-up",
+        "name": "material"
+      },
+      "Q": {
+        "type": "block",
+        "code": "game:glassslab-plain-down-free"
+      },
+      "C": {
+        "type": "item",
+        "code": "game:candle"
+      }
+    },
+    "width": 3,
+    "height": 2,
+    "output": {
+      "type": "block",
+      "code": "game:lantern-up",
+      "attributes": {
+        "material": "{material}",
+        "lining": "plain",
+        "glass": "plain"
+      }
+    }
+  }
+]

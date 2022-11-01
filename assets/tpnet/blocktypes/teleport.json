@@ -35,7 +35,7 @@
   "replaceable": 200,
   "resistance": 4,
   "lightAbsorption": 0,
-  "lightHsv": [ 34, 7, 7 ],
+  "lightHsvByType": { "*-normal": [ 34, 7, 7 ] },
   "sideopaque": { "all": false },
   "sidesolid": { "all": false },
   "sounds": {

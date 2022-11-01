@@ -1,8 +1,9 @@
+using HarmonyLib;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Vintagestory.API.Common;
-using Vintagestory.API.Config;
 using Vintagestory.API.MathTools;
 using Vintagestory.API.Server;
 using Vintagestory.ServerMods;
@@ -11,25 +12,30 @@ namespace TeleportationNetwork
 {
     public class TeleportStructure
     {
+        public const int Size = 11;
+
         [JsonProperty, JsonRequired] public string Code { get; private set; } = null!;
         [JsonProperty, JsonRequired] public string[] Schematics { get; private set; } = null!;
-        [JsonProperty] public AssetLocation[]? ReplaceWithBlocklayers { get; private set; }
+        [JsonProperty] public AssetLocation[]? NotReplaceBlocks { get; private set; }
+        [JsonProperty] public AssetLocation? TeleportBlockCode { get; private set; }
+        [JsonProperty] public bool Ruin { get; private set; }
         [JsonProperty] public bool BuildProtected { get; private set; }
         [JsonProperty] public string? BuildProtectionDesc { get; private set; }
         [JsonProperty] public string? BuildProtectionName { get; private set; }
         [JsonProperty] public float Chance { get; private set; } = 0.05f;
         [JsonProperty] public int OffsetY { get; private set; } = 0;
 
-        public BlockSchematicStructure[][] SchematicDatas { get; private set; } = null!;
-        public BlockSchematicStructure[] PillarDatas { get; private set; } = null!;
-        public BlockSchematicStructure[] PillarBaseDatas { get; private set; } = null!;
-        public int[] ReplaceBlockIds { get; private set; } = null!;
         public Cuboidi LastPlacedSchematicLocation { get; } = new();
         public BlockSchematicStructure? LastPlacedSchematic { get; private set; }
 
+        private readonly BlockPos _tmpPos = new();
+
         private int _seaLevel;
         private LCGRandom _rand = null!;
-        private readonly BlockPos _tmpPos = new();
+        private TeleportSchematicStructure[][] _schematicDatas = null!;
+        private TeleportSchematicStructure[] _pillarDatas = null!;
+        private TeleportSchematicStructure[] _pillarBaseDatas = null!;
+        private StructureBlockResolver _resolver = null!;
 
         public void Init(ICoreServerAPI api, LCGRandom rand)
         {
@@ -37,25 +43,7 @@ namespace TeleportationNetwork
             _seaLevel = api.World.SeaLevel;
 
             InitSchematicData(api);
-
-            if (ReplaceWithBlocklayers != null)
-            {
-                ReplaceBlockIds = new int[ReplaceWithBlocklayers.Length];
-                for (int i = 0; i < ReplaceBlockIds.Length; i++)
-                {
-                    Block block = api.World.GetBlock(ReplaceWithBlocklayers[i]);
-                    if (block == null)
-                    {
-                        throw new Exception(string.Format("Schematic with code {0} has replace" +
-                            " block layer {1} defined, but no such block found!",
-                            Code, ReplaceWithBlocklayers[i]));
-                    }
-                    else
-                    {
-                        ReplaceBlockIds[i] = block.Id;
-                    }
-                }
-            }
+            InitResolver();
         }
 
         private void InitSchematicData(ICoreServerAPI api)
@@ -67,7 +55,7 @@ namespace TeleportationNetwork
             var blockLayerConfig = asset.ToObject<BlockLayerConfig>();
             blockLayerConfig.ResolveBlockIds(api, rockstrata);
 
-            var schematics = new List<BlockSchematicStructure[]>();
+            var schematics = new List<TeleportSchematicStructure[]>();
             for (int i = 0; i < Schematics.Length; i++)
             {
                 var schematic = LoadSchematic(api, blockLayerConfig, Schematics[i]);
@@ -76,13 +64,34 @@ namespace TeleportationNetwork
                     schematics.Add(schematic);
                 }
             }
-            SchematicDatas = schematics.ToArray();
+            _schematicDatas = schematics.ToArray();
 
-            PillarDatas = LoadSchematic(api, blockLayerConfig, "tpnet/pillar")!;
-            PillarBaseDatas = LoadSchematic(api, blockLayerConfig, "tpnet/pillar-base")!;
+            _pillarDatas = LoadSchematic(api, blockLayerConfig, "tpnet/teleport/pillar")!;
+            _pillarBaseDatas = LoadSchematic(api, blockLayerConfig, "tpnet/teleport/pillar-base")!;
         }
 
-        private static BlockSchematicStructure[]? LoadSchematic(ICoreServerAPI api, BlockLayerConfig config, string name)
+        private void InitResolver()
+        {
+            var blockCodes = new List<AssetLocation>();
+
+            foreach (var schematic in _schematicDatas)
+            {
+                foreach (var rotatedSchematic in schematic)
+                {
+                    blockCodes.AddRange(rotatedSchematic.BlockCodes.Values.ToArray());
+                }
+            }
+
+            for (int i = 0; i < 4; i++)
+            {
+                blockCodes.AddRange(_pillarBaseDatas[i].BlockCodes.Values.ToArray());
+                blockCodes.AddRange(_pillarDatas[i].BlockCodes.Values.ToArray());
+            }
+
+            _resolver = new(blockCodes.Distinct().ToArray(), NotReplaceBlocks, TeleportBlockCode, Ruin);
+        }
+
+        private static TeleportSchematicStructure[]? LoadSchematic(ICoreServerAPI api, BlockLayerConfig config, string name)
         {
             IAsset[] assets;
 
@@ -98,7 +107,7 @@ namespace TeleportationNetwork
 
             foreach (IAsset asset in assets)
             {
-                var schematic = asset.ToObject<BlockSchematicStructure>();
+                var schematic = asset.ToObject<TeleportSchematicStructure>();
                 if (schematic == null)
                 {
                     api.World.Logger.Warning("Could not load {0}", name);
@@ -107,14 +116,14 @@ namespace TeleportationNetwork
 
                 schematic.FromFileName = asset.Name;
 
-                var rotatedSchematics = new BlockSchematicStructure[4];
+                var rotatedSchematics = new TeleportSchematicStructure[4];
                 rotatedSchematics[0] = schematic;
 
                 for (int k = 0; k < 4; k++)
                 {
                     if (k > 0)
                     {
-                        rotatedSchematics[k] = rotatedSchematics[0].Clone();
+                        rotatedSchematics[k] = rotatedSchematics[0].Copy();
                         rotatedSchematics[k].TransformWhilePacked(api.World, EnumOrigin.BottomCenter, k * 90);
                     }
                     rotatedSchematics[k].blockLayerConfig = config;
@@ -129,111 +138,107 @@ namespace TeleportationNetwork
             return null;
         }
 
-        public bool TryGenerate(IBlockAccessor blockAccessor,
-            IWorldAccessor worldForCollectibleResolve, BlockPos pos,
-            int climateUpLeft, int climateUpRight, int climateBotLeft, int climateBotRight)
+        public bool TryGenerate(IBlockAccessor blockAccessor, IWorldAccessor world, BlockPos pos)
         {
-            pos.Y += OffsetY;
-            _rand.InitPositionSeed(pos.X, pos.Z);
-
-            int num = _rand.NextInt(SchematicDatas.Length);
-            int orient = _rand.NextInt(4);
-            var schematic = SchematicDatas[num][orient];
-
-            int widthHalf = (int)Math.Ceiling(schematic.SizeX / 2f);
-            int lenghtHalf = (int)Math.Ceiling(schematic.SizeZ / 2f);
-
-            int width = schematic.SizeX;
-            int length = schematic.SizeZ;
-            int height = schematic.SizeY;
-
-            _tmpPos.Set(pos.X + widthHalf, 0, pos.Z + lenghtHalf);
-            int centerY = blockAccessor.GetTerrainMapheightAt(_tmpPos);
-            if (!OnFlatGround(pos, width, length, centerY, blockAccessor))
+            if (!CheckArea(pos, blockAccessor, world, out bool generatePillar, out int lowerY))
             {
                 return false;
             }
 
-            pos.Y = centerY + 1 + OffsetY;
+            _rand.InitPositionSeed(pos.X, pos.Z);
 
-            bool generatePillar = false;
-            if (SubMergedInWater(pos, width, length, height, blockAccessor))
-            {
-                generatePillar = true;
-                pos.Y = _seaLevel + 1;
-                if (SubMergedInWater(pos, width, length, height, blockAccessor))
-                {
-                    return false;
-                }
-            }
+            int number = _rand.NextInt(_schematicDatas.Length);
+            int orientation = _rand.NextInt(4);
+            var schematic = _schematicDatas[number][orientation];
 
-            if (!SatisfiesMinDistance(pos, worldForCollectibleResolve)) return false;
-            if (IsStructureAt(pos, worldForCollectibleResolve)) return false;
+            _resolver.InitNew(blockAccessor, pos, _rand, schematic);
 
             if (generatePillar)
             {
-                var pillarSchematic = SchematicDatas[num][orient];
-                for (int i = centerY + 1; i < pos.Y; i++)
+                var pillarBaseSchematic = _pillarBaseDatas[orientation];
+                _tmpPos.Set(pos.X, pos.Y - 2, pos.Z);
+                pillarBaseSchematic.PlaceWithReplaceBlockIds(blockAccessor, world, _tmpPos, _resolver);
+
+                var pillarSchematic = _pillarDatas[orientation];
+                for (int i = lowerY; i < pos.Y - 2; i++)
                 {
-                    pos.Y = i;
-                    pillarSchematic.PlaceRespectingBlockLayers(blockAccessor, worldForCollectibleResolve, pos,
-                        climateUpLeft, climateUpRight, climateBotLeft, climateBotRight, ReplaceBlockIds);
+                    _tmpPos.Set(pos.X, i, pos.Z);
+                    pillarSchematic.PlaceWithReplaceBlockIds(blockAccessor, world, _tmpPos, _resolver);
                 }
-                pos.Y = _seaLevel + 1 + OffsetY;
             }
 
-            schematic.PlaceRespectingBlockLayers(blockAccessor, worldForCollectibleResolve, pos,
-                climateUpLeft, climateUpRight, climateBotLeft, climateBotRight, ReplaceBlockIds);
+            schematic.PlaceWithReplaceBlockIds(blockAccessor, world, pos, _resolver);
 
             LastPlacedSchematic = schematic;
             LastPlacedSchematicLocation.Set(pos.X, pos.Y, pos.Z,
-            pos.X + schematic.SizeX, pos.Y + schematic.SizeY, pos.Z + schematic.SizeZ);
+                pos.X + schematic.SizeX, pos.Y + schematic.SizeY, pos.Z + schematic.SizeZ);
+
             return true;
         }
 
-        private static bool SubMergedInWater(BlockPos pos, int width, int length, int height, IBlockAccessor blockAccessor)
+        private bool CheckArea(BlockPos pos, IBlockAccessor blockAccessor,
+            IWorldAccessor worldForCollectibleResolve, out bool generatePillar, out int lowerY)
         {
-            int widthHalf = (int)Math.Ceiling(width / 2f);
-            int lenghtHalf = (int)Math.Ceiling(length / 2f);
+            lowerY = pos.Y;
+            generatePillar = false;
 
-            int[] dx = new int[] { widthHalf, width, width, 0, 0 };
-            int[] dz = new int[] { lenghtHalf, length, 0, length, 0 };
-
-            for (int i = 0; i < height; i++)
+            if (!SatisfiesMinDistance(pos, worldForCollectibleResolve) ||
+                IsStructureAt(pos, worldForCollectibleResolve))
             {
-                for (int j = 0; j < dx.Length; j++)
-                {
-                    Block block = blockAccessor.GetBlock(pos.X + dx[j], pos.Y + i, pos.Z + dz[j], BlockLayersAccess.Fluid);
-                    if (block.IsLiquid())
-                    {
-                        return true;
-                    }
-                }
+                return false;
             }
 
-            return false;
+            if (IsLiquid(pos.X, pos.Y + 1, pos.Z, blockAccessor))
+            {
+                pos.Y = _seaLevel - 1;
+                if (IsLiquid(pos.X, pos.Y + 1, pos.Z, blockAccessor))
+                {
+                    return false;
+                }
+                generatePillar = true;
+            }
+
+            pos.Y = pos.Y + 1 + OffsetY;
+
+            int areaSize = Size * Size;
+            bool isFreeArea = IsFreeArea(pos, blockAccessor, out int lowerCount, out lowerY);
+            if (!isFreeArea || !generatePillar && lowerCount > areaSize / 4)
+            {
+                return false;
+            }
+
+            generatePillar = generatePillar || lowerCount != 0;
+            return true;
         }
 
-        private bool OnFlatGround(BlockPos pos, int width, int length, int centerY, IBlockAccessor blockAccessor)
+        private bool IsLiquid(int x, int y, int z, IBlockAccessor blockAccessor)
         {
-            // Probe all 4 corners + center if they are on the same height
+            _tmpPos.Set(x, y, z);
+            return blockAccessor.GetBlock(_tmpPos, BlockLayersAccess.Fluid).IsLiquid();
+        }
 
-            _tmpPos.Set(pos.X, 0, pos.Z);
-            int topLeftY = blockAccessor.GetTerrainMapheightAt(_tmpPos);
-
-            _tmpPos.Set(pos.X + width, 0, pos.Z);
-            int topRightY = blockAccessor.GetTerrainMapheightAt(_tmpPos);
-
-            _tmpPos.Set(pos.X, 0, pos.Z + length);
-            int botLeftY = blockAccessor.GetTerrainMapheightAt(_tmpPos);
-
-            _tmpPos.Set(pos.X + width, 0, pos.Z + length);
-            int botRightY = blockAccessor.GetTerrainMapheightAt(_tmpPos);
-
-            int diff = GameMath.Max(centerY, topLeftY, topRightY, botLeftY, botRightY) -
-                GameMath.Min(centerY, topLeftY, topRightY, botLeftY, botRightY);
-
-            return diff == 0;
+        private bool IsFreeArea(BlockPos pos, IBlockAccessor blockAccessor, out int lowerCount, out int lowerY)
+        {
+            lowerCount = 0;
+            lowerY = pos.Y - 1;
+            for (int i = 0; i < Size; i++)
+            {
+                for (int j = 0; j < Size; j++)
+                {
+                    _tmpPos.Set(pos.X + i, 0, pos.Z + j);
+                    int y = blockAccessor.GetTerrainMapheightAt(_tmpPos);
+                    if (y < pos.Y - 1)
+                    {
+                        lowerCount++;
+                        if (y < lowerY)
+                        {
+                            lowerY = y;
+                        }
+                    }
+                    else if (y > pos.Y - 1) return false;
+                }
+            }
+            return true;
         }
 
         public static bool IsStructureAt(BlockPos pos, IWorldAccessor world)
@@ -289,7 +294,8 @@ namespace TeleportationNetwork
 
                     foreach (var val in mapregion.GeneratedStructures)
                     {
-                        if (val.Group == Constants.TeleportStructureGroup && val.Location.Center.SquareDistanceTo(pos.X, pos.Y, pos.Z) < minDistSq)
+                        if (val.Group == Constants.TeleportStructureGroup &&
+                            val.Location.Center.SquareDistanceTo(pos.X, pos.Y, pos.Z) < minDistSq)
                         {
                             return false;
                         }
