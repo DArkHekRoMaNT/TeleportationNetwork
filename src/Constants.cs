@@ -13,5 +13,6 @@ namespace TeleportationNetwork
         public const int EntityTeleportedPacketId = 13516;
 
         public const string TeleportStructureGroup = "tpnet-teleport";
+        public const int MaxPillarHeight = 20;
     }
 }

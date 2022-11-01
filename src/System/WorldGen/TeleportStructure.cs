@@ -202,7 +202,9 @@ namespace TeleportationNetwork
 
             int areaSize = Size * Size;
             bool isFreeArea = IsFreeArea(pos, blockAccessor, out int lowerCount, out lowerY);
-            if (!isFreeArea || !generatePillar && lowerCount > areaSize / 4)
+            if (!isFreeArea ||
+                !generatePillar && lowerCount > areaSize / 4 ||
+                pos.Y - lowerY > Constants.MaxPillarHeight)
             {
                 return false;
             }
