@@ -14,5 +14,6 @@ namespace TeleportationNetwork
 
         public const string TeleportStructureGroup = "tpnet-teleport";
         public const int MaxPillarHeight = 20;
+        public const int TeleportTriesPerChunk = 10;
     }
 }

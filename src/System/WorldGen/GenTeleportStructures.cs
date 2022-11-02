@@ -3,7 +3,6 @@ using Vintagestory.API.Common;
 using Vintagestory.API.Datastructures;
 using Vintagestory.API.MathTools;
 using Vintagestory.API.Server;
-using Vintagestory.API.Util;
 using Vintagestory.ServerMods;
 
 namespace TeleportationNetwork
@@ -14,10 +13,10 @@ namespace TeleportationNetwork
 
         private int _worldheight;
         private int _chunksize;
+        private float _fullChance;
 
-        private LCGRandom _strucRand = null!; // Deterministic random
+        private LCGRandom _strucRand = null!;
         private TeleportStructure[] _structures = null!;
-        private TeleportStructure[] _shuffledStructures = null!;
         private IWorldGenBlockAccessor _worldgenBlockAccessor = null!;
 
         public override double ExecuteOrder() => 0.51; // vanilla structures is 0.5
@@ -49,84 +48,88 @@ namespace TeleportationNetwork
             {
                 LCGRandom rand = new(_api.World.Seed + i + 512);
                 _structures[i].Init(_api, rand);
+                _fullChance += _structures[i].Chance;
             }
-            _shuffledStructures = new TeleportStructure[_structures.Length];
         }
 
-        private void OnChunkColumnGenPostPass(IServerChunk[] chunks, int chunkX, int chunkZ, ITreeAttribute chunkGenParams = null)
+        private void OnChunkColumnGenPostPass(IServerChunk[] chunks, int chunkX, int chunkZ,
+            ITreeAttribute? chunkGenParams = null)
         {
             _worldgenBlockAccessor.BeginColumn();
-
-            var pos = new BlockPos();
-
             _strucRand.InitPositionSeed(chunkX, chunkZ);
 
-            // We need to make a copy each time to preserve determinism
-            // which is crucial for the translocator to find an exit point
-            for (int i = 0; i < _shuffledStructures.Length; i++)
+            var pos = new BlockPos(chunkX * _chunksize, 0, chunkZ * _chunksize);
+            if (!TeleportStructure.SatisfiesMinDistance(pos, _api.World))
             {
-                _shuffledStructures[i] = _structures[i];
+                return;
             }
-
-            _shuffledStructures.Shuffle(_strucRand);
 
             IMapRegion region = chunks[0].MapChunk.MapRegion;
             ushort[] heightMap = chunks[0].MapChunk.WorldGenTerrainHeightMap;
 
-            for (int i = 0; i < _shuffledStructures.Length; i++)
+            float chance = _strucRand.NextFloat() * _fullChance;
+            for (int i = 0; i < _structures.Length; i++)
             {
-                TeleportStructure struc = _shuffledStructures[i];
-
-                float chance = struc.Chance;
-
-                while (chance-- > _strucRand.NextFloat())
+                TeleportStructure struc = _structures[i];
+                chance -= struc.Chance;
+                if (chance <= 0)
                 {
-                    int dx = _strucRand.NextInt(_chunksize);
-                    int dz = _strucRand.NextInt(_chunksize);
-                    int ySurface = heightMap[dz * _chunksize + dx];
-                    if (ySurface <= 0 || ySurface >= _worldheight - 15) continue;
-
-                    pos.Set(chunkX * _chunksize + dx, ySurface, chunkZ * _chunksize + dz);
-
-                    if (struc.TryGenerate(_worldgenBlockAccessor, _api.World, pos))
+                    for (int tries = 0; tries < Constants.TeleportTriesPerChunk; tries++)
                     {
-                        Cuboidi loc = struc.LastPlacedSchematicLocation;
+                        int dx = _strucRand.NextInt(_chunksize);
+                        int dz = _strucRand.NextInt(_chunksize);
+                        int ySurface = heightMap[dz * _chunksize + dx];
+                        if (ySurface <= 0 || ySurface >= _worldheight - 15) continue;
 
-                        string code = struc.Code + (struc.LastPlacedSchematic == null ?
-                            "" : "/" + struc.LastPlacedSchematic.FromFileName);
+                        pos.Set(chunkX * _chunksize + dx, ySurface, chunkZ * _chunksize + dz);
 
-                        region.GeneratedStructures.Add(new GeneratedStructure()
+                        if (struc.TryGenerate(_worldgenBlockAccessor, _api.World, pos))
                         {
-                            Code = code,
-                            Group = Constants.TeleportStructureGroup,
-                            Location = loc.Clone()
-                        });
+                            Cuboidi loc = struc.LastPlacedSchematicLocation;
 
-                        region.DirtyForSaving = true;
+                            string code = struc.Code + (struc.LastPlacedSchematic == null ?
+                                "" : "/" + struc.LastPlacedSchematic.FromFileName);
 
-                        bool buildProtected = struc.BuildProtected;
-                        if (Core.Config.TeleportBuildProtected == "on")
-                        {
-                            buildProtected = true;
-                        }
-                        else if (Core.Config.TeleportBuildProtected == "off")
-                        {
-                            buildProtected = false;
-                        }
-
-                        if (buildProtected)
-                        {
-                            _api.World.Claims.Add(new LandClaim()
+                            region.GeneratedStructures.Add(new GeneratedStructure()
                             {
-                                Areas = new List<Cuboidi>() { loc.Clone() },
-                                Description = struc.BuildProtectionDesc ?? "Teleport Perimeter",
-                                ProtectionLevel = 10,
-                                LastKnownOwnerName = struc.BuildProtectionName ?? "Teleport",
-                                AllowUseEveryone = true
+                                Code = code,
+                                Group = Constants.TeleportStructureGroup,
+                                Location = loc.Clone()
                             });
+
+                            region.DirtyForSaving = true;
+
+                            AddBuildProtection(struc, loc);
+                            break;
                         }
                     }
+                    break;
                 }
+            }
+        }
+
+        private void AddBuildProtection(TeleportStructure struc, Cuboidi loc)
+        {
+            bool buildProtected = struc.BuildProtected;
+            if (Core.Config.TeleportBuildProtected == "on")
+            {
+                buildProtected = true;
+            }
+            else if (Core.Config.TeleportBuildProtected == "off")
+            {
+                buildProtected = false;
+            }
+
+            if (buildProtected)
+            {
+                _api.World.Claims.Add(new LandClaim()
+                {
+                    Areas = new List<Cuboidi>() { loc.Clone() },
+                    Description = struc.BuildProtectionDesc ?? "Teleport Perimeter",
+                    ProtectionLevel = 10,
+                    LastKnownOwnerName = struc.BuildProtectionName ?? "Teleport",
+                    AllowUseEveryone = true
+                });
             }
         }
     }
