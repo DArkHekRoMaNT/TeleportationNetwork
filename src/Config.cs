@@ -74,5 +74,11 @@ namespace TeleportationNetwork
             false,
             Description = "Create only standard teleports with granite and aged wood")]
         public bool BiomlessTeleports { get; set; }
+
+        [ConfigItem(typeof(string),
+            "trader-only",
+            Values = new string[] { "on", "off", "trader-only" },
+            Description = "Create claim for teleport structure")]
+        public string TeleportBuildProtected { get; set; } = null!;
     }
 }
