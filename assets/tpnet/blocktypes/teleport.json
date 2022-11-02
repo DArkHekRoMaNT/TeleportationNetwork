@@ -27,11 +27,18 @@
       "states": [ "broken", "normal" ]
     }
   ],
-  "creativeinventory": {
-    "general": [ "*" ],
-    "decorative": [ "*" ],
-    "tpnet": [ "*" ]
-  },
+  "creativeinventoryStacks": [
+    {
+      "tabs": [ "general", "decorative", "tpnet" ],
+      "stacks": [
+        {
+          "type": "block",
+          "code": "teleport-{state}",
+          "attributes": { "frameCode": "game:cobblestone-granite" }
+        }
+      ]
+    }
+  ],
   "replaceable": 200,
   "resistance": 4,
   "lightAbsorption": 0,

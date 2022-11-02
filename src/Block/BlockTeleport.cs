@@ -1,5 +1,3 @@
-using HarmonyLib;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Vintagestory.API.Client;
@@ -129,7 +127,6 @@ namespace TeleportationNetwork
         }
 
         public override void OnBlockBroken(IWorldAccessor world, BlockPos pos, IPlayer byPlayer, float dropQuantityMultiplier = 1)
-
         {
             if (Core.Config.Unbreakable && byPlayer.WorldData.CurrentGameMode != EnumGameMode.Creative)
             {
@@ -155,13 +152,23 @@ namespace TeleportationNetwork
         {
             bool flag = base.DoPlaceBlock(world, byPlayer, blockSel, byItemStack);
 
-            if (api.Side == EnumAppSide.Server)
+            if (world.BlockAccessor.GetBlockEntity(blockSel.Position) is BETeleport be)
             {
-                if (flag && byPlayer.WorldData.CurrentGameMode == EnumGameMode.Creative)
+                if (api.Side == EnumAppSide.Server)
                 {
-                    if (api.World.BlockAccessor.GetBlockEntity(blockSel.Position) is BETeleport be)
+                    if (flag && byPlayer.WorldData.CurrentGameMode == EnumGameMode.Creative)
                     {
                         be.ActivateTeleportByPlayer(byPlayer.PlayerUID);
+                    }
+                }
+
+                string? frameCode = byItemStack?.Attributes.GetString("frameCode");
+                if (frameCode != null)
+                {
+                    Block? frameBlock = world.GetBlock(new AssetLocation(frameCode));
+                    if (frameBlock != null)
+                    {
+                        be.FrameStack = new ItemStack(frameBlock);
                     }
                 }
             }
@@ -169,17 +176,48 @@ namespace TeleportationNetwork
             return flag;
         }
 
-        public override ItemStack[] GetDrops(IWorldAccessor world, BlockPos pos, IPlayer byPlayer, float dropQuantityMultiplier = 1)
+        public override ItemStack OnPickBlock(IWorldAccessor world, BlockPos pos)
         {
-            var drops = base.GetDrops(world, pos, byPlayer, dropQuantityMultiplier) ?? Array.Empty<ItemStack>();
+            var stack = base.OnPickBlock(world, pos);
             if (world.BlockAccessor.GetBlockEntity(pos) is BETeleport be)
             {
-                if (be.FrameStack.Collectible.Code != BETeleport.DefaultFrameCode)
+                if (be.FrameStack != null)
                 {
-                    drops.AddItem(be.FrameStack);
+                    stack.Attributes.SetString("frameCode", be.FrameStack.Collectible.Code.ToString());
                 }
             }
-            return drops;
+            return stack;
+        }
+
+        public override void OnBeforeRender(ICoreClientAPI capi, ItemStack itemstack,
+            EnumItemRenderTarget target, ref ItemRenderInfo renderinfo)
+        {
+            string? frameStackCode = itemstack.Attributes.GetString("frameCode");
+            if (frameStackCode != null)
+            {
+                string key = Core.ModId + "_teleportFrameMesh_" + Code + "_" + frameStackCode;
+                renderinfo.ModelRef = ObjectCacheUtil.GetOrCreate(capi, key, () =>
+                {
+                    capi.Tesselator.TesselateBlock(this, out MeshData baseMesh);
+
+                    Block? frameBlock = capi.World.GetBlock(new AssetLocation(frameStackCode));
+                    if (frameBlock != null)
+                    {
+                        var shapeCode = new AssetLocation(Core.ModId, "shapes/block/teleport/frame.json");
+                        Shape frameShape = capi.Assets.Get<Shape>(shapeCode);
+                        capi.Tesselator.TesselateShape(frameBlock, frameShape, out MeshData frameMesh);
+                        baseMesh.AddMeshData(frameMesh);
+                    }
+
+                    return capi.Render.UploadMesh(baseMesh);
+                });
+            }
+            base.OnBeforeRender(capi, itemstack, target, ref renderinfo);
+        }
+
+        public override ItemStack[] GetDrops(IWorldAccessor world, BlockPos pos, IPlayer byPlayer, float dropQuantityMultiplier = 1)
+        {
+            return new ItemStack[] { OnPickBlock(world, pos) };
         }
 
         public override WorldInteraction[] GetPlacedBlockInteractionHelp(IWorldAccessor world, BlockSelection selection, IPlayer forPlayer)
