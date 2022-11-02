@@ -78,7 +78,7 @@ namespace TeleportationNetwork
         [ConfigItem(typeof(string),
             "trader-only",
             Values = new string[] { "on", "off", "trader-only" },
-            Description = "Create claim for teleport structure")]
+            Description = "Create claim for teleport structure (does not affect generated structures)")]
         public string TeleportBuildProtected { get; set; } = null!;
     }
 }

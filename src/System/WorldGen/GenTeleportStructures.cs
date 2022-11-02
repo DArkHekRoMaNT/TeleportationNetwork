@@ -104,14 +104,24 @@ namespace TeleportationNetwork
 
                         region.DirtyForSaving = true;
 
-                        if (struc.BuildProtected)
+                        bool buildProtected = struc.BuildProtected;
+                        if (Core.Config.TeleportBuildProtected == "on")
+                        {
+                            buildProtected = true;
+                        }
+                        else if (Core.Config.TeleportBuildProtected == "off")
+                        {
+                            buildProtected = false;
+                        }
+
+                        if (buildProtected)
                         {
                             _api.World.Claims.Add(new LandClaim()
                             {
                                 Areas = new List<Cuboidi>() { loc.Clone() },
-                                Description = struc.BuildProtectionDesc,
+                                Description = struc.BuildProtectionDesc ?? "Teleport Perimeter",
                                 ProtectionLevel = 10,
-                                LastKnownOwnerName = struc.BuildProtectionName,
+                                LastKnownOwnerName = struc.BuildProtectionName ?? "Teleport",
                                 AllowUseEveryone = true
                             });
                         }

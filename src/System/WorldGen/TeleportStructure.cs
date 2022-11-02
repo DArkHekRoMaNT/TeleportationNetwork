@@ -66,17 +66,6 @@ namespace TeleportationNetwork
 
             _pillarDatas = LoadSchematic(api, blockLayerConfig, "tpnet/teleport/pillar")!;
             _pillarBaseDatas = LoadSchematic(api, blockLayerConfig, "tpnet/teleport/pillar-base")!;
-
-            if (Core.Config.TeleportBuildProtected == "on")
-            {
-                BuildProtected = true;
-                BuildProtectionName = "Teleport";
-                BuildProtectionDesc = "Teleport Perimeter";
-            }
-            else if (Core.Config.TeleportBuildProtected == "off")
-            {
-                BuildProtected = false;
-            }
         }
 
         private void InitResolver()
