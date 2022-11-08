@@ -4,7 +4,7 @@
   "name": "Teleportation Network",
   "authors": [ "DArkHekRoMaNT" ],
   "description": "Adds a network of surface teleports",
-  "version": "1.8.0-pre.6",
+  "version": "1.8.0-pre.7",
   "dependencies": {
     "game": "1.17.0"
   },
