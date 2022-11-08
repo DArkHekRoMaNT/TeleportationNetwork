@@ -116,11 +116,16 @@ namespace TeleportationNetwork
                         activeSlot.Itemstack.Block.DrawType == EnumDrawType.Cube &&
                         !activeSlot.Itemstack.Collectible.Equals(activeSlot.Itemstack, be.FrameStack))
                     {
+                        if (byPlayer.WorldData.CurrentGameMode == EnumGameMode.Creative ||
+                            world.Claims.TryAccess(byPlayer, blockSel.Position, EnumBlockAccessFlags.BuildOrBreak))
+                        {
                         api.World.SpawnItemEntity(be.FrameStack, blockSel.Position.ToVec3d().Add(TopMiddlePos));
                         be.FrameStack = activeSlot.TakeOut(1);
+                            be.MarkDirty(true);
                         return true;
                     }
                 }
+            }
             }
 
             return base.OnBlockInteractStart(world, byPlayer, blockSel);
