@@ -23,7 +23,7 @@ namespace TeleportationNetwork
         public bool Repaired => (Block as BlockTeleport)?.IsNormal ?? false;
 
         private GuiDialogTeleportList? _teleportDlg;
-        private GuiDialogRenameTeleport? _renameDlg;
+        private GuiDialogEditTeleport? _editDlg;
 
         private BlockEntityAnimationUtil? AnimUtil
             => GetBehavior<BEBehaviorAnimatable>()?.animUtil;
@@ -250,15 +250,15 @@ namespace TeleportationNetwork
             }
         }
 
-        public void OpenRenameDlg()
+        public void OpenEditDialog()
         {
-            if (Api.Side == EnumAppSide.Client)
+            if (Api is ICoreClientAPI capi)
             {
-                _renameDlg ??= new GuiDialogRenameTeleport(Pos, (ICoreClientAPI)Api);
+                _editDlg ??= new GuiDialogEditTeleport(capi, Pos);
 
-                if (!_renameDlg.IsOpened())
+                if (!_editDlg.IsOpened())
                 {
-                    _renameDlg.TryOpen();
+                    _editDlg.TryOpen();
                 }
             }
         }
@@ -272,15 +272,6 @@ namespace TeleportationNetwork
         public override void OnReceivedClientPacket(IPlayer fromPlayer, int packetid, byte[] data)
         {
             base.OnReceivedClientPacket(fromPlayer, packetid, data);
-
-            if (packetid == Constants.ChangeTeleportNamePacketId)
-            {
-                if (Api.World.Claims.TryAccess(fromPlayer, Pos, EnumBlockAccessFlags.Use))
-                {
-                    Teleport.Name = Encoding.UTF8.GetString(data);
-                    TeleportManager.Points.MarkDirty(Pos);
-                }
-            }
 
             if (packetid == Constants.TeleportPlayerPacketId)
             {
@@ -313,7 +304,7 @@ namespace TeleportationNetwork
         {
             base.OnReceivedServerPacket(packetid, data);
 
-            if(packetid == Constants.EntityTeleportedPacketId)
+            if (packetid == Constants.EntityTeleportedPacketId)
             {
                 Entity entity = Api.World.GetEntityById(BitConverter.ToInt64(data, 0));
                 if (entity != null)

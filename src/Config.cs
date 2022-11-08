@@ -80,5 +80,30 @@ namespace TeleportationNetwork
             Values = new string[] { "on", "off", "trader-only" },
             Description = "Create claim for teleport structure (does not affect generated structures)")]
         public string TeleportBuildProtected { get; set; } = null!;
+
+        [ConfigItem(typeof(bool),
+            true,
+            ClientOnly = true,
+            Description = "Show teleport points on map")]
+        public bool ShowTeleportOnMap { get; set; }
+
+        [ConfigItem(typeof(string),
+            "spiral",
+            Values = new string[] { "circle", "bee", "cave", "home", "ladder", "pick", "rocks", "ruins", "spiral", "star1", "star2", "trader", "vessel" },
+            ClientOnly = true,
+            Description = "Default repaired teleport icon on the map")]
+        public string DefaultTeleportIcon { get; set; } = null!;
+
+        [ConfigItem(typeof(string),
+            "#23cca2",
+            ClientOnly = true,
+            Description = "Default repaired teleport icon color")]
+        public string DefaultTeleportColor { get; set; } = null!;
+
+        [ConfigItem(typeof(string),
+            "#104430",
+            ClientOnly = true,
+            Description = "Broken teleport icon color")]
+        public string BrokenTeleportColor { get; set; } = null!;
     }
 }

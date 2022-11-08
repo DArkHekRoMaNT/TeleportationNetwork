@@ -15,7 +15,7 @@ namespace TeleportationNetwork
         private readonly List<MapComponent> _components = new();
 
         public Dictionary<string, LoadedTexture> TexturesByIcon { get; } = new();
-        public List<string> WaypointIcons { get; set; } = new()
+        public string[] WaypointIcons { get; } = new string[]
         {
             "circle",
             "bee",
@@ -32,6 +32,15 @@ namespace TeleportationNetwork
             "vessel"
         };
 
+        public List<int> WaypointColors { get; }
+        private static readonly string[] _hexColors = new string[]
+        {
+            "#F9D0DC", "#F179AF", "#F15A4A", "#ED272A", "#A30A35", "#  FFDE98", "#EFFD5F", "#F6EA5E", "#FDBB3A", "#C8772E",
+            "#F47832", "C3D941", "#9FAB3A", "#94C948", "#47B749", "#366E4F", "#516D66", "93D7E3", "#7698CF", "#20909E",
+            "#14A4DD", "#204EA2", "#28417A", "#C395C4", "#92479B", "#8E007E", "#5E3896", "D9D4CE", "#AFAAA8", "#706D64",
+            "#4F4C2B", "#BF9C86", "#9885530", "#5D3D21", "#FFFFFF", "#080504"
+        };
+
         public MeshRef QuadModel { get; private set; }
 
         public override string Title => "TpNetOverlay";
@@ -43,13 +52,22 @@ namespace TeleportationNetwork
             manager.Points.Changed += RebuildMapComponents;
 
             QuadModel = api.Render.UploadMesh(QuadMeshUtil.GetQuad());
+
+            WaypointColors = new List<int>();
+            for (int i = 0; i < _hexColors.Length; i++)
+            {
+                WaypointColors.Add(ColorUtil.Hex2Int(_hexColors[i]));
+            }
         }
 
         public override void Render(GuiElementMap mapElem, float dt)
         {
-            foreach (var component in _components)
+            if (Core.Config.ShowTeleportOnMap)
             {
-                component.Render(mapElem, dt);
+                foreach (var component in _components)
+                {
+                    component.Render(mapElem, dt);
+                }
             }
         }
 
@@ -125,6 +143,7 @@ namespace TeleportationNetwork
             foreach (var component in _components)
             {
                 component.OnMouseUpOnElement(args, mapElem);
+                if (args.Handled) break;
             }
         }
     }

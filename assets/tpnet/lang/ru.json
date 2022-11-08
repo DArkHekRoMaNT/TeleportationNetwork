@@ -8,7 +8,7 @@
 
   "tpimp-empty": "Не найдено",
 
-  "blockhelp-teleport-rename": "Переименовать",
+  "blockhelp-teleport-edit": "Редактировать",
   "blockhelp-teleport-change-frame": "Сменить рамку",
 
   "block-brokenlantern-copper-*": "Сломанный медный фонарь",
@@ -22,5 +22,8 @@
   "block-brokenlantern-silver-*": "Сломанный серебрянный фонарь",
   "block-brokenlantern-gold-*": "Сломанный золотой фонарь",
   "block-brokenlantern-steel-*": "Сломанный стальной фонарь",
-  "block-brokenlantern-meteoriciron-*": "Сломанный фонарь из метеоритного железа"
+  "block-brokenlantern-meteoriciron-*": "Сломанный фонарь из метеоритного железа",
+
+  "edittpdlg-title": "Изменить телепорт",
+  "edittpdlg-order-label": "Сортировка"
 }

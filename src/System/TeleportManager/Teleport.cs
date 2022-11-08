@@ -1,6 +1,11 @@
 using ProtoBuf;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using Vintagestory.API.Client;
 using Vintagestory.API.MathTools;
+using Vintagestory.Common;
+using Vintagestory.GameContent;
 
 namespace TeleportationNetwork
 {
@@ -13,9 +18,7 @@ namespace TeleportationNetwork
 
         public List<Teleport> Neighbours { get; private set; }
         public List<string> ActivatedByPlayers { get; private set; }
-
-        public string Icon { get; set; }
-        public int Color { get; set; }
+        public Dictionary<string, TeleportClientData> ClientData { get; private set; }
 
         private Teleport()
         {
@@ -24,9 +27,7 @@ namespace TeleportationNetwork
             Pos = new BlockPos();
             Neighbours = new List<Teleport>();
             ActivatedByPlayers = new List<string>();
-
-            Icon = "spiral";
-            Color = ColorUtil.Hex2Int("#FF23cca2");
+            ClientData = new Dictionary<string, TeleportClientData>();
         }
 
         public Teleport(BlockPos pos) : this()
@@ -39,6 +40,40 @@ namespace TeleportationNetwork
             Pos = pos;
             Name = name;
             Enabled = enabled;
+        }
+
+        public TeleportClientData GetClientData(string playerUID)
+        {
+            ClientData.TryGetValue(playerUID, out TeleportClientData data);
+            return data?.Clone() ?? new TeleportClientData();
+        }
+
+        public TeleportClientData GetClientData(ICoreClientAPI capi)
+            => GetClientData(capi.World.Player.PlayerUID);
+
+        public void SetClientData(string playerUID, TeleportClientData data)
+        {
+            if (ClientData.ContainsKey(playerUID))
+            {
+                ClientData[playerUID] = data;
+            }
+            else
+            {
+                ClientData.Add(playerUID, data);
+            }
+        }
+
+        public void SetClientData(ICoreClientAPI capi, TeleportClientData data)
+            => SetClientData(capi.World.Player.PlayerUID, data);
+
+        public Teleport ForPlayer(string playerUID)
+        {
+            var teleport = (Teleport)MemberwiseClone();
+            teleport.ClientData = new Dictionary<string, TeleportClientData>()
+            {
+                { playerUID, GetClientData(playerUID) }
+            };
+            return teleport;
         }
     }
 }

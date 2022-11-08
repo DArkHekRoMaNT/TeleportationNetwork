@@ -47,7 +47,7 @@ namespace TeleportationNetwork
             {
                 WorldInteractions.Add(new WorldInteraction()
                 {
-                    ActionLangCode = Core.ModId + ":blockhelp-teleport-rename",
+                    ActionLangCode = Core.ModId + ":blockhelp-teleport-edit",
                     MouseButton = EnumMouseButton.Right,
                     HotKeyCode = "sneak"
                 });
@@ -81,7 +81,7 @@ namespace TeleportationNetwork
             {
                 if (byPlayer.Entity.Controls.Sneak)
                 {
-                    be.OpenRenameDlg();
+                    be.OpenEditDialog();
                     return true;
                 }
 
@@ -119,13 +119,13 @@ namespace TeleportationNetwork
                         if (byPlayer.WorldData.CurrentGameMode == EnumGameMode.Creative ||
                             world.Claims.TryAccess(byPlayer, blockSel.Position, EnumBlockAccessFlags.BuildOrBreak))
                         {
-                        api.World.SpawnItemEntity(be.FrameStack, blockSel.Position.ToVec3d().Add(TopMiddlePos));
-                        be.FrameStack = activeSlot.TakeOut(1);
+                            api.World.SpawnItemEntity(be.FrameStack, blockSel.Position.ToVec3d().Add(TopMiddlePos));
+                            be.FrameStack = activeSlot.TakeOut(1);
                             be.MarkDirty(true);
-                        return true;
+                            return true;
+                        }
                     }
                 }
-            }
             }
 
             return base.OnBlockInteractStart(world, byPlayer, blockSel);

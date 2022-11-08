@@ -1,7 +1,11 @@
 using ProtoBuf;
+using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Xml.Linq;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
+using Vintagestory.API.Config;
 using Vintagestory.API.MathTools;
 using Vintagestory.API.Server;
 using Vintagestory.GameContent;
@@ -41,11 +45,19 @@ namespace TeleportationNetwork
                     .RegisterMessageType<RemoveTeleportMessage>()
                     .RegisterMessageType<SyncTeleportListMessage>()
                     .RegisterMessageType<TeleportPlayerMessage>()
+                    .SetMessageHandler<SyncTeleportMessage>(OnReceiveClientSyncTeleportMessage)
                     .SetMessageHandler<TeleportPlayerMessage>(OnReceiveTeleportPlayerMessage);
 
-                Points.ValueChanged += teleport => _serverChannel.BroadcastPacket(new SyncTeleportMessage(teleport));
+                Points.ValueChanged += teleport =>
+                {
+                    foreach (var player in _api.World.AllOnlinePlayers)
+                    {
+                        var message = new SyncTeleportMessage(teleport.ForPlayer(player.PlayerUID));
+                        _serverChannel.SendPacket(message, (IServerPlayer)player);
+                    }
+                };
                 Points.ValueRemoved += pos => _serverChannel.BroadcastPacket(new RemoveTeleportMessage(pos));
-                sapi.Event.PlayerJoin += player => _serverChannel.SendPacket(new SyncTeleportListMessage(Points), player);
+                sapi.Event.PlayerJoin += player => _serverChannel.SendPacket(new SyncTeleportListMessage(Points.ForPlayer(player)), player);
             }
         }
 
@@ -59,11 +71,6 @@ namespace TeleportationNetwork
         {
             IAsset names = api.Assets.Get(new AssetLocation(Core.ModId, "config/names.json"));
             DefaultNames = names?.ToObject<List<string>>() ?? DefaultNames;
-        }
-
-        public void MarkDirty()
-        {
-            _serverChannel?.BroadcastPacket(new SyncTeleportListMessage(Points));
         }
 
         public string GetRandomName()
@@ -112,6 +119,42 @@ namespace TeleportationNetwork
                     });
                 }
             }
+        }
+
+        public void UpdateTeleport(Teleport teleport)
+        {
+            _clientChannel?.SendPacket(new SyncTeleportMessage(teleport));
+        }
+
+        private void OnReceiveClientSyncTeleportMessage(IServerPlayer fromPlayer,
+            SyncTeleportMessage msg)
+        {
+            var teleport = Points[msg.Teleport.Pos];
+            if (teleport == null) return;
+
+            teleport.SetClientData(fromPlayer.PlayerUID, msg.Teleport.GetClientData(fromPlayer.PlayerUID));
+
+            if (teleport.Name != msg.Teleport.Name)
+            {
+                int chunkSize = _api.World.BlockAccessor.ChunkSize;
+                int chunkX = teleport.Pos.X / chunkSize;
+                int chunkZ = teleport.Pos.Z / chunkSize;
+
+                ((ICoreServerAPI)_api).WorldManager.LoadChunkColumnPriority(chunkX, chunkZ, new ChunkLoadOptions()
+                {
+                    OnLoaded = delegate
+                    {
+                        if (fromPlayer.WorldData.CurrentGameMode == EnumGameMode.Creative ||
+                            _api.World.Claims.TryAccess(fromPlayer, teleport.Pos, EnumBlockAccessFlags.Use))
+                        {
+                            teleport.Name = msg.Teleport.Name;
+                            Points.MarkDirty(teleport.Pos);
+                        }
+                    }
+                });
+            }
+
+            Points.MarkDirty(teleport.Pos);
         }
 
         [ProtoContract(ImplicitFields = ImplicitFields.AllPublic)]

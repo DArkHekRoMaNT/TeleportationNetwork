@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Vintagestory.API.MathTools;
+using Vintagestory.API.Server;
 
 namespace TeleportationNetwork
 {
@@ -97,6 +98,16 @@ namespace TeleportationNetwork
                 _teleports.Add(teleport.Pos, teleport);
             }
             Changed?.Invoke();
+        }
+
+        public TeleportList ForPlayer(IServerPlayer player)
+        {
+            var list = new TeleportList();
+            foreach (var teleport in _teleports)
+            {
+                list[teleport.Key] = teleport.Value.ForPlayer(player.PlayerUID);
+            }
+            return list;
         }
     }
 }

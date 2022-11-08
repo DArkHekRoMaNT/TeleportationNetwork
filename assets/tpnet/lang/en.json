@@ -8,7 +8,7 @@
 
   "tpimp-empty": "Not found",
 
-  "blockhelp-teleport-rename": "Rename",
+  "blockhelp-teleport-edit": "Edit",
   "blockhelp-teleport-change-frame": "Change frame",
 
   "config-unbreakable": "Unbreakable teleports now is {0}",
@@ -27,5 +27,8 @@
   "block-brokenlantern-silver-*": "Broken silver lantern",
   "block-brokenlantern-gold-*": "Broken gold lantern",
   "block-brokenlantern-steel-*": "Broken steel lantern",
-  "block-brokenlantern-meteoriciron-*": "Broken meteoric iron lantern"
+  "block-brokenlantern-meteoriciron-*": "Broken meteoric iron lantern",
+
+  "edittpdlg-title": "Edit teleport",
+  "edittpdlg-order-label": "Sort"
 }

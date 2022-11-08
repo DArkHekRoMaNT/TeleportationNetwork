@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Text;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
@@ -9,41 +10,48 @@ namespace TeleportationNetwork
 {
     public class TeleportMapComponent : MapComponent
     {
+        private readonly Teleport _teleport;
+        private readonly TeleportClientData _data;
         private readonly TeleportMapLayer _teleportLayer;
         private readonly Matrixf _mvMat = new();
         private readonly Vec4f _color = new();
 
         private Vec2f _viewPos = new();
         private bool _mouseOver;
+        private GuiDialogEditTeleport? _editTeleportDialog;
 
-
-        public Teleport Teleport { get; set; }
-        public Vec3d MapPos => Teleport.Pos.ToVec3d().AddCopy(.5, 0, .5);
+        public Vec3d MapPos => _teleport.Pos.ToVec3d().AddCopy(.5, 0, .5);
 
         public TeleportMapComponent(ICoreClientAPI capi, Teleport teleport, TeleportMapLayer teleportLayer) : base(capi)
         {
-            Teleport = teleport;
+            _teleport = teleport;
             _teleportLayer = teleportLayer;
+            _data = _teleport.GetClientData(capi);
 
-            if (Teleport.Enabled)
+            if (_teleport.Enabled)
             {
-                Teleport.Color = ColorUtil.Hex2Int("#FF23cca2");
+                ColorUtil.ToRGBAVec4f(_data.Color, ref _color);
             }
             else
             {
-                // a 10, b 11, c 12, d 13, e 14, f 15
-                Teleport.Color = ColorUtil.Hex2Int("#FF116651");
+                int color = ColorUtil.Hex2Int(Core.Config.BrokenTeleportColor);
+                ColorUtil.ToRGBAVec4f(color, ref _color);
             }
 
-            ColorUtil.ToRGBAVec4f(Teleport.Color, ref _color);
+            _color.A = 1;
         }
 
         public override void Render(GuiElementMap map, float dt)
         {
             map.TranslateWorldPosToViewPos(MapPos, ref _viewPos);
-
-            if (_viewPos.X < -10 || _viewPos.Y < -10 ||
-                _viewPos.X > map.Bounds.OuterWidth + 10 || _viewPos.Y > map.Bounds.OuterHeight + 10)
+            if (_data.Pinned)
+            {
+                map.Api.Render.PushScissor(null);
+                map.ClampButPreserveAngle(ref _viewPos, 2);
+            }
+            else if (_viewPos.X < -10 || _viewPos.Y < -10 ||
+                _viewPos.X > map.Bounds.OuterWidth + 10 ||
+                _viewPos.Y > map.Bounds.OuterHeight + 10)
             {
                 return;
             }
@@ -61,7 +69,7 @@ namespace TeleportationNetwork
 
             float hover = (_mouseOver ? 6 : 0) - 1.5f * Math.Max(1, 1 / map.ZoomLevel);
 
-            if (!_teleportLayer.TexturesByIcon.TryGetValue(Teleport.Icon, out LoadedTexture tex))
+            if (!_teleportLayer.TexturesByIcon.TryGetValue(_data.Icon, out LoadedTexture tex))
             {
                 _teleportLayer.TexturesByIcon.TryGetValue("circle", out tex);
             }
@@ -81,6 +89,11 @@ namespace TeleportationNetwork
 
                 api.Render.RenderMesh(_teleportLayer.QuadModel);
             }
+
+            if (_data.Pinned)
+            {
+                map.Api.Render.PopScissor();
+            }
         }
 
         public override void OnMouseMove(MouseEvent args, GuiElementMap mapElem, StringBuilder hoverText)
@@ -91,13 +104,27 @@ namespace TeleportationNetwork
             double x = viewPos.X + mapElem.Bounds.renderX;
             double y = viewPos.Y + mapElem.Bounds.renderY;
 
+            if (_data.Pinned)
+            {
+                mapElem.ClampButPreserveAngle(ref viewPos, 2);
+                x = viewPos.X + mapElem.Bounds.renderX;
+                y = viewPos.Y + mapElem.Bounds.renderY;
+
+                x = (float)GameMath.Clamp(x, mapElem.Bounds.renderX + 2, mapElem.Bounds.renderX + mapElem.Bounds.InnerWidth - 2);
+                y = (float)GameMath.Clamp(y, mapElem.Bounds.renderY + 2, mapElem.Bounds.renderY + mapElem.Bounds.InnerHeight - 2);
+            }
             double dX = args.X - x;
             double dY = args.Y - y;
 
             if (_mouseOver = Math.Abs(dX) < 8 && Math.Abs(dY) < 8)
             {
-                string text = Teleport.Name;
+                string text = _teleport.Name;
                 hoverText.AppendLine(text);
+
+                if (!string.IsNullOrWhiteSpace(_data.Note))
+                {
+                    hoverText.AppendLine(_data.Note);
+                }
             }
         }
 
@@ -105,10 +132,27 @@ namespace TeleportationNetwork
         {
             base.OnMouseUpOnElement(args, mapElem);
 
-            if (_mouseOver && capi.World.Player.WorldData.CurrentGameMode == EnumGameMode.Creative)
+            if (_mouseOver)
             {
-                capi.ModLoader.GetModSystem<TeleportManager>().
-                    TeleportPlayerTo(Teleport.Pos);
+                if (args.Button == EnumMouseButton.Left &&
+                    capi.World.Player.WorldData.CurrentGameMode == EnumGameMode.Creative)
+                {
+                    capi.ModLoader.GetModSystem<TeleportManager>().TeleportPlayerTo(_teleport.Pos);
+                }
+                else if(args.Button == EnumMouseButton.Right)
+                {
+                    if (_editTeleportDialog != null)
+                    {
+                        _editTeleportDialog.TryClose();
+                        _editTeleportDialog.Dispose();
+                    }
+
+                    var mapdlg = capi.ModLoader.GetModSystem<WorldMapManager>().worldMapDlg;
+                    _editTeleportDialog = new GuiDialogEditTeleport(capi, _teleport.Pos, _teleportLayer);
+                    _editTeleportDialog.TryOpen();
+                    _editTeleportDialog.OnClosed += () => capi.Gui.RequestFocus(mapdlg);
+                    args.Handled = true;
+                }
             }
         }
     }
