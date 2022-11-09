@@ -13,6 +13,7 @@
     "schematics": [ "tpnet/teleport/locust" ],
     "teleportBlockCode": "game:rockpolished-granite",
     "ruin": true,
+    "special":  true,
     "chance": 1,
     "offsetY": 0
   },
@@ -21,6 +22,7 @@
     "name": "TpNet's teleport (trader)",
     "schematics": [ "tpnet/teleport/trader" ],
     "teleportBlockCode": "game:planks-aged-hor",
+    "special": true,
     "buildProtected": true,
     "buildProtectionDesc": "Trader Perimenter",
     "buildProtectionName": "Trader",

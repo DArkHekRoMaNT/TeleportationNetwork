@@ -17,6 +17,7 @@ namespace TeleportationNetwork
         [JsonProperty] public AssetLocation[]? NotReplaceBlocks { get; private set; }
         [JsonProperty] public AssetLocation? TeleportBlockCode { get; private set; }
         [JsonProperty] public bool Ruin { get; private set; }
+        [JsonProperty] public bool Special { get; private set; }
         [JsonProperty] public bool BuildProtected { get; private set; }
         [JsonProperty] public string? BuildProtectionDesc { get; private set; }
         [JsonProperty] public string? BuildProtectionName { get; private set; }

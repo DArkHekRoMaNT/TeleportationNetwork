@@ -105,5 +105,10 @@ namespace TeleportationNetwork
             ClientOnly = true,
             Description = "Broken teleport icon color")]
         public string BrokenTeleportColor { get; set; } = null!;
+
+        [ConfigItem(typeof(bool),
+            false,
+            Description = "Disable trader and locust teleport structures")]
+        public bool NoSpecialTeleports { get; set; }
     }
 }

@@ -74,6 +74,11 @@ namespace TeleportationNetwork
                 chance -= struc.Chance;
                 if (chance <= 0)
                 {
+                    if (struc.Special && Core.Config.NoSpecialTeleports)
+                    {
+                        break;
+                    }
+
                     for (int tries = 0; tries < Constants.TeleportTriesPerChunk; tries++)
                     {
                         int dx = _strucRand.NextInt(_chunksize);
