@@ -51,7 +51,7 @@ namespace TeleportationNetwork
                     }
                     Mod.Logger.Event($"Data loaded for {list.Count} teleports");
                     Mod.Logger.Event("Check teleport exists (async)");
-                    _sapi.ModLoader.GetModSystem<TeleportManager>().CheckAllTeleport();
+                    _sapi.ModLoader.GetModSystem<TeleportManager>().CheckAllTeleportExists();
                 }
                 else
                 {

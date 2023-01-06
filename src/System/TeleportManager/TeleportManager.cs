@@ -1,11 +1,8 @@
 using ProtoBuf;
-using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Xml.Linq;
+using System.Linq;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
-using Vintagestory.API.Config;
 using Vintagestory.API.MathTools;
 using Vintagestory.API.Server;
 using Vintagestory.GameContent;
@@ -56,8 +53,16 @@ namespace TeleportationNetwork
                         _serverChannel.SendPacket(message, (IServerPlayer)player);
                     }
                 };
-                Points.ValueRemoved += pos => _serverChannel.BroadcastPacket(new RemoveTeleportMessage(pos));
-                sapi.Event.PlayerJoin += player => _serverChannel.SendPacket(new SyncTeleportListMessage(Points.ForPlayer(player)), player);
+
+                Points.ValueRemoved += pos =>
+                {
+                    _serverChannel.BroadcastPacket(new RemoveTeleportMessage(pos));
+                };
+
+                sapi.Event.PlayerJoin += player =>
+                {
+                    _serverChannel.SendPacket(new SyncTeleportListMessage(Points.ForPlayer(player)), player);
+                };
             }
         }
 
@@ -94,7 +99,7 @@ namespace TeleportationNetwork
             fromPlayer.Entity?.StabilityRelatedTeleportTo(msg.Pos.ToVec3d().AddCopy(0.5, 1.5, 0.5));
         }
 
-        public void CheckAllTeleport()
+        public void CheckAllTeleportExists()
         {
             if (_api is ICoreServerAPI sapi)
             {
@@ -165,7 +170,6 @@ namespace TeleportationNetwork
             public RemoveTeleportMessage(BlockPos pos) => Pos = pos;
         }
 
-
         [ProtoContract(ImplicitFields = ImplicitFields.AllPublic)]
         private class SyncTeleportListMessage
         {
@@ -174,7 +178,6 @@ namespace TeleportationNetwork
             public SyncTeleportListMessage(TeleportList points) => Points = points;
         }
 
-
         [ProtoContract(ImplicitFields = ImplicitFields.AllPublic)]
         private class SyncTeleportMessage
         {
@@ -182,7 +185,6 @@ namespace TeleportationNetwork
             protected SyncTeleportMessage() => Teleport = null!;
             public SyncTeleportMessage(Teleport teleport) => Teleport = teleport;
         }
-
 
         [ProtoContract(ImplicitFields = ImplicitFields.AllPublic)]
         private class TeleportPlayerMessage

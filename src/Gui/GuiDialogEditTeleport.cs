@@ -1,8 +1,6 @@
 using System;
 using System.Globalization;
-using System.IO;
 using System.Linq;
-using System.Runtime.Remoting.Messaging;
 using Vintagestory.API.Client;
 using Vintagestory.API.Config;
 using Vintagestory.API.MathTools;

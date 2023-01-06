@@ -20,6 +20,8 @@ namespace TeleportationNetwork
         public event Action<Teleport>? ValueChanged;
         public event Action<BlockPos>? ValueRemoved;
 
+        public int Count => _teleports.Count;
+
         public Teleport? this[BlockPos pos]
         {
             get => _teleports.TryGetValue(pos, out Teleport value) ? value : null;
