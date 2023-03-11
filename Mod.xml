@@ -1,0 +1,16 @@
+<Project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.w3.org/2001/XMLSchema Mod.xsd">
+	<PropertyGroup>
+		<Name>Teleportation Network</Name>
+		<ModId>tpnet</ModId>
+		<Version>1.9.0</Version>
+		<Authors>DArkHekRoMaNT</Authors>
+		<GameVersion>1.18.0-pre.5</GameVersion>
+		<Description>Adds surface teleport network</Description>
+		<Website>https://github.com/DArkHekRoMaNT/TeleportationNetwork</Website>
+	</PropertyGroup>
+	<ItemGroup>		
+		<IncludeFiles Include="modicon.png" />
+		<IncludeFiles Include="LICENSE" />
+		<IncludeFiles Include="README.md" />
+	</ItemGroup>
+</Project>
