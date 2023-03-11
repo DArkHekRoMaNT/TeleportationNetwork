@@ -2,7 +2,7 @@
 	<PropertyGroup>
 		<Name>Teleportation Network</Name>
 		<ModId>tpnet</ModId>
-		<Version>1.9.0</Version>
+		<Version>1.9.0-rc.1</Version>
 		<Authors>DArkHekRoMaNT</Authors>
 		<GameVersion>1.18.0-pre.6</GameVersion>
 		<Description>Adds surface teleport network</Description>
