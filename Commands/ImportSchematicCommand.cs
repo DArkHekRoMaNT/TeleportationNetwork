@@ -18,7 +18,7 @@ namespace TeleportationNetwork
         public ImportSchematicCommand()
         {
             Command = "tpimp";
-            Description = Core.ModPrefix + "Import teleport schematic";
+            Description = "[" + Constants.ModId + "] Import teleport schematic";
             Syntax = "/tpimp [list] or  /tpimp [paste|import|pasteraw] name";
             RequiredPrivilege = Privilege.gamemode;
             handler = Handler;
@@ -39,7 +39,7 @@ namespace TeleportationNetwork
 
                     if (schematics == null || schematics.Count == 0)
                     {
-                        player.SendMessage(groupId, Lang.Get(Core.ModId + ":tpimp-empty"),
+                        player.SendMessage(groupId, Lang.Get(Constants.ModId + ":tpimp-empty"),
                             EnumChatType.CommandError);
                         break;
                     }
@@ -87,12 +87,12 @@ namespace TeleportationNetwork
                 return;
             }
 
-            IAsset schema = player.Entity.Api.Assets
-                .TryGet($"{Constants.TeleportSchematicPath}/{name}.json");
+            string schemapath = $"{Constants.TeleportSchematicPath}/{name}.json";
+            IAsset schema = player.Entity.Api.Assets.TryGet(schemapath);
 
             if (schema == null)
             {
-                player.SendMessage(groupId, Lang.Get(Core.ModId + ":tpimp-empty"),
+                player.SendMessage(groupId, Lang.Get(Constants.ModId + ":tpimp-empty"),
                     EnumChatType.CommandError);
                 return;
             }
@@ -177,8 +177,8 @@ namespace TeleportationNetwork
             Entity entity;
             foreach (string entity2 in schematic.Entities)
             {
-                using MemoryStream input = new MemoryStream(Ascii85.Decode(entity2));
-                BinaryReader binaryReader = new BinaryReader(input);
+                using var input = new MemoryStream(Ascii85.Decode(entity2));
+                using var binaryReader = new BinaryReader(input);
                 string entityClass = binaryReader.ReadString();
                 entity = worldForCollectibleResolve.ClassRegistry.CreateEntity(entityClass);
                 entity.FromBytes(binaryReader, isSync: false);
@@ -207,7 +207,7 @@ namespace TeleportationNetwork
 
                 var workspace = we.GetWorkSpace(player.PlayerUID);
                 workspace.ToolsEnabled = true;
-                workspace.SetTool("Import");
+                workspace.SetTool("Import", player.Entity.Api);
 
                 clipboardFieldInfo.SetValue(workspace, schematic);
                 var tool = (ImportTool)toolFieldInfo.GetValue(workspace);

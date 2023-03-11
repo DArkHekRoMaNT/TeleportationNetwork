@@ -219,7 +219,7 @@ namespace TeleportationNetwork
 
         private void ReplaceBrokenLanterns(ref AssetLocation code)
         {
-            if(code.Domain == Core.ModId && code.Path.Contains("brokenlantern"))
+            if(code.Domain == Constants.ModId && code.Path.Contains("brokenlantern"))
             {
                 code.Path = code.Path.Replace("copper", _currentLantern);
             }

@@ -8,7 +8,7 @@ namespace TeleportationNetwork
         public RandomTeleportCommand()
         {
             Command = "rndtp";
-            Description = Core.ModPrefix + "Teleport player to random location";
+            Description = "[" + Constants.ModId + "] Teleport player to random location";
             Syntax = "/rndtp [range]";
             RequiredPrivilege = Privilege.tp;
             handler = (player, groupId, args) =>

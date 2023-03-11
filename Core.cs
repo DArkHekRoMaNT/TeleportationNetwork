@@ -1,6 +1,6 @@
+using CommonLib.Config;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
-using Vintagestory.API.Datastructures;
 using Vintagestory.API.Server;
 
 namespace TeleportationNetwork
@@ -12,9 +12,6 @@ namespace TeleportationNetwork
         /// In other mod system use inner Mod.Logger instead
         /// </summary>
         public static ILogger ModLogger { get; private set; } = null!;
-        public static string ModId { get; private set; } = null!;
-        public static string ModPrefix => $"[{ModId}] ";
-
         public static Config Config { get; private set; } = null!;
 
         public HudCircleRenderer? HudCircleRenderer { get; private set; }
@@ -22,8 +19,6 @@ namespace TeleportationNetwork
         public override void StartPre(ICoreAPI api)
         {
             ModLogger = Mod.Logger;
-            ModId = Mod.Info.ModID;
-
             var configManager = api.ModLoader.GetModSystem<ConfigManager>();
             Config = configManager.GetConfig<Config>();
         }
@@ -33,8 +28,6 @@ namespace TeleportationNetwork
             api.RegisterBlockClass("BlockBrokenTeleport", typeof(BlockTeleport));
             api.RegisterBlockClass("BlockNormalTeleport", typeof(BlockTeleport));
             api.RegisterBlockEntityClass("BETeleport", typeof(BETeleport));
-
-            TreeAttribute.RegisterAttribute(Constants.AttributesId + 1, typeof(BlockPosArrayAttribute));
         }
 
         public override void StartClientSide(ICoreClientAPI api)

@@ -8,7 +8,7 @@ namespace TeleportationNetwork
         public OpenTeleportDialogCommand(ICoreClientAPI api)
         {
             Command = "tpdlg";
-            Description = Core.ModPrefix + "Open teleport dialog (creative only)";
+            Description = "[" + Constants.ModId + "] Open teleport dialog (creative only)";
             Syntax = ".tpdlg";
 
             handler = (groupId, args) =>

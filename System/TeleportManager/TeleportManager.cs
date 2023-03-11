@@ -1,6 +1,5 @@
 using ProtoBuf;
 using System.Collections.Generic;
-using System.Linq;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
 using Vintagestory.API.MathTools;
@@ -74,7 +73,7 @@ namespace TeleportationNetwork
 
         public override void AssetsLoaded(ICoreAPI api)
         {
-            IAsset names = api.Assets.Get(new AssetLocation(Core.ModId, "config/names.json"));
+            IAsset names = api.Assets.Get(new AssetLocation(Constants.ModId, "config/names.json"));
             DefaultNames = names?.ToObject<List<string>>() ?? DefaultNames;
         }
 

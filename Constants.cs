@@ -2,17 +2,14 @@ namespace TeleportationNetwork
 {
     public static class Constants
     {
-        public const int AttributesId = 93;
-        public const string TeleportSchematicPath = "worldgen/schematics/tpnet/teleport";
-
-        public const float BeforeTeleportShowGUITime = 3f;
-        public const float SealRadius = 2.5f;
-
-        public const int TeleportPlayerPacketId = 13514;
-        public const int EntityTeleportedPacketId = 13516;
-
-        public const string TeleportStructureGroup = "tpnet-teleport";
-        public const int MaxPillarHeight = 20;
-        public const int TeleportTriesPerChunk = 10;
+        public static string ModId => "tpnet";
+        public static string TeleportSchematicPath => "worldgen/schematics/tpnet/teleport";
+        public static float BeforeTeleportShowGUITime => 3f;
+        public static float SealRadius => 2.5f;
+        public static int TeleportPlayerPacketId => 13514;
+        public static int EntityTeleportedPacketId => 13516;
+        public static string TeleportStructureGroup => ModId + "-teleport";
+        public static int MaxPillarHeight => 20;
+        public static int TeleportTriesPerChunk => 10;
     }
 }

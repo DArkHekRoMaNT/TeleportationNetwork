@@ -75,7 +75,7 @@ namespace TeleportationNetwork
 
             if (blockAccessor is not IBlockAccessorRevertable)
             {
-                PlaceEntitiesAndBlockEntities(blockAccessor, world, pos);
+                PlaceEntitiesAndBlockEntities(blockAccessor, world, pos, BlockCodesTmpForRemap, ItemCodes);
                 for (int i = 0; i < Indices.Count; i++)
                 {
                     uint index = Indices[i];

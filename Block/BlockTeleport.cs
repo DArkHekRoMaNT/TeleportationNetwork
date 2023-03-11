@@ -47,7 +47,7 @@ namespace TeleportationNetwork
             {
                 WorldInteractions.Add(new WorldInteraction()
                 {
-                    ActionLangCode = Core.ModId + ":blockhelp-teleport-edit",
+                    ActionLangCode = Constants.ModId + ":blockhelp-teleport-edit",
                     MouseButton = EnumMouseButton.Right,
                     HotKeyCode = "sneak"
                 });
@@ -60,7 +60,7 @@ namespace TeleportationNetwork
 
             WorldInteractions.Add(new WorldInteraction()
             {
-                ActionLangCode = Core.ModId + ":blockhelp-teleport-change-frame",
+                ActionLangCode = Constants.ModId + ":blockhelp-teleport-change-frame",
                 MouseButton = EnumMouseButton.Right,
                 HotKeyCode = "sprint",
                 Itemstacks = frames
@@ -200,7 +200,7 @@ namespace TeleportationNetwork
             string? frameStackCode = itemstack.Attributes.GetString("frameCode");
             if (frameStackCode != null)
             {
-                string key = Core.ModId + "_teleportFrameMesh_" + Code + "_" + frameStackCode;
+                string key = Constants.ModId + "_teleportFrameMesh_" + Code + "_" + frameStackCode;
                 renderinfo.ModelRef = ObjectCacheUtil.GetOrCreate(capi, key, () =>
                 {
                     capi.Tesselator.TesselateBlock(this, out MeshData baseMesh);
@@ -208,7 +208,7 @@ namespace TeleportationNetwork
                     Block? frameBlock = capi.World.GetBlock(new AssetLocation(frameStackCode));
                     if (frameBlock != null)
                     {
-                        var shapeCode = new AssetLocation(Core.ModId, "shapes/block/teleport/frame.json");
+                        var shapeCode = new AssetLocation(Constants.ModId, "shapes/block/teleport/frame.json");
                         Shape frameShape = capi.Assets.Get<Shape>(shapeCode);
                         capi.Tesselator.TesselateShape(frameBlock, frameShape, out MeshData frameMesh);
                         baseMesh.AddMeshData(frameMesh);

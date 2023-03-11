@@ -24,7 +24,7 @@ namespace TeleportationNetwork
         private TeleportClientData _data = new();
 
         public GuiDialogEditTeleport(ICoreClientAPI capi, BlockPos pos, TeleportMapLayer? layer = null)
-            : base(Lang.Get(Core.ModId + ":edittpdlg-title"), capi)
+            : base(Lang.Get(Constants.ModId + ":edittpdlg-title"), capi)
         {
             _pos = pos;
 
@@ -135,7 +135,7 @@ namespace TeleportationNetwork
 
 
             SingleComposer = capi.Gui
-                .CreateCompo(Core.ModId + ":edittpdlg", dialogBounds)
+                .CreateCompo(Constants.ModId + ":edittpdlg", dialogBounds)
                 .AddShadedDialogBG(bgBounds, false)
                 .AddDialogTitleBar(DialogTitle, () => TryClose())
                 .BeginChildElements(bgBounds)
@@ -145,7 +145,7 @@ namespace TeleportationNetwork
                     .AddStaticText(Lang.Get("Note"), CairoFont.WhiteSmallText(), noteLabel)
                     .AddTextArea(noteArea, OnNoteChanged, CairoFont.TextInput(), "noteInput")
 
-                    .AddStaticText(Lang.Get(Core.ModId + ":edittpdlg-order-label"), CairoFont.WhiteSmallText(), orderLabel)
+                    .AddStaticText(Lang.Get(Constants.ModId + ":edittpdlg-order-label"), CairoFont.WhiteSmallText(), orderLabel)
                     .AddNumberInput(orderInput, OnOrderChanged, CairoFont.WhiteSmallText(), "orderInput")
 
                     .AddStaticText(Lang.Get("Pinned"), CairoFont.WhiteSmallText(), pinnedLabel)
@@ -170,7 +170,6 @@ namespace TeleportationNetwork
             SingleComposer.GetNumberInput("orderInput").SetValue(_data.SortOrder);
             SingleComposer.GetSwitch("pinnedSwitch").SetValue(_data.Pinned);
 
-            SingleComposer.GetTextArea("noteInput").SetMaxWidth(260);
             SingleComposer.GetTextArea("noteInput").SetMaxLines(noteMaxLines);
         }
 

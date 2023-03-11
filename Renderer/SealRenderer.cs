@@ -34,14 +34,14 @@ namespace TeleportationNetwork
             {
                 for (int j = 0; j < 5; j++)
                 {
-                    var loc = new AssetLocation(Core.ModId, $"textures/block/teleport/seal-{i}-{j}.png");
+                    var loc = new AssetLocation(Constants.ModId, $"textures/block/teleport/seal-{i}-{j}.png");
                     _sealTextureId[i * 5 + j] = api.Render.GetOrLoadTexture(loc);
                 }
             }
             MeshData modelData = QuadMeshUtil.GetCustomQuadHorizontal(0, 0, 0, 1, 1, 255, 255, 255, 255);
             _sealModelRef = api.Render.UploadMesh(modelData);
 
-            api.Event.RegisterRenderer(this, EnumRenderStage.Opaque, Core.ModId + "-teleport");
+            api.Event.RegisterRenderer(this, EnumRenderStage.Opaque, Constants.ModId + "-teleport");
         }
 
         public void OnRenderFrame(float deltaTime, EnumRenderStage stage)

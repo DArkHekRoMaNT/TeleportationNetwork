@@ -13,7 +13,7 @@ namespace TeleportationNetwork
         private HudCircleSettings Settings { get; }
         private ICoreClientAPI Api { get; }
 
-        private MeshRef _circleMesh = null;
+        private MeshRef? _circleMesh = null;
 
         private float _circleAlpha = 0.0F;
         private float _circleProgress = 0.0F;
@@ -110,20 +110,18 @@ namespace TeleportationNetwork
                 y = Api.Input.MouseY;
             }
 
-            // These IRenderAPI methods are deprecated but not sure how to do it otherwise.
-#pragma warning disable CS0618
             rend.GlPushMatrix();
             rend.GlTranslate(x, y, 0);
             rend.GlScale(Settings.OuterRadius, Settings.OuterRadius, 0);
             shader.UniformMatrix("modelViewMatrix", rend.CurrentModelviewMatrix);
             rend.GlPopMatrix();
-#pragma warning restore CS0618
 
             rend.RenderMesh(_circleMesh);
         }
 
         public void Dispose()
         {
+            GC.SuppressFinalize(this);
             if (_circleMesh != null)
                 Api.Render.DeleteMesh(_circleMesh);
         }

@@ -8,7 +8,7 @@ namespace TeleportationNetwork
         public RestoreStabilityCommand()
         {
             Command = "rst";
-            Description = Core.ModPrefix + "Restore player temporal stability";
+            Description = "[" + Constants.ModId + "] Restore player temporal stability";
             Syntax = "/rst [player]";
             RequiredPrivilege = Privilege.commandplayer;
             handler = (player, groupId, args) =>

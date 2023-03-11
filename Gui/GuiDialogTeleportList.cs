@@ -1,3 +1,4 @@
+using CommonLib.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -22,7 +23,7 @@ namespace TeleportationNetwork
         private List<Teleport> _allPoints;
 
         public GuiDialogTeleportList(ICoreClientAPI capi, BlockPos? blockEntityPos)
-            : base(Lang.Get(Core.ModId + ":tpdlg-title"), capi)
+            : base(Lang.Get(Constants.ModId + ":tpdlg-title"), capi)
         {
             Pos = blockEntityPos;
             TeleportManager = capi.ModLoader.GetModSystem<TeleportManager>();
@@ -102,12 +103,12 @@ namespace TeleportationNetwork
             bool emptyList = _allPoints.Count == 0;
 
             SingleComposer = capi.Gui
-                .CreateCompo(Core.ModId + "-teleport-dialog", dialogBounds)
+                .CreateCompo(Constants.ModId + "-teleport-dialog", dialogBounds)
                 .AddDialogTitleBar(DialogTitle, () => TryClose())
                 .AddDialogBG(bgBounds, false)
                 .BeginChildElements(bgBounds)
                     .AddIf(emptyList)
-                        .AddStaticText(Lang.Get(Core.ModId + ":tpdlg-empty"), CairoFont.WhiteSmallText(), buttons[0])
+                        .AddStaticText(Lang.Get(Constants.ModId + ":tpdlg-empty"), CairoFont.WhiteSmallText(), buttons[0])
                     .EndIf()
                     .AddIf(!emptyList)
                         .BeginClip(clipBounds)
@@ -117,7 +118,7 @@ namespace TeleportationNetwork
                         .AddVerticalScrollbar(OnNewScrollbarValue, scrollbarBounds, "scrollbar")
                         .AddHoverText("", CairoFont.WhiteDetailText(), 300, listBounds.FlatCopy(), "hoverText")
                         .AddIf(IsUnstableWorld)
-                            .AddDynamicText(Lang.Get(Core.ModId + ":tpdlg-unstable"),
+                            .AddDynamicText(Lang.Get(Constants.ModId + ":tpdlg-unstable"),
                                 CairoFont.WhiteSmallText().WithOrientation(EnumTextOrientation.Center),
                                 messageBounds, "message")
                         .EndIf()
@@ -248,7 +249,7 @@ namespace TeleportationNetwork
         private void OnTextUpdateTick(float dt)
         {
             var textComponent = SingleComposer.GetDynamicText("message");
-            string newText = Lang.Get(Core.ModId + ":tpdlg-unstable");
+            string newText = Lang.Get(Constants.ModId + ":tpdlg-unstable");
             if (capi.World.Rand.Next(0, 10) == 0) newText = newText.Shuffle(capi.World.Rand);
             textComponent.SetNewText(newText, forceRedraw: true);
         }

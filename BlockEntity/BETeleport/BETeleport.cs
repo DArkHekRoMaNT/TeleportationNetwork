@@ -104,7 +104,7 @@ namespace TeleportationNetwork
         {
             if (Repaired && entity is EntityPlayer player)
             {
-                if (player.IsActivityRunning(Core.ModId + "_teleportCooldown"))
+                if (player.IsActivityRunning(Constants.ModId + "_teleportCooldown"))
                 {
                     return;
                 }
@@ -385,7 +385,7 @@ namespace TeleportationNetwork
         {
             if (Api is ICoreClientAPI capi)
             {
-                var shapeCode = new AssetLocation(Core.ModId, "shapes/block/teleport/frame.json");
+                var shapeCode = new AssetLocation(Constants.ModId, "shapes/block/teleport/frame.json");
                 Shape frameShape = Api.Assets.Get<Shape>(shapeCode);
                 capi.Tesselator.TesselateShape(_frameStack.Collectible, frameShape, out _frameMesh);
             }
@@ -404,7 +404,7 @@ namespace TeleportationNetwork
                 if (Repaired)
                 {
                     float rotY = Block.Shape.rotateY;
-                    AnimUtil.InitializeAnimator(Core.ModId + "-teleport", new Vec3f(0, rotY, 0));
+                    AnimUtil.InitializeAnimator(Constants.ModId + "-teleport", null, null, new Vec3f(0, rotY, 0));
 
                     if (AnimUtil.activeAnimationsByAnimCode.Count == 0 ||
                         AnimUtil.animator!.ActiveAnimationCount == 0)

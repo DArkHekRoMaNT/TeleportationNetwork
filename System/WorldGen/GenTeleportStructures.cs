@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Reflection;
 using Vintagestory.API.Common;
 using Vintagestory.API.Datastructures;
 using Vintagestory.API.MathTools;
@@ -25,7 +26,9 @@ namespace TeleportationNetwork
         {
             _api = api;
 
-            if (ModStdWorldGen.DoDecorationPass)
+            FieldInfo fieldInfo = typeof(TerraGenConfig).GetField("DoDecorationPass", BindingFlags.Static | BindingFlags.NonPublic);
+            bool doDecorationPass = (bool)fieldInfo.GetValue(null);
+            if (doDecorationPass)
             {
                 api.Event.InitWorldGenerator(InitWorldGen, "standard");
                 api.Event.ChunkColumnGeneration(OnChunkColumnGenPostPass, EnumWorldGenPass.TerrainFeatures, "standard");

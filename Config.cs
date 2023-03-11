@@ -1,3 +1,4 @@
+using CommonLib.Config;
 using Vintagestory.API.Client;
 
 namespace TeleportationNetwork
