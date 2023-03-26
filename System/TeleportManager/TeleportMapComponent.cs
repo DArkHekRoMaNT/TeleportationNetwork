@@ -138,7 +138,7 @@ namespace TeleportationNetwork
                 {
                     capi.ModLoader.GetModSystem<TeleportManager>().TeleportPlayerTo(_teleport.Pos);
                 }
-                else if(args.Button == EnumMouseButton.Right)
+                else if (args.Button == EnumMouseButton.Right)
                 {
                     if (_editTeleportDialog != null)
                     {
