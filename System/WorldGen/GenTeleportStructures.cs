@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 using Vintagestory.API.Common;
@@ -25,10 +26,7 @@ namespace TeleportationNetwork
         public override void StartServerSide(ICoreServerAPI api)
         {
             _api = api;
-
-            FieldInfo fieldInfo = typeof(TerraGenConfig).GetField("DoDecorationPass", BindingFlags.Static | BindingFlags.NonPublic);
-            bool doDecorationPass = (bool)fieldInfo.GetValue(null);
-            if (doDecorationPass)
+            if (TerraGenConfig.DoDecorationPass)
             {
                 api.Event.InitWorldGenerator(InitWorldGen, "standard");
                 api.Event.ChunkColumnGeneration(OnChunkColumnGenPostPass, EnumWorldGenPass.TerrainFeatures, "standard");
@@ -55,20 +53,23 @@ namespace TeleportationNetwork
             }
         }
 
-        private void OnChunkColumnGenPostPass(IServerChunk[] chunks, int chunkX, int chunkZ,
-            ITreeAttribute? chunkGenParams = null)
+        private void OnChunkColumnGenPostPass(IChunkColumnGenerateRequest request)
         {
             _worldgenBlockAccessor.BeginColumn();
-            _strucRand.InitPositionSeed(chunkX, chunkZ);
+            _strucRand.InitPositionSeed(request.ChunkX, request.ChunkZ);
 
-            var pos = new BlockPos(chunkX * _chunksize, 0, chunkZ * _chunksize);
+            int posX = request.ChunkX * _chunksize;
+            int posZ = request.ChunkZ * _chunksize;
+            var pos = new BlockPos(posX, 0, posZ);
+
             if (!TeleportStructure.SatisfiesMinDistance(pos, _api.World))
             {
                 return;
             }
 
-            IMapRegion region = chunks[0].MapChunk.MapRegion;
-            ushort[] heightMap = chunks[0].MapChunk.WorldGenTerrainHeightMap;
+            IMapChunk mapChunk = request.Chunks[0].MapChunk;
+            IMapRegion region = mapChunk.MapRegion;
+            ushort[] heightMap = mapChunk.WorldGenTerrainHeightMap;
 
             float chance = _strucRand.NextFloat() * _fullChance;
             for (int i = 0; i < _structures.Length; i++)
@@ -89,14 +90,17 @@ namespace TeleportationNetwork
                         int ySurface = heightMap[dz * _chunksize + dx];
                         if (ySurface <= 0 || ySurface >= _worldheight - 15) continue;
 
-                        pos.Set(chunkX * _chunksize + dx, ySurface, chunkZ * _chunksize + dz);
+                        pos.Set(posX + dx, ySurface, posZ + dz);
 
                         if (struc.TryGenerate(_worldgenBlockAccessor, _api.World, pos))
                         {
                             Cuboidi loc = struc.LastPlacedSchematicLocation;
 
-                            string code = struc.Code + (struc.LastPlacedSchematic == null ?
-                                "" : "/" + struc.LastPlacedSchematic.FromFileName);
+                            string code = struc.Code;
+                            if (struc.LastPlacedSchematic != null)
+                            {
+                                code += "/" + struc.LastPlacedSchematic.FromFileName;
+                            }
 
                             region.GeneratedStructures.Add(new GeneratedStructure()
                             {
