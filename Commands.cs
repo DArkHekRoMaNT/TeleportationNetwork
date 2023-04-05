@@ -109,7 +109,7 @@ namespace TeleportationNetwork
             TextCommandResult PasteTeleportSchematic(TextCommandCallingArgs args)
             {
                 string name = (string)args[0];
-                BlockPos pos = (BlockPos)args[1];
+                BlockPos pos = ((Vec3d)args[1]).AsBlockPos;
                 bool replaceMetaBlocks = (bool)args[2];
 
                 string? error = null;
