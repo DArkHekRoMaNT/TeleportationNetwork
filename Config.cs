@@ -50,15 +50,17 @@ namespace TeleportationNetwork
         public bool ShowTeleportOnMap { get; set; } = true;
 
         [ClientOnly]
+        [WaypointName]
         [Description("Default repaired teleport icon on the map")]
-        [Strings("circle", "bee", "cave", "home", "ladder", "pick", "rocks", "ruins", "spiral", "star1", "star2", "trader", "vessel")]
         public string DefaultTeleportIcon { get; set; } = "spiral";
 
         [ClientOnly]
+        [HexColor]
         [Description("Default repaired teleport icon color")]
         public string DefaultTeleportColor { get; set; } = "#23cca2";
 
         [ClientOnly]
+        [HexColor]
         [Description("Broken teleport icon color")]
         public string BrokenTeleportColor { get; set; } = "#104430";
 
