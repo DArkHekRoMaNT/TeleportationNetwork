@@ -93,8 +93,17 @@ namespace TeleportationNetwork
                     return null;
                 }
 
-                return BlockSchematic.LoadFromFile(Path.Combine(schema.Origin.OriginPath,
-                    schema.Location.Domain, schema.Location.Path), ref error);
+                string path;
+                if (schema.Origin.OriginPath.EndsWith(schema.Location.Domain))
+                {
+                    path = Path.Combine(schema.Origin.OriginPath, schema.Location.Path);
+                }
+                else
+                {
+                    path = Path.Combine(schema.Origin.OriginPath, schema.Location.Domain, schema.Location.Path);
+                }
+
+                return BlockSchematic.LoadFromFile(path, ref error);
             }
 
             TextCommandResult PasteTeleportSchematic(TextCommandCallingArgs args)
