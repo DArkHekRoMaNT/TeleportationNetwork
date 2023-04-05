@@ -274,10 +274,10 @@ namespace TeleportationNetwork
         public override void OnMouseMove(MouseEvent args)
         {
             base.OnMouseMove(args);
-            ShowTeleportPos(args.X, args.Y);
+            ShowTeleportInfo(args.X, args.Y);
         }
 
-        private void ShowTeleportPos(int XMousePos, int YMousePos)
+        private void ShowTeleportInfo(int XMousePos, int YMousePos)
         {
             if (SingleComposer != null && SingleComposer.Bounds.PointInside(XMousePos, YMousePos))
             {
@@ -300,7 +300,7 @@ namespace TeleportationNetwork
                         var data = teleport.GetClientData(capi);
                         if (data != null && !string.IsNullOrWhiteSpace(data.Note))
                         {
-                            sb.AppendLine(data.Note);
+                            sb.Append(data.Note);
                         }
                     }
 

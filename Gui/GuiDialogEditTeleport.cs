@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Reflection;
 using Vintagestory.API.Client;
 using Vintagestory.API.Config;
 using Vintagestory.API.MathTools;
@@ -85,7 +87,7 @@ namespace TeleportationNetwork
             int spacing = -15;
             int rowHeight = 25;
             int colorRows = (int)Math.Ceiling((double)_colors.Length / 11);
-            int iconRows = 2;
+            int iconRows = (int)Math.Ceiling((double)_icons.Length / 9);
             int noteMaxLines = 5;
 
             var leftColumn = ElementBounds.Fixed(0, 28, 100, rowHeight);
