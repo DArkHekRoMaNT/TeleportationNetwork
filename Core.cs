@@ -26,19 +26,10 @@ namespace TeleportationNetwork
 
         public override void StartClientSide(ICoreClientAPI api)
         {
-            api.RegisterCommand(new OpenTeleportDialogCommand(api));
-
             HudCircleRenderer = new HudCircleRenderer(api, new HudCircleSettings()
             {
                 Color = 0x23cca2
             });
-        }
-
-        public override void StartServerSide(ICoreServerAPI api)
-        {
-            api.RegisterCommand(new ImportSchematicCommand());
-            api.RegisterCommand(new RandomTeleportCommand());
-            api.RegisterCommand(new RestoreStabilityCommand());
         }
     }
 }

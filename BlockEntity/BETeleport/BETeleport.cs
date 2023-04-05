@@ -287,7 +287,7 @@ namespace TeleportationNetwork
                     if (fromPlayer is IServerPlayer player)
                     {
                         Vec3d startPoint = Pos.ToVec3d().AddCopy(.5, 1, .5);
-                        TeleportUtil.AreaTeleportTo(player, startPoint, targetPoint, Constants.SealRadius,
+                        TeleportUtil.AreaTeleportToPoint(player, startPoint, targetPoint, Constants.SealRadius,
                         ModLogger, (entity) =>
                         {
                             // one per tp

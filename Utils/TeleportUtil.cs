@@ -9,7 +9,7 @@ namespace TeleportationNetwork
 {
     public static class TeleportUtil
     {
-        public static void AreaTeleportTo(IServerPlayer player, Vec3d startPoint, BlockPos targetPoint,
+        public static void AreaTeleportToPoint(IServerPlayer player, Vec3d startPoint, BlockPos targetPoint,
             float radius, ILogger logger, Action<Entity>? onTeleported = null)
         {
             var sapi = (ICoreServerAPI)player.Entity.Api;
@@ -34,12 +34,6 @@ namespace TeleportationNetwork
 
                 logger.Notification($"{entity?.GetName()} teleported to {point} ({targetName})");
             }
-        }
-
-        public static void AreaTeleportTo(IServerPlayer player, BlockPos targetPoint, float radius,
-            ILogger logger, Action<Entity>? onTeleported = null)
-        {
-            AreaTeleportTo(player, player.Entity.Pos.XYZ, targetPoint, radius, logger, onTeleported);
         }
 
         public static void StabilityRelatedTeleportTo(this EntityPlayer entity, Vec3d pos,
@@ -81,50 +75,15 @@ namespace TeleportationNetwork
 
             if (Core.Config.StabilityTeleportMode != "off" && unstableTeleport)
             {
-                RandomTeleport((IServerPlayer)entity.Player, logger, Core.Config.UnstableTeleportRange, pos.AsBlockPos.ToVec3i());
+                CommonLib.Utils.TeleportUtil.RandomTeleport((IServerPlayer)entity.Player, new()
+                {
+                    Range = Core.Config.UnstableTeleportRange,
+                    CenterPos = pos.AsBlockPos.ToVec3i()
+                }, logger);
             }
             else
             {
                 entity.TeleportTo(pos, onTeleported);
-            }
-        }
-
-        public static void RandomTeleport(IServerPlayer player, ILogger logger,
-            int range = -1, Vec3i? pos = null, Action? onTeleported = null)
-        {
-            try
-            {
-                var sapi = (ICoreServerAPI)player.Entity.Api;
-
-                int x, z;
-                if (range != -1)
-                {
-                    if (pos == null) pos = player.Entity.Pos.XYZInt;
-
-                    x = sapi.World.Rand.Next(range * 2) - range + pos.X;
-                    z = sapi.World.Rand.Next(range * 2) - range + pos.Z;
-                }
-                else
-                {
-                    x = sapi.World.Rand.Next(sapi.WorldManager.MapSizeX);
-                    z = sapi.World.Rand.Next(sapi.WorldManager.MapSizeZ);
-                }
-
-                int chunkSize = sapi.WorldManager.ChunkSize;
-                player.Entity.TeleportToDouble(x + 0.5f, sapi.WorldManager.MapSizeY + 2, z + 0.5f);
-                sapi.WorldManager.LoadChunkColumnPriority(x / chunkSize, z / chunkSize, new ChunkLoadOptions()
-                {
-                    OnLoaded = () =>
-                    {
-                        int y = (int)sapi.WorldManager.GetSurfacePosY(x, z)!;
-                        player.Entity.TeleportToDouble(x + 0.5f, y + 2, z + 0.5f, onTeleported);
-                    }
-                });
-            }
-            catch (Exception e)
-            {
-                logger.Error("Failed to teleport player to random location.");
-                logger.Error(e.Message);
             }
         }
 
