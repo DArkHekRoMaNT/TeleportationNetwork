@@ -1,115 +1,68 @@
 using CommonLib.Config;
-using Vintagestory.API.Client;
 
 namespace TeleportationNetwork
 {
     [Config("tpnet.json")]
     public class Config
     {
-        [ConfigItem(typeof(bool),
-            true,
-            Description = "Teleport blocks are unbreakable in survival")]
-        public bool Unbreakable { get; set; }
+        [Description("Teleport block are unbreakable in survival")]
+        public bool Unbreakable { get; set; } = true;
 
-        [ConfigItem(typeof(string),
-            "on",
-            Values = new string[] { "on", "off", "always" },
-            Description = "Enabling the teleport stability mode." +
+        [Strings("on", "off", "always")]
+        [Description("Enabling the teleport stability mode." +
             " If on, teleport will be unstable at low temporal stability" +
             " (lower than StabilityConsumable) and during storms." +
-            " If always, then everytime will be unstable.")]
-        public string StabilityTeleportMode { get; set; } = null!;
+            " If always, then everytime will be unstable")]
+        public string StabilityTeleportMode { get; set; } = "on";
 
-        [ConfigItem(typeof(double),
-            0.2,
-            MinValue = 0,
-            MaxValue = 1,
-            Description = "Consumption of stability for teleport if stability" +
+        [Range(0, 1.0)]
+        [Description("Consumption of stability for teleport if stability" +
             " is not enough <data deleted>. Percentage values from 0 to 1")]
-        public double StabilityConsumable { get; set; }
+        public double StabilityConsumable { get; set; } = 0.2;
 
+        [Range(0, int.MaxValue)]
+        [Description("Range for unstable teleport <data deleted> behavior")]
+        public int UnstableTeleportRange { get; set; } = 500;
 
-        [ConfigItem(typeof(int),
-            500,
-            MinValue = 0,
-            Description = "Range for unstable teleport <data deleted>")]
-        public int UnstableTeleportRange { get; set; }
+        [Description("Teleports are immediately available to everyone if repaired")]
+        public bool SharedTeleports { get; set; } = false;
 
-        [ConfigItem(typeof(bool),
-            false,
-            Description = "Creates teleports subnetworks. You will not be able to teleport" +
-            " if you activate the teleport too far from the desired one and" +
-            " do not activate teleports in between.")]
-        public bool SubNetworks { get; set; }
+        [Range(0, int.MaxValue)]
+        [Description("Cooldown between teleports in milliseconds")]
+        public int TeleportCooldown { get; set; } = 5000;
 
-        [ConfigItem(typeof(int),
-            10000,
-            MinValue = 0,
-            Description = "Maximum distance between two teleports to create a network." +
-            " Only works if SubNetworks is true")]
-        public int MaxNetworkDistance { get; set; }
+        [Range(0, int.MaxValue)]
+        [Description("Minimal distance between teleport structures")]
+        public int MinTeleportDistance { get; set; } = 4096;
 
-        [ConfigItem(typeof(bool),
-            false,
-            Description = "Teleports are immediately available to everyone if repaired")]
-        public bool SharedTeleports { get; set; }
+        [Description("Remove all paper and metal lanterns from teleport structures if True")]
+        public bool DarknessMode { get; set; } = false;
 
-        [ConfigItem(typeof(int),
-            5000,
-            MinValue = 0,
-            Description = "Cooldown between teleports in milliseconds")]
-        public int TeleportCooldown { get; set; }
+        [Description("Create only standard teleports with granite and aged wood")]
+        public bool BiomlessTeleports { get; set; } = false;
 
-        [ConfigItem(typeof(int),
-            4096,
-            MinValue = 0,
-            Description = "Minimal distance between teleport structures")]
-        public int MinTeleportDistance { get; set; }
+        [Strings("on", "off", "trader-only")]
+        [Description("Create claim for teleport structure (does not affect generated structures)")]
+        public string TeleportBuildProtected { get; set; } = "trader-only";
 
-        [ConfigItem(typeof(bool),
-            false,
-            Description = "Remove all paper and metal lanterns from teleport structures if True")]
-        public bool DarknessMode { get; set; }
+        [ClientOnly]
+        [Description("Show teleport points on map")]
+        public bool ShowTeleportOnMap { get; set; } = true;
 
-        [ConfigItem(typeof(bool),
-            false,
-            Description = "Create only standard teleports with granite and aged wood")]
-        public bool BiomlessTeleports { get; set; }
+        [ClientOnly]
+        [Description("Default repaired teleport icon on the map")]
+        [Strings("circle", "bee", "cave", "home", "ladder", "pick", "rocks", "ruins", "spiral", "star1", "star2", "trader", "vessel")]
+        public string DefaultTeleportIcon { get; set; } = "spiral";
 
-        [ConfigItem(typeof(string),
-            "trader-only",
-            Values = new string[] { "on", "off", "trader-only" },
-            Description = "Create claim for teleport structure (does not affect generated structures)")]
-        public string TeleportBuildProtected { get; set; } = null!;
+        [ClientOnly]
+        [Description("Default repaired teleport icon color")]
+        public string DefaultTeleportColor { get; set; } = "#23cca2";
 
-        [ConfigItem(typeof(bool),
-            true,
-            ClientOnly = true,
-            Description = "Show teleport points on map")]
-        public bool ShowTeleportOnMap { get; set; }
+        [ClientOnly]
+        [Description("Broken teleport icon color")]
+        public string BrokenTeleportColor { get; set; } = "#104430";
 
-        [ConfigItem(typeof(string),
-            "spiral",
-            Values = new string[] { "circle", "bee", "cave", "home", "ladder", "pick", "rocks", "ruins", "spiral", "star1", "star2", "trader", "vessel" },
-            ClientOnly = true,
-            Description = "Default repaired teleport icon on the map")]
-        public string DefaultTeleportIcon { get; set; } = null!;
-
-        [ConfigItem(typeof(string),
-            "#23cca2",
-            ClientOnly = true,
-            Description = "Default repaired teleport icon color")]
-        public string DefaultTeleportColor { get; set; } = null!;
-
-        [ConfigItem(typeof(string),
-            "#104430",
-            ClientOnly = true,
-            Description = "Broken teleport icon color")]
-        public string BrokenTeleportColor { get; set; } = null!;
-
-        [ConfigItem(typeof(bool),
-            false,
-            Description = "Disable trader and locust teleport structures")]
-        public bool NoSpecialTeleports { get; set; }
+        [Description("Disable trader and locust teleport structures")]
+        public bool NoSpecialTeleports { get; set; } = false;
     }
 }
