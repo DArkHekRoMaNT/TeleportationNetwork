@@ -46,7 +46,7 @@ namespace TeleportationNetwork
                 var teleport = TeleportManager.Points[Pos];
                 if (teleport == null)
                 {
-                    Core.ModLogger.Warning("Using not-exists teleport at {0}, gui closed", Pos);
+                    TeleportManager.Mod.Logger.Warning("Using not-exists teleport at {0}, gui closed", Pos);
                     TryClose();
                 }
             }

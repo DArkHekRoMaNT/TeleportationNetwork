@@ -95,7 +95,8 @@ namespace TeleportationNetwork
 
         private void OnReceiveTeleportPlayerMessage(IServerPlayer fromPlayer, TeleportPlayerMessage msg)
         {
-            fromPlayer.Entity?.StabilityRelatedTeleportTo(msg.Pos.ToVec3d().AddCopy(0.5, 1.5, 0.5));
+            Vec3d pos = msg.Pos.ToVec3d().AddCopy(0.5, 1.5, 0.5);
+            fromPlayer.Entity?.StabilityRelatedTeleportTo(pos, Mod.Logger);
         }
 
         public void CheckAllTeleportExists()

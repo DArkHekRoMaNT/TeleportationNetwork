@@ -13,7 +13,7 @@ namespace TeleportationNetwork
             RequiredPrivilege = Privilege.tp;
             handler = (player, groupId, args) =>
             {
-                TeleportUtil.RandomTeleport(player, args.PopInt() ?? -1);
+                TeleportUtil.RandomTeleport(player, logger, args.PopInt() ?? -1);
             };
         }
     }

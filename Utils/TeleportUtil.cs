@@ -9,9 +9,8 @@ namespace TeleportationNetwork
 {
     public static class TeleportUtil
     {
-        // Constants.SealRadius, add .5 1 .5
         public static void AreaTeleportTo(IServerPlayer player, Vec3d startPoint, BlockPos targetPoint,
-            float radius, Action<Entity>? onTeleported = null)
+            float radius, ILogger logger, Action<Entity>? onTeleported = null)
         {
             var sapi = (ICoreServerAPI)player.Entity.Api;
             var manager = sapi.ModLoader.GetModSystem<TeleportManager>();
@@ -26,25 +25,25 @@ namespace TeleportationNetwork
 
                 if (entity is EntityPlayer entityPlayer)
                 {
-                    StabilityRelatedTeleportTo(entityPlayer, point, () => onTeleported?.Invoke(entity));
+                    StabilityRelatedTeleportTo(entityPlayer, point, logger, () => onTeleported?.Invoke(entity));
                 }
                 else
                 {
                     entity.TeleportTo(point, () => onTeleported?.Invoke(entity));
                 }
 
-                Core.ModLogger.Notification($"{entity?.GetName()} teleported to {point} ({targetName})");
+                logger.Notification($"{entity?.GetName()} teleported to {point} ({targetName})");
             }
         }
 
         public static void AreaTeleportTo(IServerPlayer player, BlockPos targetPoint, float radius,
-            Action<Entity>? onTeleported = null)
+            ILogger logger, Action<Entity>? onTeleported = null)
         {
-            AreaTeleportTo(player, player.Entity.Pos.XYZ, targetPoint, radius, onTeleported);
+            AreaTeleportTo(player, player.Entity.Pos.XYZ, targetPoint, radius, logger, onTeleported);
         }
 
         public static void StabilityRelatedTeleportTo(this EntityPlayer entity, Vec3d pos,
-            Action? onTeleported = null)
+            ILogger logger, Action? onTeleported = null)
         {
             if (entity.Api is not ICoreServerAPI sapi)
             {
@@ -82,7 +81,7 @@ namespace TeleportationNetwork
 
             if (Core.Config.StabilityTeleportMode != "off" && unstableTeleport)
             {
-                RandomTeleport((IServerPlayer)entity.Player, Core.Config.UnstableTeleportRange, pos.AsBlockPos.ToVec3i());
+                RandomTeleport((IServerPlayer)entity.Player, logger, Core.Config.UnstableTeleportRange, pos.AsBlockPos.ToVec3i());
             }
             else
             {
@@ -90,8 +89,8 @@ namespace TeleportationNetwork
             }
         }
 
-        public static void RandomTeleport(IServerPlayer player, int range = -1, Vec3i? pos = null,
-            Action? onTeleported = null)
+        public static void RandomTeleport(IServerPlayer player, ILogger logger,
+            int range = -1, Vec3i? pos = null, Action? onTeleported = null)
         {
             try
             {
@@ -124,8 +123,8 @@ namespace TeleportationNetwork
             }
             catch (Exception e)
             {
-                Core.ModLogger.Error("Failed to teleport player to random location.");
-                Core.ModLogger.Error(e.Message);
+                logger.Error("Failed to teleport player to random location.");
+                logger.Error(e.Message);
             }
         }
 

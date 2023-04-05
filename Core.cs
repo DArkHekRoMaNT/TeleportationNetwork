@@ -7,18 +7,12 @@ namespace TeleportationNetwork
 {
     public class Core : ModSystem
     {
-        /// <summary>
-        /// Common ModLogger. For blocks, items, ui and other.
-        /// In other mod system use inner Mod.Logger instead
-        /// </summary>
-        public static ILogger ModLogger { get; private set; } = null!;
         public static Config Config { get; private set; } = null!;
 
         public HudCircleRenderer? HudCircleRenderer { get; private set; }
 
         public override void StartPre(ICoreAPI api)
         {
-            ModLogger = Mod.Logger;
             var configManager = api.ModLoader.GetModSystem<ConfigManager>();
             Config = configManager.GetConfig<Config>();
         }

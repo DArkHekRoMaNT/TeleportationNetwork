@@ -16,19 +16,14 @@ namespace TeleportationNetwork
     {
         public static AssetLocation DefaultFrameCode => new("game:stonebricks-granite");
 
-        public bool Active { get; set; }
-        private Dictionary<string, TeleportingPlayerData> ActivePlayers { get; } = new();
         private float _activeTime;
-
-        public bool Repaired => (Block as BlockTeleport)?.IsNormal ?? false;
+        private Dictionary<string, TeleportingPlayerData> ActivePlayers { get; } = new();
 
         private GuiDialogTeleportList? _teleportDlg;
         private GuiDialogEditTeleport? _editDlg;
 
         private BlockEntityAnimationUtil? AnimUtil
             => GetBehavior<BEBehaviorAnimatable>()?.animUtil;
-
-        public TeleportManager TeleportManager { get; private set; } = null!;
         private SealRenderer SealRenderer { get; set; } = null!;
         private TeleportParticleController? ParticleController =>
             (Block as BlockTeleport)?.ParticleController;
@@ -37,9 +32,15 @@ namespace TeleportationNetwork
         private float _soundVolume;
         private float _soundPith;
 
-
         private MeshData? _frameMesh;
         private ItemStack _frameStack = null!;
+
+        private ILogger? _modLogger;
+
+        public bool Active { get; set; }
+        public bool Repaired => (Block as BlockTeleport)?.IsNormal ?? false;
+
+        public TeleportManager TeleportManager { get; private set; } = null!;
         public ItemStack FrameStack
         {
             get => _frameStack;
@@ -66,10 +67,14 @@ namespace TeleportationNetwork
             }
         }
 
+        public ILogger ModLogger => _modLogger ?? Api.Logger;
+
 
         public override void Initialize(ICoreAPI api)
         {
             base.Initialize(api);
+
+            _modLogger = api.ModLoader.GetModSystem<Core>().Mod.Logger;
 
             _frameStack ??= new ItemStack(api.World.GetBlock(DefaultFrameCode));
             TeleportManager = api.ModLoader.GetModSystem<TeleportManager>();
@@ -241,7 +246,7 @@ namespace TeleportationNetwork
             {
                 if (Api.Side == EnumAppSide.Client)
                 {
-                    Core.ModLogger.Error("Creating teleport on client side!");
+                    ModLogger.Error("Creating teleport on client side!");
                 }
 
                 string name = TeleportManager.GetRandomName();
@@ -282,7 +287,8 @@ namespace TeleportationNetwork
                     if (fromPlayer is IServerPlayer player)
                     {
                         Vec3d startPoint = Pos.ToVec3d().AddCopy(.5, 1, .5);
-                        TeleportUtil.AreaTeleportTo(player, startPoint, targetPoint, Constants.SealRadius, (entity) =>
+                        TeleportUtil.AreaTeleportTo(player, startPoint, targetPoint, Constants.SealRadius,
+                        ModLogger, (entity) =>
                         {
                             // one per tp
                             if (entity is EntityPlayer entityPlayer && entityPlayer.PlayerUID == player.PlayerUID)
