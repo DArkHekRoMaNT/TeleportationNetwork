@@ -12,11 +12,18 @@ namespace TeleportationNetwork
 {
     public class Commands : ModSystem
     {
-        public override void StartClientSide(ICoreClientAPI api)
+        public override void Start(ICoreAPI api)
         {
             api.ChatCommands
                 .GetOrCreate("tpnet")
                 .WithDescription("Teleportation Network commands")
+                .RequiresPrivilege(Privilege.chat);
+        }
+
+        public override void StartClientSide(ICoreClientAPI api)
+        {
+            api.ChatCommands
+                .GetOrCreate("tpnet")
                 .BeginSubCommand("dialog")
                     .WithDescription("Open teleport dialog")
                     .RequiresPrivilege(Privilege.tp)
@@ -36,10 +43,9 @@ namespace TeleportationNetwork
             var parsers = api.ChatCommands.Parsers;
             api.ChatCommands
                 .GetOrCreate("tpnet")
-                .WithDescription("Teleportation Network commands")
                 .BeginSubCommand("schematic")
-                    .WithDescription("Teleport schematic commands")
                     .RequiresPrivilege(Privilege.gamemode)
+                    .WithDescription("Teleport schematic commands")
                     .BeginSubCommand("list")
                         .HandleWith(ShowAllTeleportSchematic)
                     .EndSubCommand()
