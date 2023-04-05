@@ -34,7 +34,7 @@ namespace TeleportationNetwork
             "red"
         };
 
-        private static string[] Paitings => new string[]
+        private static string[] Paintings => new string[]
         {
             "howl",
             "elk",
@@ -238,7 +238,7 @@ namespace TeleportationNetwork
         {
             if (code.Path.Contains("painting"))
             {
-                string newPainting = Paitings[rand.NextInt(Paitings.Length - 1)];
+                string newPainting = Paintings[rand.NextInt(Paintings.Length - 1)];
                 code.Path = code.Path.Replace("elk", newPainting);
                 code.Path = code.Path.Replace("forestdawn", newPainting);
             }
