@@ -45,13 +45,18 @@ namespace TeleportationNetwork
             for (int i = 0; i < _structures.Length; i++)
             {
                 LCGRandom rand = new(_api.World.Seed + i + 512);
-                _structures[i].Init(_api, rand);
+                _structures[i].Init(_api, rand, Mod.Logger);
                 _fullChance += _structures[i].Chance;
             }
         }
 
         private void OnChunkColumnGenPostPass(IChunkColumnGenerateRequest request)
         {
+            if (!TerraGenConfig.GenerateStructures)
+            {
+                return;
+            }
+
             _worldgenBlockAccessor.BeginColumn();
             _strucRand.InitPositionSeed(request.ChunkX, request.ChunkZ);
 
@@ -91,28 +96,28 @@ namespace TeleportationNetwork
 
                         lock (region.GeneratedStructures)
                         {
-                        if (struc.TryGenerate(_worldgenBlockAccessor, _api.World, pos))
-                        {
-                            Cuboidi loc = struc.LastPlacedSchematicLocation;
-
-                            string code = struc.Code;
-                            if (struc.LastPlacedSchematic != null)
+                            if (struc.TryGenerate(_worldgenBlockAccessor, _api.World, pos))
                             {
-                                code += "/" + struc.LastPlacedSchematic.FromFileName;
+                                Cuboidi loc = struc.LastPlacedSchematicLocation;
+
+                                string code = struc.Code;
+                                if (struc.LastPlacedSchematic != null)
+                                {
+                                    code += "/" + struc.LastPlacedSchematic.FromFileName;
+                                }
+
+                                region.GeneratedStructures.Add(new GeneratedStructure()
+                                {
+                                    Code = code,
+                                    Group = Constants.TeleportStructureGroup,
+                                    Location = loc.Clone()
+                                });
+                                region.DirtyForSaving = true;
+
+                                AddBuildProtection(struc, loc);
+                                break;
                             }
-
-                            region.GeneratedStructures.Add(new GeneratedStructure()
-                            {
-                                Code = code,
-                                Group = Constants.TeleportStructureGroup,
-                                Location = loc.Clone()
-                            });
-                            region.DirtyForSaving = true;
-
-                            AddBuildProtection(struc, loc);
-                            break;
                         }
-                    }
                     }
                     break;
                 }

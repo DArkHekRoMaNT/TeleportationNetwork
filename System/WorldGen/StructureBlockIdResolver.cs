@@ -103,8 +103,8 @@ namespace TeleportationNetwork
         private string _currentWood = "";
         private string _currentLantern = "";
 
-        private Random _rand = new();
-        private bool _ruin;
+        private readonly Random _rand = new();
+        private readonly bool _ruin;
 
         public StructureBlockResolver(AssetLocation[] blockCodes, AssetLocation[]? notReplaceBlocks, AssetLocation? teleportBlockCode, bool ruin)
         {
@@ -114,7 +114,7 @@ namespace TeleportationNetwork
             _teleportBlockCode = teleportBlockCode;
         }
 
-        public void InitNew(IBlockAccessor blockAccessor, BlockPos pos, LCGRandom rand, TeleportSchematicStructure schematic)
+        public void InitNew(IBlockAccessor blockAccessor, BlockPos pos, LCGRandom rand, TeleportSchematicStructure schematic, ILogger logger)
         {
             _replaceBlockIds.Clear();
 
@@ -157,7 +157,7 @@ namespace TeleportationNetwork
                 }
                 else
                 {
-                    _replaceBlockIds.Clear();
+                    logger.Warning($"Unknown new block {newCode}");
                 }
             }
 
@@ -254,12 +254,12 @@ namespace TeleportationNetwork
 
         private void ReplaceRoofing(ref AssetLocation code)
         {
-            if (code.Path.Contains("shingle"))
+            if (code.Path.StartsWith("clayshingle"))
             {
                 code.Path = code.Path.Replace("blue", _currentRoofing);
             }
 
-            if (code.Path.Contains("roofing"))
+            if (code.Path.StartsWith("slantedroofing"))
             {
                 code.Path = code.Path.Replace("blueclay", _currentRoofing + "clay");
             }
