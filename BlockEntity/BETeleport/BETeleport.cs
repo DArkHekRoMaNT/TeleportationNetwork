@@ -33,7 +33,7 @@ namespace TeleportationNetwork
         private float _soundPith;
 
         private MeshData? _frameMesh;
-        private ItemStack _frameStack = null!;
+        private ItemStack? _frameStack;
 
         private ILogger? _modLogger;
 
@@ -41,7 +41,7 @@ namespace TeleportationNetwork
         public bool Repaired => (Block as BlockTeleport)?.IsNormal ?? false;
 
         public TeleportManager TeleportManager { get; private set; } = null!;
-        public ItemStack FrameStack
+        public ItemStack? FrameStack
         {
             get => _frameStack;
             set
@@ -375,16 +375,14 @@ namespace TeleportationNetwork
 
         public override void OnLoadCollectibleMappings(IWorldAccessor worldForNewMappings, Dictionary<int, AssetLocation> oldBlockIdMapping, Dictionary<int, AssetLocation> oldItemIdMapping, int schematicSeed)
         {
-            if (_frameStack == null)
+            base.OnLoadCollectibleMappings(worldForNewMappings, oldBlockIdMapping, oldItemIdMapping, schematicSeed);
+            return;
+
+            _frameStack?.ResolveBlockOrItem(worldForNewMappings);
+            if (_frameStack == null || !_frameStack.FixMapping(oldBlockIdMapping, oldItemIdMapping, worldForNewMappings))
             {
                 _frameStack = new ItemStack(worldForNewMappings.GetBlock(DefaultFrameCode));
             }
-            else
-            {
-                _frameStack.FixMapping(oldBlockIdMapping, oldItemIdMapping, worldForNewMappings);
-            }
-
-            base.OnLoadCollectibleMappings(worldForNewMappings, oldBlockIdMapping, oldItemIdMapping, schematicSeed);
         }
 
         private void UpdateFrameMesh()
