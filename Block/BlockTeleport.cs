@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -182,15 +183,15 @@ namespace TeleportationNetwork
             return flag;
         }
 
-        [MethodImpl(MethodImplOptions.NoOptimization)] // Fix weird bug with block info
         public override ItemStack OnPickBlock(IWorldAccessor world, BlockPos pos)
         {
-            var stack = base.OnPickBlock(world, pos);
+            ItemStack stack = base.OnPickBlock(world, pos) ?? new(this);
             if (world.BlockAccessor.GetBlockEntity(pos) is BETeleport be)
             {
-                if (be.FrameStack != null)
+                AssetLocation? frameCode = be.FrameStack?.Collectible?.Code;
+                if (frameCode != null)
                 {
-                    stack.Attributes.SetString("frameCode", be.FrameStack.Collectible.Code.ToString());
+                    stack.Attributes.SetString("frameCode", frameCode.ToString());
                 }
             }
             return stack;
