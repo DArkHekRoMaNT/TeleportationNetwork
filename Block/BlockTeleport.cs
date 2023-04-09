@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
 using Vintagestory.API.Common.Entities;
@@ -181,6 +182,7 @@ namespace TeleportationNetwork
             return flag;
         }
 
+        [MethodImpl(MethodImplOptions.NoOptimization)] // Fix weird bug with block info
         public override ItemStack OnPickBlock(IWorldAccessor world, BlockPos pos)
         {
             var stack = base.OnPickBlock(world, pos);
