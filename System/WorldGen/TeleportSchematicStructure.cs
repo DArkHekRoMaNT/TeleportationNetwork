@@ -18,25 +18,14 @@ namespace TeleportationNetwork
             var curPos = new BlockPos();
             int placed = 0;
 
-            PlaceBlockDelegate handler = null!;
-            switch (ReplaceMode)
+            PlaceBlockDelegate handler = ReplaceMode switch
             {
-                case EnumReplaceMode.ReplaceAll:
-                    handler = PlaceReplaceAll;
-                    break;
-
-                case EnumReplaceMode.Replaceable:
-                    handler = PlaceReplaceable;
-                    break;
-
-                case EnumReplaceMode.ReplaceAllNoAir:
-                    handler = PlaceReplaceAllNoAir;
-                    break;
-
-                case EnumReplaceMode.ReplaceOnlyAir:
-                    handler = PlaceReplaceOnlyAir;
-                    break;
-            }
+                EnumReplaceMode.ReplaceAll => PlaceReplaceAll,
+                EnumReplaceMode.Replaceable => PlaceReplaceable,
+                EnumReplaceMode.ReplaceAllNoAir => PlaceReplaceAllNoAir,
+                EnumReplaceMode.ReplaceOnlyAir => PlaceReplaceOnlyAir,
+                _ => throw new NotImplementedException()
+            };
 
             int chunksize = blockAccessor.ChunkSize;
             for (int i = 0; i < Indices.Count; i++)
