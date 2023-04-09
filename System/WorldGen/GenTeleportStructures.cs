@@ -89,6 +89,8 @@ namespace TeleportationNetwork
 
                         pos.Set(posX + dx, ySurface, posZ + dz);
 
+                        lock (region.GeneratedStructures)
+                        {
                         if (struc.TryGenerate(_worldgenBlockAccessor, _api.World, pos))
                         {
                             Cuboidi loc = struc.LastPlacedSchematicLocation;
@@ -105,12 +107,12 @@ namespace TeleportationNetwork
                                 Group = Constants.TeleportStructureGroup,
                                 Location = loc.Clone()
                             });
-
                             region.DirtyForSaving = true;
 
                             AddBuildProtection(struc, loc);
                             break;
                         }
+                    }
                     }
                     break;
                 }
