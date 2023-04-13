@@ -1,3 +1,4 @@
+using CommonLib.Utils;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -5,6 +6,7 @@ using System.Text;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
 using Vintagestory.API.Common.Entities;
+using Vintagestory.API.Config;
 using Vintagestory.API.Datastructures;
 using Vintagestory.API.MathTools;
 using Vintagestory.API.Server;
@@ -287,12 +289,42 @@ namespace TeleportationNetwork
                     if (fromPlayer is IServerPlayer player)
                     {
                         Vec3d startPoint = Pos.ToVec3d().AddCopy(.5, 1, .5);
+
+                        ItemSlot? gearSlot = null;
+                        if (!string.IsNullOrEmpty(Core.Config.ItemForTeleport))
+                        {
+                            var loc = new AssetLocation(Core.Config.ItemForTeleport);
+                            CollectibleObject item = player.Entity.World.GetCollectibleObject(loc);
+                            if (item != null)
+                            {
+                                bool hasItem = player.InventoryManager.Find(slot =>
+                                {
+                                    if (slot.Itemstack?.Collectible.Code == item.Code)
+                                    {
+                                        gearSlot = slot;
+                                        return true;
+                                    }
+
+                                    return false;
+                                });
+
+                                if (!hasItem && player.WorldData.CurrentGameMode != EnumGameMode.Creative)
+                                {
+                                    string itemName = item.GetHeldItemName(new ItemStack(item));
+                                    string message = Lang.Get("Requires {0} for teleport", itemName);
+                                    player.SendIngameError("", message);
+                                    return;
+                                }
+                            }
+                        }
+
                         TeleportUtil.AreaTeleportToPoint(player, startPoint, targetPoint, Constants.SealRadius,
                         ModLogger, (entity) =>
                         {
                             // one per tp
                             if (entity is EntityPlayer entityPlayer && entityPlayer.PlayerUID == player.PlayerUID)
                             {
+                                gearSlot?.TakeOut(1);
                                 var soundLoc = new AssetLocation("sounds/effect/translocate-breakdimension.ogg");
                                 entity.World.PlaySoundAt(soundLoc, entity, null, true, 32, .5f);
                             }

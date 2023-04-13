@@ -66,5 +66,8 @@ namespace TeleportationNetwork
 
         [Description("Disable trader and locust teleport structures")]
         public bool NoSpecialTeleports { get; set; } = false;
+
+        [Description("Consume this item on player teleport, for example game:gear-temporal")]
+        public string ItemForTeleport { get; set; } = string.Empty;
     }
 }
