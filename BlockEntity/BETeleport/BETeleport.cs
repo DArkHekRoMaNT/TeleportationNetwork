@@ -327,14 +327,15 @@ namespace TeleportationNetwork
             if (Repaired)
             {
                 dsc.AppendLine(Teleport.Name);
+            }
 
-                if (forPlayer.WorldData.CurrentGameMode == EnumGameMode.Creative)
+            if (forPlayer.WorldData.CurrentGameMode == EnumGameMode.Creative)
+            {
+                dsc.AppendLine($"Frame code: {_frameStack?.Collectible?.Code}");
+                dsc.AppendLine("Neighbours:");
+                foreach (Teleport node in Teleport.Neighbours)
                 {
-                    dsc.AppendLine("Neighbours:");
-                    foreach (Teleport node in Teleport.Neighbours)
-                    {
-                        dsc.AppendLine("*** " + node.Name);
-                    }
+                    dsc.AppendLine("*** " + node.Name);
                 }
             }
         }

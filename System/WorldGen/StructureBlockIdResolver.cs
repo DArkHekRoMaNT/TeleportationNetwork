@@ -1,8 +1,10 @@
+using CommonLib.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using Vintagestory.API.Common;
 using Vintagestory.API.MathTools;
+using Vintagestory.API.Util;
 using Vintagestory.GameContent;
 
 namespace TeleportationNetwork
@@ -12,6 +14,7 @@ namespace TeleportationNetwork
         private static string[] Woods => new string[]
         {
             "aged",
+            "agedebony",
             "birch",
             "oak",
             "maple",
@@ -92,6 +95,22 @@ namespace TeleportationNetwork
             "meteoriciron"
         };
 
+        private static string[] Chairs => new string[]
+        {
+            "plain",
+            "blue",
+            "red",
+            "yellow",
+            "purple",
+            "brown",
+            "green",
+            "orange",
+            "black",
+            "gray",
+            "pink",
+            "white"
+        };
+
         private readonly BlockPos _tmpPos = new();
         private readonly AssetLocation[] _blockCodes;
         private readonly AssetLocation[]? _notReplaceBlocks;
@@ -102,6 +121,7 @@ namespace TeleportationNetwork
         private string _currentRoofing = "";
         private string _currentWood = "";
         private string _currentLantern = "";
+        private string _currentChair = "";
 
         private readonly Random _rand = new();
         private readonly bool _ruin;
@@ -112,6 +132,11 @@ namespace TeleportationNetwork
             _blockCodes = blockCodes;
             _notReplaceBlocks = notReplaceBlocks;
             _teleportBlockCode = teleportBlockCode;
+
+            if (_teleportBlockCode != null && !_blockCodes.Contains(_teleportBlockCode))
+            {
+                _blockCodes = _blockCodes.Append(_teleportBlockCode);
+            }
         }
 
         public void InitNew(IBlockAccessor blockAccessor, BlockPos pos, LCGRandom rand, TeleportSchematicStructure schematic, ILogger logger)
@@ -122,6 +147,7 @@ namespace TeleportationNetwork
             _currentRoofing = Shingles[rand.NextInt(Shingles.Length)];
             _currentWood = Woods[rand.NextInt(Woods.Length)];
             _currentLantern = Lanterns[rand.NextInt(Lanterns.Length)];
+            _currentChair = Chairs[rand.NextInt(Chairs.Length)];
 
             foreach (var blockCode in _blockCodes)
             {
@@ -148,6 +174,8 @@ namespace TeleportationNetwork
                     ReplacePaintings(ref newCode, rand);
                     ReplaceVessels(ref newCode, rand);
                     ReplaceBrokenLanterns(ref newCode);
+                    ReplaceChairs(ref newCode);
+                    RandomizeCandles(ref newCode);
                 }
 
                 Block newBlock = blockAccessor.GetBlock(newCode);
@@ -217,6 +245,22 @@ namespace TeleportationNetwork
             }
         }
 
+        private void RandomizeCandles(ref AssetLocation code)
+        {
+            if (code.Path.StartsWith("buncheocandles"))
+            {
+                code.Path = $"buncheocandles-{_rand.Next(1, 10)}";
+            }
+        }
+
+        private void ReplaceChairs(ref AssetLocation code)
+        {
+            if (code.Path.StartsWith("chair"))
+            {
+                code.Path = code.Path.Replace("plain", _currentChair);
+            }
+        }
+
         private void ReplaceBrokenLanterns(ref AssetLocation code)
         {
             if (code.Domain == Constants.ModId && code.Path.Contains("brokenlantern"))
@@ -227,7 +271,7 @@ namespace TeleportationNetwork
 
         private static void ReplaceVessels(ref AssetLocation code, LCGRandom rand)
         {
-            if (code.Path.Contains("storagevessel"))
+            if (code.Path.StartsWith("storagevessel"))
             {
                 string newVessel = Vessels[rand.NextInt(Vessels.Length - 1)];
                 code.Path = code.Path.Replace("burned", newVessel);
@@ -236,7 +280,7 @@ namespace TeleportationNetwork
 
         private static void ReplacePaintings(ref AssetLocation code, LCGRandom rand)
         {
-            if (code.Path.Contains("painting"))
+            if (code.Path.StartsWith("painting"))
             {
                 string newPainting = Paintings[rand.NextInt(Paintings.Length - 1)];
                 code.Path = code.Path.Replace("elk", newPainting);
@@ -246,7 +290,11 @@ namespace TeleportationNetwork
 
         private void ReplaceWood(ref AssetLocation code)
         {
-            if (code.Path.Contains("aged"))
+            if (code.Path.Contains("agedebony"))
+            {
+                code.Path = code.Path.Replace("agedebony", _currentWood);
+            }
+            else
             {
                 code.Path = code.Path.Replace("aged", _currentWood);
             }

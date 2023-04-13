@@ -21,7 +21,7 @@
     "code": "tpnet_teleport_trader",
     "name": "TpNet's teleport (trader)",
     "schematics": [ "tpnet/teleport/trader" ],
-    "teleportBlockCode": "game:planks-aged-hor",
+    "teleportBlockCode": "game:planks-aged-ud",
     "special": true,
     "buildProtected": true,
     "buildProtectionDesc": "Trader Perimenter",
