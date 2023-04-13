@@ -131,8 +131,7 @@ namespace TeleportationNetwork
             _clientChannel?.SendPacket(new SyncTeleportMessage(teleport));
         }
 
-        private void OnReceiveClientSyncTeleportMessage(IServerPlayer fromPlayer,
-            SyncTeleportMessage msg)
+        private void OnReceiveClientSyncTeleportMessage(IServerPlayer fromPlayer, SyncTeleportMessage msg)
         {
             var teleport = Points[msg.Teleport.Pos];
             if (teleport == null) return;
