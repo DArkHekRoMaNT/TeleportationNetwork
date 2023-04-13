@@ -1,8 +1,10 @@
 using CommonLib.Extensions;
+using CommonLib.Utils;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
@@ -189,17 +191,37 @@ namespace TeleportationNetwork
                     nameFont.FontWeight = Cairo.FontWeight.Bold;
                 }
 
-                stacklist.Add(new GuiElementTeleportButton(capi,
+                var inventory = new InventoryGeneric(1, $"{Constants.ModId}-help-pay-inv-{i}-{Pos}", capi);
+                if (!string.IsNullOrEmpty(Core.Config.ItemForTeleport))
+                {
+                    var loc = new AssetLocation(Core.Config.ItemForTeleport);
+                    CollectibleObject item = capi.World.GetCollectibleObject(loc);
+                    if (item != null)
+                    {
+                        inventory[0].Itemstack = new ItemStack(item, 1);
+                    }
+                }
+
+                var container = new GuiElementContainer(capi, buttons[i]);
+                var buttonBounds = ElementBounds.Fixed(0, 0, 100, 40);
+                var slotBounds = ElementBounds.Fixed(0, 260, 300, 40);
+
+                container.Add(new GuiElementTeleportButton(capi,
                     name, tp.Pos, nameFont,
                     data.Pinned ?
                         CairoFont.WhiteSmallText().WithWeight(Cairo.FontWeight.Bold) :
                         CairoFont.WhiteSmallText(),
                     () => OnTeleportButtonClick(tp.Pos),
-                    buttons[i],
+                    buttonBounds,
                     EnumButtonStyle.Normal)
                 {
                     Enabled = IsPointEnabled(tp)
                 });
+
+                container.Add(new GuiElementPassiveItemSlot(capi, slotBounds, inventory, inventory[0], true));
+                new GuiElementFlatList
+
+                stacklist.Add(container);
             }
         }
 
