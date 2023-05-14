@@ -28,5 +28,17 @@
     "buildProtectionName": "Trader",
     "chance": 1,
     "offsetY": 0
+  },
+  {
+    "code": "tpnet_teleport_tower",
+    "name": "TpNet's teleport (tower)",
+    "schematics": [ "tpnet/teleport/tower" ],
+    "teleportBlockCode": "game:rockpolished-granite",
+    "special": true,
+    "buildProtected": true,
+    "buildProtectionDesc": "Trader Perimenter",
+    "buildProtectionName": "Trader",
+    "chance": 0.5,
+    "offsetY": 0
   }
 ]

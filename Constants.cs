@@ -9,7 +9,6 @@ namespace TeleportationNetwork
         public static int TeleportPlayerPacketId => 13514;
         public static int EntityTeleportedPacketId => 13516;
         public static string TeleportStructureGroup => ModId + "-teleport";
-        public static int MaxPillarHeight => 20;
-        public static int TeleportTriesPerChunk => 10;
+        public static int MaxPillarHeight => int.MaxValue;
     }
 }

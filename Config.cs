@@ -24,9 +24,6 @@ namespace TeleportationNetwork
         [Description("Range for unstable teleport <data deleted> behavior")]
         public int UnstableTeleportRange { get; set; } = 500;
 
-        [Description("Teleports are immediately available to everyone if repaired")]
-        public bool SharedTeleports { get; set; } = false;
-
         [Range(0, int.MaxValue)]
         [Description("Cooldown between teleports in milliseconds")]
         public int TeleportCooldown { get; set; } = 5000;
@@ -64,7 +61,15 @@ namespace TeleportationNetwork
         [Description("Broken teleport icon color")]
         public string BrokenTeleportColor { get; set; } = "#104430";
 
-        [Description("Disable trader and locust teleport structures")]
+        [Description("Disable trader, locust and tower teleport structures")]
         public bool NoSpecialTeleports { get; set; } = false;
+
+        [Range(32, int.MaxValue)]
+        [Description("Distance between teleports")]
+        public int TeleportGridSize { get; set; } = 4096;
+
+        [Range(1, int.MaxValue)]
+        [Description("Teleport position random spread relative to the grid")]
+        public int TeleportGridAreaRadius { get; set; } = 512;
     }
 }

@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using Vintagestory.API.Common;
 using Vintagestory.API.MathTools;
 using Vintagestory.API.Server;
@@ -8,17 +10,16 @@ namespace TeleportationNetwork
 {
     public class GenTeleportStructures : ModSystem
     {
-        private ICoreServerAPI _api = null!;
-
-        private int _worldheight;
         private int _chunksize;
         private float _fullChance;
 
+        private ICoreServerAPI _api = null!;
+        private LCGRandom _posRand = null!;
         private LCGRandom _strucRand = null!;
         private TeleportStructure[] _structures = null!;
         private IWorldGenBlockAccessor _worldgenBlockAccessor = null!;
 
-        public override double ExecuteOrder() => 0.51; // vanilla structures is 0.5
+        public override double ExecuteOrder() => 0.41; // vanilla structures is 0.5
 
         public override void StartServerSide(ICoreServerAPI api)
         {
@@ -36,9 +37,10 @@ namespace TeleportationNetwork
 
         private void InitWorldGen()
         {
-            _chunksize = _api.WorldManager.ChunkSize;
-            _worldheight = _api.WorldManager.MapSizeY;
             _strucRand = new LCGRandom(_api.World.Seed + 1091);
+            _posRand = new LCGRandom(_api.World.Seed + 19861);
+
+            _chunksize = _api.WorldManager.ChunkSize;
 
             IAsset asset = _api.Assets.Get("tpnet:worldgen/teleports.json");
             _structures = asset.ToObject<TeleportStructure[]>();
@@ -57,69 +59,113 @@ namespace TeleportationNetwork
                 return;
             }
 
-            _worldgenBlockAccessor.BeginColumn();
-            _strucRand.InitPositionSeed(request.ChunkX, request.ChunkZ);
+            int centerX = _api.WorldManager.MapSizeX / 2;
+            int centerZ = _api.WorldManager.MapSizeZ / 2;
 
-            int posX = request.ChunkX * _chunksize;
-            int posZ = request.ChunkZ * _chunksize;
+            int gridSize = Core.Config.TeleportGridSize;
+            int centerOffsetX = centerX % gridSize;
+            int centerOffsetZ = centerZ % gridSize;
+
+            int teleportX = request.ChunkX * _chunksize / gridSize;
+            int teleportZ = request.ChunkZ * _chunksize / gridSize;
+            _posRand.InitPositionSeed(teleportX, teleportZ);
+
+            int gridAreaRadius = Core.Config.TeleportGridAreaRadius;
+            int offsetX = _posRand.NextInt(gridAreaRadius * 2) - gridAreaRadius;
+            int offsetZ = _posRand.NextInt(gridAreaRadius * 2) - gridAreaRadius;
+
+            int posX = teleportX * gridSize + centerOffsetX + offsetX;
+            int posZ = teleportZ * gridSize + centerOffsetZ + offsetZ;
             var pos = new BlockPos(posX, 0, posZ);
 
-            if (!TeleportStructure.SatisfiesMinDistance(pos, _api.World))
+            int chunkPosX = request.ChunkX * _chunksize;
+            int chunkPosZ = request.ChunkZ * _chunksize;
+
+            if (chunkPosX > posX || posX >= chunkPosX + _chunksize ||
+                chunkPosZ > posZ || posZ >= chunkPosZ + _chunksize ||
+                _structures.Length == 0)
             {
                 return;
             }
 
-            IMapChunk mapChunk = request.Chunks[0].MapChunk;
-            IMapRegion region = mapChunk.MapRegion;
-            ushort[] heightMap = mapChunk.WorldGenTerrainHeightMap;
+            _worldgenBlockAccessor.BeginColumn();
 
-            float chance = _strucRand.NextFloat() * _fullChance;
-            for (int i = 0; i < _structures.Length; i++)
+            IMapRegion region = request.Chunks[0].MapChunk.MapRegion;
+
+            TeleportStructure? towerStruc = _structures.FirstOrDefault(e => e.IsTower);
+
+            if (Core.Config.NoSpecialTeleports || towerStruc == null ||
+                MaxHeightDiff(21, _worldgenBlockAccessor, pos) < 10)
             {
-                TeleportStructure struc = _structures[i];
-                chance -= struc.Chance;
-                if (chance <= 0)
+                float chance = _strucRand.NextFloat() * _fullChance;
+                for (int i = 0, k = 0; k < _structures.Length * 2; i++, k++)
                 {
-                    if (struc.Special && Core.Config.NoSpecialTeleports)
+                    if (i >= _structures.Length)
                     {
+                        i = 0;
+                    }
+
+                    TeleportStructure struc = _structures[i];
+                    chance -= struc.Chance;
+                    if (chance <= 0)
+                    {
+                        if (struc.Special && Core.Config.NoSpecialTeleports)
+                        {
+                            continue;
+                        }
+
+                        GenerateStructure(struc);
                         break;
                     }
+                }
+            }
+            else
+            {
+                GenerateStructure(towerStruc);
+            }
 
-                    for (int tries = 0; tries < Constants.TeleportTriesPerChunk; tries++)
+            int MaxHeightDiff(int size, IWorldGenBlockAccessor blockAccessor, BlockPos pos)
+            {
+                var tmp = new BlockPos();
+                int min = int.MaxValue;
+                int max = 0;
+
+                for (int i = 0; i < size; i++)
+                {
+                    for (int j = 0; j < size; j++)
                     {
-                        int dx = _strucRand.NextInt(_chunksize);
-                        int dz = _strucRand.NextInt(_chunksize);
-                        int ySurface = heightMap[dz * _chunksize + dx];
-                        if (ySurface <= 0 || ySurface >= _worldheight - 15) continue;
-
-                        pos.Set(posX + dx, ySurface, posZ + dz);
-
-                        lock (region.GeneratedStructures)
-                        {
-                            if (struc.TryGenerate(_worldgenBlockAccessor, _api.World, pos))
-                            {
-                                Cuboidi loc = struc.LastPlacedSchematicLocation;
-
-                                string code = struc.Code;
-                                if (struc.LastPlacedSchematic != null)
-                                {
-                                    code += "/" + struc.LastPlacedSchematic.FromFileName;
-                                }
-
-                                region.GeneratedStructures.Add(new GeneratedStructure()
-                                {
-                                    Code = code,
-                                    Group = Constants.TeleportStructureGroup,
-                                    Location = loc.Clone()
-                                });
-                                region.DirtyForSaving = true;
-
-                                AddBuildProtection(struc, loc);
-                                break;
-                            }
-                        }
+                        tmp.Set(pos.X + i, 0, pos.Z + j);
+                        int y = blockAccessor.GetTerrainMapheightAt(tmp);
+                        min = Math.Min(y, min);
+                        max = Math.Max(y, max);
                     }
-                    break;
+                }
+
+                return max - min;
+            }
+
+            void GenerateStructure(TeleportStructure struc)
+            {
+                lock (region.GeneratedStructures)
+                {
+                    struc.Generate(_worldgenBlockAccessor, _api.World, pos);
+                    Cuboidi loc = struc.LastPlacedSchematicLocation;
+
+                    string code = struc.Code;
+                    if (struc.LastPlacedSchematic != null)
+                    {
+                        code += "/" + struc.LastPlacedSchematic.FromFileName;
+                    }
+
+                    region.GeneratedStructures.Add(new GeneratedStructure()
+                    {
+                        Code = code,
+                        Group = Constants.TeleportStructureGroup,
+                        Location = loc.Clone()
+                    });
+                    region.DirtyForSaving = true;
+
+                    AddBuildProtection(struc, loc);
                 }
             }
         }
