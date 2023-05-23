@@ -28,10 +28,6 @@ namespace TeleportationNetwork
         [Description("Cooldown between teleports in milliseconds")]
         public int TeleportCooldown { get; set; } = 5000;
 
-        [Range(0, int.MaxValue)]
-        [Description("Minimal distance between teleport structures")]
-        public int MinTeleportDistance { get; set; } = 4096;
-
         [Description("Remove all paper and metal lanterns from teleport structures if True")]
         public bool DarknessMode { get; set; } = false;
 
