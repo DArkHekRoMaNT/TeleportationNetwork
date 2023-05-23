@@ -40,6 +40,8 @@ namespace TeleportationNetwork
 
         public override void StartServerSide(ICoreServerAPI api)
         {
+            var teleportGen = api.ModLoader.GetModSystem<GenTeleportStructures>();
+
             var parsers = api.ChatCommands.Parsers;
             api.ChatCommands
                 .GetOrCreate("tpnet")
@@ -63,6 +65,29 @@ namespace TeleportationNetwork
                         .WithArgs(parsers.Word("name"))
                         .HandleWith(ImportTeleportSchematic)
                     .EndSubCommand()
+                .EndSubCommand()
+                .BeginSubCommand("nexttp")
+                    .WithDescription("Show nearest teleport coordinates")
+                    .RequiresPlayer()
+                    .HandleWith(args =>
+                    {
+                        int chunkSize = api.World.BlockAccessor.ChunkSize;
+                        int chunkX = args.Caller.Pos.XInt / chunkSize;
+                        int chunkZ = args.Caller.Pos.ZInt / chunkSize;
+                        BlockPos pos = teleportGen.GetTeleportPosHere(chunkX, chunkZ);
+
+                        args.Caller.Entity.TeleportTo(pos);
+                        api.WorldManager.LoadChunkColumnPriority(pos.X / chunkSize, pos.Z / chunkSize, new ChunkLoadOptions
+                        {
+                            OnLoaded = () =>
+                            {
+                                pos.Y = api.WorldManager.GetSurfacePosY(pos.X, pos.Z) ?? api.WorldManager.MapSizeY;
+                                args.Caller.Entity.TeleportTo(pos);
+                            }
+                        });
+
+                        return TextCommandResult.Success();
+                    })
                 .EndSubCommand();
 
             TextCommandResult ShowAllTeleportSchematic(TextCommandCallingArgs args)

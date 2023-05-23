@@ -52,13 +52,8 @@ namespace TeleportationNetwork
             }
         }
 
-        private void OnChunkColumnGenPostPass(IChunkColumnGenerateRequest request)
+        public BlockPos GetTeleportPosHere(int chunkX, int chunkZ)
         {
-            if (!TerraGenConfig.GenerateStructures)
-            {
-                return;
-            }
-
             int centerX = _api.WorldManager.MapSizeX / 2;
             int centerZ = _api.WorldManager.MapSizeZ / 2;
 
@@ -66,8 +61,8 @@ namespace TeleportationNetwork
             int centerOffsetX = centerX % gridSize;
             int centerOffsetZ = centerZ % gridSize;
 
-            int teleportX = request.ChunkX * _chunksize / gridSize;
-            int teleportZ = request.ChunkZ * _chunksize / gridSize;
+            int teleportX = chunkX * _chunksize / gridSize;
+            int teleportZ = chunkZ * _chunksize / gridSize;
             _posRand.InitPositionSeed(teleportX, teleportZ);
 
             int gridAreaRadius = Core.Config.TeleportGridAreaRadius;
@@ -76,13 +71,24 @@ namespace TeleportationNetwork
 
             int posX = teleportX * gridSize + centerOffsetX + offsetX;
             int posZ = teleportZ * gridSize + centerOffsetZ + offsetZ;
-            var pos = new BlockPos(posX, 0, posZ);
+
+            return new BlockPos(posX, 0, posZ);
+        }
+
+        private void OnChunkColumnGenPostPass(IChunkColumnGenerateRequest request)
+        {
+            if (!TerraGenConfig.GenerateStructures)
+            {
+                return;
+            }
+
+            var pos = GetTeleportPosHere(request.ChunkX, request.ChunkZ);
 
             int chunkPosX = request.ChunkX * _chunksize;
             int chunkPosZ = request.ChunkZ * _chunksize;
 
-            if (chunkPosX > posX || posX >= chunkPosX + _chunksize ||
-                chunkPosZ > posZ || posZ >= chunkPosZ + _chunksize ||
+            if (chunkPosX > pos.X || pos.X >= chunkPosX + _chunksize ||
+                chunkPosZ > pos.Z || pos.Z >= chunkPosZ + _chunksize ||
                 _structures.Length == 0)
             {
                 return;
@@ -124,7 +130,7 @@ namespace TeleportationNetwork
                 GenerateStructure(towerStruc);
             }
 
-            int MaxHeightDiff(int size, IWorldGenBlockAccessor blockAccessor, BlockPos pos)
+            static int MaxHeightDiff(int size, IWorldGenBlockAccessor blockAccessor, BlockPos pos)
             {
                 var tmp = new BlockPos();
                 int min = int.MaxValue;
