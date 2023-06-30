@@ -1,7 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.IO;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
 using Vintagestory.API.Common.Entities;
@@ -109,26 +106,6 @@ namespace TeleportationNetwork
         public int GetRandomColor()
         {
             return _temporalGear.GetRandomColor(_api, null);
-        }
-
-        private static int[] GetColorsFromPNG(ICoreAPI api, string path)
-        {
-            var colors = new List<int>();
-
-            IAsset asset = api.Assets.Get(new AssetLocation(path));
-            using var ms = new MemoryStream(asset.Data);
-            using var bitmap = new Bitmap(ms);
-            {
-                for (int i = 0; i < bitmap.Width; i++)
-                {
-                    for (int j = 0; j < bitmap.Height; j++)
-                    {
-                        colors.Add(bitmap.GetPixel(i, j).ToArgb());
-                    }
-                }
-            }
-
-            return colors.ToArray();
         }
 
         private static Vec3d GetSealCenter(BlockPos pos) => pos.ToVec3d().Add(0.5, 1, 0.5);
