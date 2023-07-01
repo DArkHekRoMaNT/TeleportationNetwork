@@ -60,12 +60,8 @@ namespace TeleportationNetwork
         [Description("Disable trader, locust and tower teleport structures")]
         public bool NoSpecialTeleports { get; set; } = false;
 
-        [Range(32, int.MaxValue)]
-        [Description("Distance between teleports")]
-        public int TeleportGridSize { get; set; } = 4096;
-
-        [Range(1, int.MaxValue)]
-        [Description("Teleport position random spread relative to the grid")]
-        public int TeleportGridAreaRadius { get; set; } = 512;
+        [Range(0, int.MaxValue)]
+        [Description("Minimal distance between teleport structures")]
+        public int MinTeleportDistance { get; set; } = 4096;
     }
 }

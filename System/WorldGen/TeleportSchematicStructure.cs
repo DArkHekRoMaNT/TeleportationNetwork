@@ -9,11 +9,8 @@ namespace TeleportationNetwork
 {
     public class TeleportSchematicStructure : BlockSchematicStructure
     {
-        public delegate void OnBlockEntityPlacedDelegate(int x, int y, int z, IBlockAccessor blockAccessor);
-        public OnBlockEntityPlacedDelegate? BlockEntityPlaced { get; set; }
-
-        public int PlaceWithReplaceBlockIds(IBlockAccessor blockAccessor, IWorldAccessor world,
-            BlockPos pos, StructureBlockResolver resolver)
+        public int PlaceWithReplaceBlockIds(IBlockAccessor blockAccessor, IWorldAccessor world, BlockPos pos,
+            TeleportStructureBlockRandomizer blockRandomizer)
         {
             var curPos = new BlockPos();
             int placed = 0;
@@ -38,7 +35,7 @@ namespace TeleportationNetwork
                 int dz = (int)((index >> 10) & 0x1ff);
 
                 AssetLocation blockCode = BlockCodes[storedBlockid];
-                Block? newBlock = resolver.GetBlock(blockCode, blockAccessor);
+                Block? newBlock = blockRandomizer.GetRandomizedBlock(blockCode, blockAccessor);
                 if (newBlock == null) continue;
 
                 curPos.Set(dx + pos.X, dy + pos.Y, dz + pos.Z);
@@ -54,11 +51,11 @@ namespace TeleportationNetwork
                 // In the post pass the rain map does not update, so let's set it ourselves
                 if (p > 0 && !newBlock.RainPermeable)
                 {
-                    IMapChunk mapchunk = blockAccessor.GetMapChunkAtBlockPos(curPos);
+                    IMapChunk mapChunk = blockAccessor.GetMapChunkAtBlockPos(curPos);
                     int lx = curPos.X % chunksize;
                     int lz = curPos.Z % chunksize;
-                    int y = mapchunk.RainHeightMap[lz * chunksize + lx];
-                    mapchunk.RainHeightMap[lz * chunksize + lx] = (ushort)Math.Max(y, curPos.Y);
+                    int y = mapChunk.RainHeightMap[lz * chunksize + lx];
+                    mapChunk.RainHeightMap[lz * chunksize + lx] = (ushort)Math.Max(y, curPos.Y);
                 }
             }
 
@@ -71,7 +68,7 @@ namespace TeleportationNetwork
                     int x = pos.X + (int)(index & 0x1ff);
                     int y = pos.Y + (int)((index >> 20) & 0x1ff);
                     int z = pos.Z + (int)((index >> 10) & 0x1ff);
-                    BlockEntityPlaced?.Invoke(x, y, z, blockAccessor);
+                    blockRandomizer.AfterPlaceBlockRandomization(x, y, z, blockAccessor);
                 }
             }
 

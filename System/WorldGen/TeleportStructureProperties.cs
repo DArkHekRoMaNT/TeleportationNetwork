@@ -1,0 +1,31 @@
+using Newtonsoft.Json;
+using System;
+using System.Linq;
+
+namespace TeleportationNetwork
+{
+    public class TeleportStructureProperties
+    {
+        [JsonProperty, JsonRequired] public string Code { get; private set; } = null!;
+        [JsonProperty, JsonRequired] public string[] Schematics { get; private set; } = null!;
+        [JsonProperty] public string[] PillarSchematics { get; private set; } = Array.Empty<string>();
+        [JsonProperty] public string[] BaseSchematics { get; private set; } = Array.Empty<string>();
+
+        [JsonProperty] public bool Ruin { get; private set; } = false;
+        [JsonProperty] public bool Special { get; private set; } = false;
+
+        [JsonProperty] public bool BuildProtected { get; private set; } = false;
+        [JsonProperty] public string? BuildProtectionName { get; private set; }
+        [JsonProperty] public string? BuildProtectionDesc { get; private set; }
+
+        [JsonProperty] public float Chance { get; private set; } = 0.05f;
+        [JsonProperty] public int OffsetY { get; private set; } = 0;
+
+        /// <summary>
+        /// Place on the sea bottom only
+        /// </summary>
+        [JsonProperty] public bool Underwater { get; private set; } = false;
+        [JsonProperty] public int MaxDepth { get; private set; } = 15;
+        [JsonProperty] public int MinDepth { get; private set; } = 0;
+    }
+}

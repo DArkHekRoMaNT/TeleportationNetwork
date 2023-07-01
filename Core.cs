@@ -42,7 +42,6 @@ namespace TeleportationNetwork
         public override void StartServerSide(ICoreServerAPI api)
         {
             _ = new SchematicChatCommand(api);
-            _ = new TeleportToNearestStructureChatCommand(api);
         }
     }
 }
