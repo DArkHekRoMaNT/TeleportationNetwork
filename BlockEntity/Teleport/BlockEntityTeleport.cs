@@ -22,11 +22,10 @@ namespace TeleportationNetwork
         private GuiDialogTeleportList? _teleportDlg;
         private GuiDialogEditTeleport? _editDlg;
 
-        private BlockEntityAnimationUtil? AnimUtil
-            => GetBehavior<BEBehaviorAnimatable>()?.animUtil;
+        private BlockEntityAnimationUtil? AnimUtil => GetBehavior<BEBehaviorAnimatable>()?.animUtil;
+
         private SealRenderer SealRenderer { get; set; } = null!;
-        private TeleportParticleController? ParticleController =>
-            (Block as BlockTeleport)?.ParticleController;
+        private TeleportParticleController? ParticleController => (Block as BlockTeleport)?.ParticleController;
 
         private ILoadedSound? _sound;
         private float _soundVolume;
@@ -68,7 +67,6 @@ namespace TeleportationNetwork
         }
 
         public ILogger ModLogger => _modLogger ?? Api.Logger;
-
 
         public override void Initialize(ICoreAPI api)
         {
@@ -173,7 +171,7 @@ namespace TeleportationNetwork
             var toRemove = new List<string>();
 
             float maxSecondsPassed = 0;
-            foreach (var activePlayer in ActivePlayers)
+            foreach (KeyValuePair<string, TeleportingPlayerData> activePlayer in ActivePlayers)
             {
                 if (activePlayer.Value.State == TeleportingPlayerData.EnumState.None)
                 {
@@ -216,7 +214,7 @@ namespace TeleportationNetwork
                 maxSecondsPassed = Math.Max(activePlayer.Value.SecondsPassed, maxSecondsPassed);
             }
 
-            foreach (var playerUID in toRemove)
+            foreach (string playerUID in toRemove)
             {
                 ActivePlayers.Remove(playerUID);
 
@@ -269,7 +267,11 @@ namespace TeleportationNetwork
 
         public override bool OnTesselation(ITerrainMeshPool mesher, ITesselatorAPI tessThreadTesselator)
         {
-            mesher.AddMeshData(_frameMesh);
+            if (_frameMesh != null)
+            {
+                mesher.AddMeshData(_frameMesh);
+            }
+
             return base.OnTesselation(mesher, tessThreadTesselator);
         }
 
@@ -362,32 +364,34 @@ namespace TeleportationNetwork
         public override void ToTreeAttributes(ITreeAttribute tree)
         {
             base.ToTreeAttributes(tree);
-            tree.SetItemstack("frameStack", _frameStack);
+            tree.SetString("frameCode", _frameStack?.Collectible.Code.ToString());
         }
 
         public override void FromTreeAttributes(ITreeAttribute tree, IWorldAccessor worldAccessForResolve)
         {
             base.FromTreeAttributes(tree, worldAccessForResolve);
-            _frameStack = tree.GetItemstack("frameStack");
-            _frameStack.ResolveBlockOrItem(worldAccessForResolve);
-            UpdateFrameMesh();
-        }
 
-        public override void OnLoadCollectibleMappings(IWorldAccessor worldForNewMappings, Dictionary<int, AssetLocation> oldBlockIdMapping, Dictionary<int, AssetLocation> oldItemIdMapping, int schematicSeed)
-        {
-            base.OnLoadCollectibleMappings(worldForNewMappings, oldBlockIdMapping, oldItemIdMapping, schematicSeed);
-            return;
-
-            _frameStack?.ResolveBlockOrItem(worldForNewMappings);
-            if (_frameStack == null || !_frameStack.FixMapping(oldBlockIdMapping, oldItemIdMapping, worldForNewMappings))
+            string? frame = tree.GetString("frameCode");
+            if (frame != null)
             {
-                _frameStack = new ItemStack(worldForNewMappings.GetBlock(DefaultFrameCode));
+                Block? block = worldAccessForResolve.GetBlock(new AssetLocation(frame));
+                if (block != null)
+                {
+                    _frameStack = new ItemStack(block);
+                }
             }
+            else // Legacy 1.12
+            {
+                _frameStack = tree.GetItemstack("frameStack");
+                _frameStack?.ResolveBlockOrItem(worldAccessForResolve);
+            }
+
+            UpdateFrameMesh();
         }
 
         private void UpdateFrameMesh()
         {
-            if (Api is ICoreClientAPI capi)
+            if (Api is ICoreClientAPI capi && _frameStack != null)
             {
                 var shapeCode = new AssetLocation(Constants.ModId, "shapes/block/teleport/frame.json");
                 Shape frameShape = Api.Assets.Get<Shape>(shapeCode);

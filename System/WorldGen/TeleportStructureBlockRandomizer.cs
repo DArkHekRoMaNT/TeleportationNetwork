@@ -24,7 +24,7 @@ namespace TeleportationNetwork
         private Dictionary<AssetLocation, string[]> ReplaceByBlocks { get; } = new();
         private List<AssetLocation> LightBlocks { get; } = new();
 
-        private TeleportStructureData _structure = null!;
+        private TeleportStructureData _currentStructure = null!;
 
         private string _currentRock = "";
         private string _currentWood = "";
@@ -118,7 +118,7 @@ namespace TeleportationNetwork
                 return "granite";
             }
 
-            _structure = structure;
+            _currentStructure = structure;
 
             _currentRock = GetRock();
             _currentWood = Woods[rand.NextInt(Woods.Length)];
@@ -132,7 +132,7 @@ namespace TeleportationNetwork
         {
             _replaceBlockIds.Clear();
 
-            foreach (var blockCode in _structure.ContainsBlockCodes)
+            foreach (var blockCode in _currentStructure.ContainsBlockCodes)
             {
                 AssetLocation newCode = blockCode.Clone();
 
@@ -179,12 +179,21 @@ namespace TeleportationNetwork
             _tmpPos.Set(x, y, z);
             BlockEntity be = blockAccessor.GetBlockEntity(_tmpPos);
 
+            if (be is BlockEntityTeleport tbe && tbe.FrameStack != null)
+            {
+                if (_replaceBlockIds.TryGetValue(tbe.FrameStack.Collectible.Code, out int blockId))
+                {
+                    Block block = blockAccessor.GetBlock(blockId);
+                    tbe.FrameStack = new ItemStack(block);
+                }
+            }
+
             if (be is BELantern lbe)
             {
                 lbe.material = _currentLantern;
             }
 
-            if (_structure.Props.Ruin && be is null)
+            if (_currentStructure.Props.Ruin && be is null)
             {
                 Block block = blockAccessor.GetBlock(_tmpPos);
 

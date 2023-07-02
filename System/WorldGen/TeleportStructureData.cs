@@ -52,7 +52,7 @@ namespace TeleportationNetwork
         private TeleportSchematicStructure[][] LoadSchematicList(BlockLayerConfig config, string[] names)
         {
             var schematics = new List<TeleportSchematicStructure[]>();
-            foreach (var name in names)
+            foreach (string name in names)
             {
                 var schematic = LoadSchematic(config, name);
                 if (schematic != null)
@@ -116,9 +116,9 @@ namespace TeleportationNetwork
         private static AssetLocation[] GetBlockCodes(TeleportSchematicStructure[][] schematics)
         {
             var blockCodes = new List<AssetLocation>();
-            foreach (var schematic in schematics)
+            foreach (TeleportSchematicStructure[] schematic in schematics)
             {
-                foreach (var rotatedSchematic in schematic)
+                foreach (TeleportSchematicStructure rotatedSchematic in schematic)
                 {
                     blockCodes.AddRange(rotatedSchematic.BlockCodes.Values.ToArray());
                 }

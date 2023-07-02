@@ -53,9 +53,9 @@ namespace TeleportationNetwork
             }
 
             var frames = api.World.Blocks
-                        .Where((b) => b.DrawType == EnumDrawType.Cube)
-                        .Select((Block b) => new ItemStack(b))
-                        .ToArray();
+                .Where((b) => b.DrawType == EnumDrawType.Cube)
+                .Select((Block b) => new ItemStack(b))
+                .ToArray();
 
             WorldInteractions.Add(new WorldInteraction
             {
