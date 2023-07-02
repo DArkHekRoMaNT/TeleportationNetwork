@@ -71,7 +71,7 @@ namespace TeleportationNetwork
 
         public override void OnEntityCollide(IWorldAccessor world, Entity entity, BlockPos pos, BlockFacing facing, Vec3d collideSpeed, bool isImpact)
         {
-            if (api.World.BlockAccessor.GetBlockEntity(pos) is BETeleport be)
+            if (api.World.BlockAccessor.GetBlockEntity(pos) is BlockEntityTeleport be)
             {
                 be.OnEntityCollide(entity);
             }
@@ -79,7 +79,7 @@ namespace TeleportationNetwork
 
         public override bool OnBlockInteractStart(IWorldAccessor world, IPlayer byPlayer, BlockSelection blockSel)
         {
-            if (api.World.BlockAccessor.GetBlockEntity(blockSel.Position) is BETeleport be)
+            if (api.World.BlockAccessor.GetBlockEntity(blockSel.Position) is BlockEntityTeleport be)
             {
                 if (byPlayer.Entity.Controls.Sneak)
                 {
@@ -159,7 +159,7 @@ namespace TeleportationNetwork
         {
             bool flag = base.DoPlaceBlock(world, byPlayer, blockSel, byItemStack);
 
-            if (world.BlockAccessor.GetBlockEntity(blockSel.Position) is BETeleport be)
+            if (world.BlockAccessor.GetBlockEntity(blockSel.Position) is BlockEntityTeleport be)
             {
                 if (api.Side == EnumAppSide.Server)
                 {
@@ -186,7 +186,7 @@ namespace TeleportationNetwork
         public override ItemStack OnPickBlock(IWorldAccessor world, BlockPos pos)
         {
             ItemStack stack = base.OnPickBlock(world, pos) ?? new(this);
-            if (world.BlockAccessor.GetBlockEntity(pos) is BETeleport be)
+            if (world.BlockAccessor.GetBlockEntity(pos) is BlockEntityTeleport be)
             {
                 AssetLocation? frameCode = be.FrameStack?.Collectible?.Code;
                 if (frameCode != null)

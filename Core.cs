@@ -21,9 +21,9 @@ namespace TeleportationNetwork
         {
             api.RegisterBlockClass("BlockBrokenTeleport", typeof(BlockTeleport));
             api.RegisterBlockClass("BlockNormalTeleport", typeof(BlockTeleport));
-            api.RegisterBlockEntityClass("BETeleport", typeof(BETeleport));
-            api.RegisterBlockEntityClass("WaterBarrier", typeof(BEWaterBarrier));
-            api.RegisterBlockEntityClass("Dome", typeof(BEDome));
+            api.RegisterBlockEntityClass("BETeleport", typeof(BlockEntityTeleport));
+            api.RegisterBlockEntityClass("WaterBarrier", typeof(BlockEntityWaterBarrier));
+            api.RegisterBlockEntityClass("Dome", typeof(BlockEntityDome));
 
             api.ChatCommands
                 .GetOrCreate("tpnet")

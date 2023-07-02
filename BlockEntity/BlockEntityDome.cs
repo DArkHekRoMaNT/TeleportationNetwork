@@ -4,7 +4,7 @@ using Vintagestory.API.MathTools;
 
 namespace TeleportationNetwork
 {
-    public class BEDome : BlockEntity
+    public class BlockEntityDome : BlockEntity
     {
         private long _listenerId;
         private SimpleParticleProperties particles;

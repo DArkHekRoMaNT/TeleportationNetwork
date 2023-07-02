@@ -114,7 +114,7 @@ namespace TeleportationNetwork
                         OnLoaded = delegate
                         {
                             BlockEntity be = sapi.World.BlockAccessor.GetBlockEntity(teleport.Pos);
-                            if (be is not BETeleport)
+                            if (be is not BlockEntityTeleport)
                             {
                                 Points.Remove(teleport.Pos);
                                 Mod.Logger.Notification("Removed unknown teleport {0} at {1}",

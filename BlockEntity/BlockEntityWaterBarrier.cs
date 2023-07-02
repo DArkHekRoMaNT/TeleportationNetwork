@@ -4,8 +4,7 @@ using Vintagestory.API.MathTools;
 
 namespace TeleportationNetwork
 {
-
-    public class BEWaterBarrier : BlockEntity
+    public class BlockEntityWaterBarrier : BlockEntity
     {
         private long _listenerId;
 

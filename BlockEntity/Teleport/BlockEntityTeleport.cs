@@ -12,7 +12,7 @@ using Vintagestory.GameContent;
 
 namespace TeleportationNetwork
 {
-    public class BETeleport : BlockEntity
+    public class BlockEntityTeleport : BlockEntity
     {
         public static AssetLocation DefaultFrameCode => new("game:stonebricks-granite");
 
