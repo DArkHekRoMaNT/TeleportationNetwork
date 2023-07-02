@@ -1,0 +1,27 @@
+{
+  "code": "meta",
+  "entityClassByType": {
+    "*-waterbarrier": "WaterBarrier",
+    "*-dome": "Dome"
+  },
+  "attributes": {
+    "handbook": {
+      "exclude": true
+    }
+  },
+  "variantgroups": [{ "code": "type", "states": [ "teleport", "waterbarrier", "dome" ]}],
+  "shape": { "base": "game:block/basic/cube" },
+  "drawtype": "cube",
+  "creativeinventory": { "meta": ["*"], "tpnet":  ["*"] },
+  "blockmaterial": "Meta",
+  "faceCullMode": "Merge",
+  "vertexFlags": { "zOffset": 7 },
+  "renderPass": "meta",
+  "replaceable": 900,
+  "lightAbsorption": 0,
+  "textures": { "all": { "base": "block/meta/{type}" }},
+  "resistance": 0.25,
+  "sideopaque": { "all": false },
+  "sidesolid": { "all": true },
+  "collisionbox": null
+}
