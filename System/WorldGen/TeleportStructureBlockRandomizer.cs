@@ -144,11 +144,11 @@ namespace TeleportationNetwork
                         .Replace("{clay}", _currentClay);
 
                     // Cobble skull fix
-                    if (_currentRock != "andesite" ||
-                        _currentRock != "chalk" ||
-                        _currentRock != "claystone" ||
-                        _currentRock != "granite" ||
-                        _currentRock != "shale" ||
+                    if (_currentRock != "andesite" &&
+                        _currentRock != "chalk" &&
+                        _currentRock != "claystone" &&
+                        _currentRock != "granite" &&
+                        _currentRock != "shale" &&
                         _currentRock != "basalt")
                     {
                         selected = selected.Replace("cobbleskull", "cobblestone");
