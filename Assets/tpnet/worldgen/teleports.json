@@ -137,16 +137,12 @@
       "maxDepth": 100,
       "chance": 0.5
     },
-
-
     {
-      "code": "tpnet_teleport_common_underwater",
-      "schematics": [ "tpnet/teleport/common" ],
-      "baseSchematics":  ["tpnet/teleport/pillar-base"],
-      "pillarSchematics":  ["tpnet/teleport/pillar"],
+      "code": "tpnet_teleport_dome",
+      "schematics": [ "tpnet/teleport/dome" ],
       "chance": 5,
-      "maxDepth": 40,
       "minDepth": 15,
+      "maxDepth": 999999,
       "underwater": true
     }
   ]
