@@ -247,7 +247,7 @@ namespace TeleportationNetwork
                     for (int k = 0; k < structure.Teleport.SizeX; k++)
                     {
                         Block block = _worldgenBlockAccessor.GetBlock(x, y, z, BlockLayersAccess.MostSolid);
-                        if (block.Id != 0)
+                        if (block.Id != 0 && !structure.Props.Underwater)
                         {
                             return false;
                         }
