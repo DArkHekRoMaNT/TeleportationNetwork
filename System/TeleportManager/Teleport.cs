@@ -65,7 +65,7 @@ namespace TeleportationNetwork
         public Teleport ForPlayer(string playerUID)
         {
             var teleport = (Teleport)MemberwiseClone();
-            teleport.ClientData = new Dictionary<string, TeleportClientData>()
+            teleport.ClientData = new Dictionary<string, TeleportClientData>
             {
                 { playerUID, GetClientData(playerUID) }
             };

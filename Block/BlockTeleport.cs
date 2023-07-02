@@ -1,7 +1,5 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
 using Vintagestory.API.Common.Entities;
@@ -11,7 +9,6 @@ using Vintagestory.GameContent;
 
 namespace TeleportationNetwork
 {
-
     public class BlockTeleport : Block
     {
         private List<WorldInteraction> WorldInteractions { get; } = new();
@@ -37,7 +34,7 @@ namespace TeleportationNetwork
             {
                 var temporalGear = api.World.GetItem(new AssetLocation("gear-temporal"));
 
-                WorldInteractions.Add(new WorldInteraction()
+                WorldInteractions.Add(new WorldInteraction
                 {
                     ActionLangCode = "blockhelp-translocator-repair-2",
                     MouseButton = EnumMouseButton.Right,
@@ -47,9 +44,9 @@ namespace TeleportationNetwork
 
             if (IsNormal)
             {
-                WorldInteractions.Add(new WorldInteraction()
+                WorldInteractions.Add(new WorldInteraction
                 {
-                    ActionLangCode = Constants.ModId + ":blockhelp-teleport-edit",
+                    ActionLangCode = $"{Constants.ModId}:blockhelp-teleport-edit",
                     MouseButton = EnumMouseButton.Right,
                     HotKeyCode = "sneak"
                 });
@@ -60,9 +57,9 @@ namespace TeleportationNetwork
                         .Select((Block b) => new ItemStack(b))
                         .ToArray();
 
-            WorldInteractions.Add(new WorldInteraction()
+            WorldInteractions.Add(new WorldInteraction
             {
-                ActionLangCode = Constants.ModId + ":blockhelp-teleport-change-frame",
+                ActionLangCode = $"{Constants.ModId}:blockhelp-teleport-change-frame",
                 MouseButton = EnumMouseButton.Right,
                 HotKeyCode = "sprint",
                 Itemstacks = frames
@@ -203,7 +200,7 @@ namespace TeleportationNetwork
             string? frameStackCode = itemstack.Attributes.GetString("frameCode");
             if (frameStackCode != null)
             {
-                string key = Constants.ModId + "_teleportFrameMesh_" + Code + "_" + frameStackCode;
+                string key = $"{Constants.ModId}_teleportFrameMesh_{Code}_{frameStackCode}";
                 renderinfo.ModelRef = ObjectCacheUtil.GetOrCreate(capi, key, () =>
                 {
                     capi.Tesselator.TesselateBlock(this, out MeshData baseMesh);

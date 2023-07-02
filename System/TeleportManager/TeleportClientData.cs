@@ -49,7 +49,9 @@ namespace TeleportationNetwork
                 Color = reader.ReadInt32();
                 SortOrder = reader.ReadInt32();
             }
-            catch (EndOfStreamException) { } // legacy data check
+            catch (EndOfStreamException)
+            {
+            } // legacy data check
         }
 
         public TeleportClientData Clone()

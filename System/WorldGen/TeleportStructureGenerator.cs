@@ -113,7 +113,10 @@ namespace TeleportationNetwork
                         int dx = _chunkRandom.NextInt(_chunksize);
                         int dz = _chunkRandom.NextInt(_chunksize);
                         int ySurface = heightMap[dz * _chunksize + dx];
-                        if (ySurface <= 0 || ySurface >= _worldheight - 15) continue;
+                        if (ySurface <= 0 || ySurface >= _worldheight - 15)
+                        {
+                            continue;
+                        }
 
                         if (TryGenerateStructure(structure, pos.X + dx, pos.Z + dz))
                         {
@@ -196,11 +199,6 @@ namespace TeleportationNetwork
                 {
                     waterLevel++;
                 }
-            }
-
-            if (structure.Props.Underwater)
-            {
-
             }
 
             if (structure.Props.Underwater && waterLevel == 0)
@@ -298,6 +296,7 @@ namespace TeleportationNetwork
             schematic.PlaceWithReplaceBlockIds(_worldgenBlockAccessor, _api.World, pos, _blockRandomizer);
             return new Cuboidi(pos.X, pos.Y, pos.Z, pos.X + schematic.SizeX, pos.Y + schematic.SizeY, pos.Z + schematic.SizeZ);
         }
+
         private void AddBuildProtection(TeleportStructureProperties props, List<Cuboidi> areas)
         {
             bool buildProtected = props.BuildProtected;
@@ -312,7 +311,7 @@ namespace TeleportationNetwork
 
             if (buildProtected)
             {
-                _api.World.Claims.Add(new LandClaim()
+                _api.World.Claims.Add(new LandClaim
                 {
                     Areas = areas,
                     Description = props.BuildProtectionDesc ?? "Teleport Perimeter",

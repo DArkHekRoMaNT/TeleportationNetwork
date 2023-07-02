@@ -46,7 +46,10 @@ namespace TeleportationNetwork
 
         private void RebuildMapComponents()
         {
-            if (!mapSink.IsOpened) return;
+            if (!mapSink.IsOpened)
+            {
+                return;
+            }
 
             foreach (var component in _components.Cast<TeleportMapComponent>())
             {
@@ -75,7 +78,10 @@ namespace TeleportationNetwork
             foreach (var component in _components)
             {
                 component.OnMouseUpOnElement(args, mapElem);
-                if (args.Handled) break;
+                if (args.Handled)
+                {
+                    break;
+                }
             }
         }
     }

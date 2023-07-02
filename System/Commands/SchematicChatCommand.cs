@@ -44,7 +44,7 @@ namespace TeleportationNetwork
 
             if (schematics == null || schematics.Count == 0)
             {
-                return TextCommandResult.Error(Lang.Get(Constants.ModId + ":tpimp-empty"));
+                return TextCommandResult.Error(Lang.Get($"{Constants.ModId}:tpimp-empty"));
             }
 
             var sb = new StringBuilder();
@@ -97,7 +97,7 @@ namespace TeleportationNetwork
 
             if (schema == null)
             {
-                error = Lang.Get(Constants.ModId + ":tpimp-empty");
+                error = Lang.Get($"{Constants.ModId}:tpimp-empty");
                 return null;
             }
 

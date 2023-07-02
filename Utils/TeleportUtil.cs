@@ -46,7 +46,7 @@ namespace TeleportationNetwork
 
             var stabilitySystem = sapi.ModLoader.GetModSystem<SystemTemporalStability>();
             bool stabilityEnabled = sapi.World.Config.GetBool("temporalStability", true);
-            entity.SetActivityRunning(Constants.ModId + "_teleportCooldown", Core.Config.TeleportCooldown);
+            entity.SetActivityRunning($"{Constants.ModId}_teleportCooldown", Core.Config.TeleportCooldown);
 
             bool unstableTeleport = false;
 

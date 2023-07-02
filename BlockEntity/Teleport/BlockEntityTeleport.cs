@@ -88,7 +88,7 @@ namespace TeleportationNetwork
             {
                 SealRenderer = new SealRenderer(Pos, capi);
 
-                _sound = capi.World.LoadSound(new SoundParams()
+                _sound = capi.World.LoadSound(new SoundParams
                 {
                     Location = new AssetLocation("sounds/effect/translocate-idle.ogg"),
                     ShouldLoop = true,
@@ -109,7 +109,7 @@ namespace TeleportationNetwork
         {
             if (Repaired && entity is EntityPlayer player)
             {
-                if (player.IsActivityRunning(Constants.ModId + "_teleportCooldown"))
+                if (player.IsActivityRunning($"{Constants.ModId}_teleportCooldown"))
                 {
                     return;
                 }
@@ -126,7 +126,6 @@ namespace TeleportationNetwork
 
         private void OnGameTick(float dt)
         {
-
             if (Repaired && Active)
             {
                 CheckActivePlayers(dt);
@@ -335,7 +334,7 @@ namespace TeleportationNetwork
                 dsc.AppendLine("Neighbours:");
                 foreach (Teleport node in Teleport.Neighbours)
                 {
-                    dsc.AppendLine("*** " + node.Name);
+                    dsc.AppendLine($"*** {node.Name}");
                 }
             }
         }
@@ -409,12 +408,12 @@ namespace TeleportationNetwork
                 if (Repaired)
                 {
                     float rotY = Block.Shape.rotateY;
-                    AnimUtil.InitializeAnimator(Constants.ModId + "-teleport", null, null, new Vec3f(0, rotY, 0));
+                    AnimUtil.InitializeAnimator($"{Constants.ModId}-teleport", null, null, new Vec3f(0, rotY, 0));
 
                     if (AnimUtil.activeAnimationsByAnimCode.Count == 0 ||
                         AnimUtil.animator!.ActiveAnimationCount == 0)
                     {
-                        AnimUtil.StartAnimation(new AnimationMetaData()
+                        AnimUtil.StartAnimation(new AnimationMetaData
                         {
                             Animation = "largegears",
                             Code = "largegears",
@@ -423,7 +422,7 @@ namespace TeleportationNetwork
                             EaseOutSpeed = float.MaxValue
                         });
 
-                        AnimUtil.StartAnimation(new AnimationMetaData()
+                        AnimUtil.StartAnimation(new AnimationMetaData
                         {
                             Animation = "smallgears",
                             Code = "smallgears",

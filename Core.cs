@@ -33,7 +33,7 @@ namespace TeleportationNetwork
 
         public override void StartClientSide(ICoreClientAPI api)
         {
-            HudCircleRenderer = new HudCircleRenderer(api, new HudCircleSettings()
+            HudCircleRenderer = new HudCircleRenderer(api, new HudCircleSettings
             {
                 Color = 0x23cca2
             });

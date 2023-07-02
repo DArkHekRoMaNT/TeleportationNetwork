@@ -36,7 +36,10 @@ namespace TeleportationNetwork
 
                 AssetLocation blockCode = BlockCodes[storedBlockid];
                 Block? newBlock = blockRandomizer.GetRandomizedBlock(blockCode, blockAccessor);
-                if (newBlock == null) continue;
+                if (newBlock == null)
+                {
+                    continue;
+                }
 
                 curPos.Set(dx + pos.X, dy + pos.Y, dz + pos.Z);
 
@@ -77,7 +80,7 @@ namespace TeleportationNetwork
 
         public TeleportSchematicStructure Copy()
         {
-            return new TeleportSchematicStructure()
+            return new TeleportSchematicStructure
             {
                 SizeX = SizeX,
                 SizeY = SizeY,

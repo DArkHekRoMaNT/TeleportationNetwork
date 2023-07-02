@@ -29,7 +29,6 @@ namespace TeleportationNetwork
             {
                 if (value != null)
                 {
-
                     if (_teleports.ContainsKey(pos))
                     {
                         _teleports[pos] = value;

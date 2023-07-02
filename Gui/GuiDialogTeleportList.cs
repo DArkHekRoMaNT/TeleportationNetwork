@@ -1,3 +1,4 @@
+using Cairo;
 using CommonLib.Extensions;
 using System;
 using System.Collections.Generic;
@@ -23,7 +24,7 @@ namespace TeleportationNetwork
         private List<Teleport> _allPoints;
 
         public GuiDialogTeleportList(ICoreClientAPI capi, BlockPos? blockEntityPos)
-            : base(Lang.Get(Constants.ModId + ":tpdlg-title"), capi)
+            : base(Lang.Get($"{Constants.ModId}:tpdlg-title"), capi)
         {
             Pos = blockEntityPos;
             TeleportManager = capi.ModLoader.GetModSystem<TeleportManager>();
@@ -103,12 +104,12 @@ namespace TeleportationNetwork
             bool emptyList = _allPoints.Count == 0;
 
             SingleComposer = capi.Gui
-                .CreateCompo(Constants.ModId + "-teleport-dialog", dialogBounds)
+                .CreateCompo($"{Constants.ModId}-teleport-dialog", dialogBounds)
                 .AddDialogTitleBar(DialogTitle, () => TryClose())
                 .AddDialogBG(bgBounds, false)
                 .BeginChildElements(bgBounds)
                     .AddIf(emptyList)
-                        .AddStaticText(Lang.Get(Constants.ModId + ":tpdlg-empty"), CairoFont.WhiteSmallText(), buttons[0])
+                        .AddStaticText(Lang.Get($"{Constants.ModId}:tpdlg-empty"), CairoFont.WhiteSmallText(), buttons[0])
                     .EndIf()
                     .AddIf(!emptyList)
                         .BeginClip(clipBounds)
@@ -118,7 +119,7 @@ namespace TeleportationNetwork
                         .AddVerticalScrollbar(OnNewScrollbarValue, scrollbarBounds, "scrollbar")
                         .AddHoverText("", CairoFont.WhiteDetailText(), 300, listBounds.FlatCopy(), "hoverText")
                         .AddIf(IsUnstableWorld)
-                            .AddDynamicText(Lang.Get(Constants.ModId + ":tpdlg-unstable"),
+                            .AddDynamicText(Lang.Get($"{Constants.ModId}:tpdlg-unstable"),
                                 CairoFont.WhiteSmallText().WithOrientation(EnumTextOrientation.Center),
                                 messageBounds, "message")
                         .EndIf()
@@ -175,7 +176,6 @@ namespace TeleportationNetwork
                     }
                     else
                     {
-
                         nameFont.Color = ColorUtil.Hex2Doubles("#c95a5a");
                     }
                 }
@@ -186,13 +186,13 @@ namespace TeleportationNetwork
 
                 if (data.Pinned)
                 {
-                    nameFont.FontWeight = Cairo.FontWeight.Bold;
+                    nameFont.FontWeight = FontWeight.Bold;
                 }
 
                 stacklist.Add(new GuiElementTeleportButton(capi,
                     name, tp.Pos, nameFont,
                     data.Pinned ?
-                        CairoFont.WhiteSmallText().WithWeight(Cairo.FontWeight.Bold) :
+                        CairoFont.WhiteSmallText().WithWeight(FontWeight.Bold) :
                         CairoFont.WhiteSmallText(),
                     () => OnTeleportButtonClick(tp.Pos),
                     buttons[i],
@@ -220,8 +220,7 @@ namespace TeleportationNetwork
             {
                 _allPoints = TeleportManager.Points.GetAll((tp) =>
                     tp.Enabled &&
-                    tp.ActivatedByPlayers.Contains(capi.World.Player.PlayerUID)
-                ).ToList();
+                    tp.ActivatedByPlayers.Contains(capi.World.Player.PlayerUID)).ToList();
             }
 
             _allPoints = _allPoints
@@ -249,8 +248,12 @@ namespace TeleportationNetwork
         private void OnTextUpdateTick(float dt)
         {
             var textComponent = SingleComposer.GetDynamicText("message");
-            string newText = Lang.Get(Constants.ModId + ":tpdlg-unstable");
-            if (capi.World.Rand.Next(0, 10) == 0) newText = newText.Shuffle(capi.World.Rand);
+            string newText = Lang.Get($"{Constants.ModId}:tpdlg-unstable");
+            if (capi.World.Rand.Next(0, 10) == 0)
+            {
+                newText = newText.Shuffle(capi.World.Rand);
+            }
+
             textComponent.SetNewText(newText, forceRedraw: true);
         }
 
@@ -282,8 +285,10 @@ namespace TeleportationNetwork
             if (SingleComposer != null && SingleComposer.Bounds.PointInside(XMousePos, YMousePos))
             {
                 var stacklist = SingleComposer.GetContainer("stacklist");
-                if (stacklist == null) return;
-
+                if (stacklist == null)
+                {
+                    return;
+                }
 
                 if (stacklist.Elements.FirstOrDefault((elem) => elem.IsPositionInside(XMousePos, YMousePos)) is GuiElementTeleportButton button)
                 {

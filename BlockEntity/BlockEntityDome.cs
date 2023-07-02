@@ -1,4 +1,3 @@
-using System;
 using Vintagestory.API.Common;
 using Vintagestory.API.MathTools;
 
@@ -33,7 +32,7 @@ namespace TeleportationNetwork
         private void OnGameTick(float dt)
         {
             float speed = 0.1f;
-            particles = new SimpleParticleProperties()
+            particles = new SimpleParticleProperties
             {
                 MinQuantity = 10,
                 MinPos = Pos.ToVec3d().AddCopy(-radius, 0, -radius),

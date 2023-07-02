@@ -43,7 +43,7 @@ namespace TeleportationNetwork
 
         private void UpdateCirceMesh(float progress)
         {
-            var ringSize = (float)Settings.InnerRadius / Settings.OuterRadius;
+            var ringSize = Settings.InnerRadius / Settings.OuterRadius;
             var stepSize = 1.0F / Settings.MaxSteps;
 
             var steps = 1 + (int)Math.Ceiling(Settings.MaxSteps * progress);
@@ -65,8 +65,14 @@ namespace TeleportationNetwork
                 }
             }
 
-            if (_circleMesh != null) Api.Render.UpdateMesh(_circleMesh, data);
-            else _circleMesh = Api.Render.UploadMesh(data);
+            if (_circleMesh != null)
+            {
+                Api.Render.UpdateMesh(_circleMesh, data);
+            }
+            else
+            {
+                _circleMesh = Api.Render.UploadMesh(data);
+            }
         }
 
         // IRenderer implementation
@@ -83,7 +89,11 @@ namespace TeleportationNetwork
                 + deltaTime / (CircleVisible ? Settings.AlphaIn : -Settings.AlphaOut)));
 
             // TODO: Do some smoothing between frames?
-            if (CircleProgress <= 0.0F || _circleAlpha <= 0.0F) return;
+            if (CircleProgress <= 0.0F || _circleAlpha <= 0.0F)
+            {
+                return;
+            }
+
             UpdateCirceMesh(CircleProgress);
 
             var r = (Settings.Color >> 16 & 0xFF) / 255.0F;
@@ -123,7 +133,9 @@ namespace TeleportationNetwork
         {
             GC.SuppressFinalize(this);
             if (_circleMesh != null)
+            {
                 Api.Render.DeleteMesh(_circleMesh);
+            }
         }
     }
 

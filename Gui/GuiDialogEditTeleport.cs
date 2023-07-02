@@ -1,8 +1,6 @@
 using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Reflection;
 using Vintagestory.API.Client;
 using Vintagestory.API.Config;
 using Vintagestory.API.MathTools;
@@ -26,7 +24,7 @@ namespace TeleportationNetwork
         private TeleportClientData _data = new();
 
         public GuiDialogEditTeleport(ICoreClientAPI capi, BlockPos pos, TeleportMapLayer? layer = null)
-            : base(Lang.Get(Constants.ModId + ":edittpdlg-title"), capi)
+            : base(Lang.Get($"{Constants.ModId}:edittpdlg-title"), capi)
         {
             _pos = pos;
 
@@ -74,7 +72,10 @@ namespace TeleportationNetwork
             }
 
             int iconIndex = _icons.IndexOf(_data.Icon);
-            if (iconIndex < 0) iconIndex = 0;
+            if (iconIndex < 0)
+            {
+                iconIndex = 0;
+            }
 
             int colorIndex = _colors.IndexOf(_data.Color);
             if (colorIndex < 0)
@@ -137,7 +138,7 @@ namespace TeleportationNetwork
 
 
             SingleComposer = capi.Gui
-                .CreateCompo(Constants.ModId + ":edittpdlg", dialogBounds)
+                .CreateCompo($"{Constants.ModId}:edittpdlg", dialogBounds)
                 .AddShadedDialogBG(bgBounds, false)
                 .AddDialogTitleBar(DialogTitle, () => TryClose())
                 .BeginChildElements(bgBounds)
@@ -147,7 +148,7 @@ namespace TeleportationNetwork
                     .AddStaticText(Lang.Get("Note"), CairoFont.WhiteSmallText(), noteLabel)
                     .AddTextArea(noteArea, OnNoteChanged, CairoFont.TextInput(), "noteInput")
 
-                    .AddStaticText(Lang.Get(Constants.ModId + ":edittpdlg-order-label"), CairoFont.WhiteSmallText(), orderLabel)
+                    .AddStaticText(Lang.Get($"{Constants.ModId}:edittpdlg-order-label"), CairoFont.WhiteSmallText(), orderLabel)
                     .AddNumberInput(orderInput, OnOrderChanged, CairoFont.WhiteSmallText(), "orderInput")
 
                     .AddStaticText(Lang.Get("Pinned"), CairoFont.WhiteSmallText(), pinnedLabel)

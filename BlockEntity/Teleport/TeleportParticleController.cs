@@ -17,7 +17,7 @@ namespace TeleportationNetwork
         {
             _api = api;
 
-            _circleParticles = new SimpleParticleProperties()
+            _circleParticles = new SimpleParticleProperties
             {
                 MinQuantity = 1f,
                 AddQuantity = 0f,
@@ -35,7 +35,7 @@ namespace TeleportationNetwork
                 VertexFlags = 20 & VertexFlags.GlowLevelBitMask
             };
 
-            _teleportParticles = new SimpleParticleProperties()
+            _teleportParticles = new SimpleParticleProperties
             {
                 MinQuantity = 15,
                 AddQuantity = 15,
@@ -55,6 +55,7 @@ namespace TeleportationNetwork
 
             _temporalGear = api.World.GetItem(new AssetLocation("gear-temporal"));
         }
+
         private void SpawnCircleEdgeParticle(float radius, Vec3d pos)
         {
             _circleParticles.MinPos.Set(MathUtil.RandomPosOnCircleEdge(radius, pos));

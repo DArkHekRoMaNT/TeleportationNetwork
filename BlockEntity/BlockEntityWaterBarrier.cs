@@ -1,4 +1,3 @@
-using System;
 using Vintagestory.API.Common;
 using Vintagestory.API.MathTools;
 
@@ -27,7 +26,7 @@ namespace TeleportationNetwork
             _listenerId = RegisterGameTickListener(OnGameTick, 1000, Api.World.Rand.Next(1000));
             _listenerId = RegisterGameTickListener(OnGameTick, 1000, Api.World.Rand.Next(1000));
 
-            particles = new SimpleParticleProperties()
+            particles = new SimpleParticleProperties
             {
                 MinQuantity = 1f,
                 AddQuantity = 0,

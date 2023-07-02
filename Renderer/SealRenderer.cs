@@ -41,7 +41,7 @@ namespace TeleportationNetwork
             MeshData modelData = QuadMeshUtil.GetCustomQuadHorizontal(0, 0, 0, 1, 1, 255, 255, 255, 255);
             _sealModelRef = api.Render.UploadMesh(modelData);
 
-            api.Event.RegisterRenderer(this, EnumRenderStage.Opaque, Constants.ModId + "-teleport");
+            api.Event.RegisterRenderer(this, EnumRenderStage.Opaque, $"{Constants.ModId}-teleport");
         }
 
         public void OnRenderFrame(float deltaTime, EnumRenderStage stage)

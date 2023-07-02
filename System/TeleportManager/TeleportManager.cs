@@ -24,7 +24,7 @@ namespace TeleportationNetwork
             if (api is ICoreClientAPI capi)
             {
                 _clientChannel = capi.Network
-                     .RegisterChannel(Mod.Info.ModID + "-teleport-manager")
+                     .RegisterChannel($"{Mod.Info.ModID}-teleport-manager")
                      .RegisterMessageType<SyncTeleportMessage>()
                      .RegisterMessageType<RemoveTeleportMessage>()
                      .RegisterMessageType<SyncTeleportListMessage>()
@@ -36,7 +36,7 @@ namespace TeleportationNetwork
             else if (api is ICoreServerAPI sapi)
             {
                 _serverChannel = sapi.Network
-                    .RegisterChannel(Mod.Info.ModID + "-teleport-manager")
+                    .RegisterChannel($"{Mod.Info.ModID}-teleport-manager")
                     .RegisterMessageType<SyncTeleportMessage>()
                     .RegisterMessageType<RemoveTeleportMessage>()
                     .RegisterMessageType<SyncTeleportListMessage>()
@@ -109,7 +109,7 @@ namespace TeleportationNetwork
                     int chunkX = teleport.Pos.X / chunkSize;
                     int chunkZ = teleport.Pos.Z / chunkSize;
 
-                    sapi.WorldManager.LoadChunkColumnPriority(chunkX, chunkZ, new ChunkLoadOptions()
+                    sapi.WorldManager.LoadChunkColumnPriority(chunkX, chunkZ, new ChunkLoadOptions
                     {
                         OnLoaded = delegate
                         {
@@ -135,7 +135,10 @@ namespace TeleportationNetwork
             SyncTeleportMessage msg)
         {
             var teleport = Points[msg.Teleport.Pos];
-            if (teleport == null) return;
+            if (teleport == null)
+            {
+                return;
+            }
 
             teleport.SetClientData(fromPlayer.PlayerUID, msg.Teleport.GetClientData(fromPlayer.PlayerUID));
 
@@ -145,7 +148,7 @@ namespace TeleportationNetwork
                 int chunkX = teleport.Pos.X / chunkSize;
                 int chunkZ = teleport.Pos.Z / chunkSize;
 
-                ((ICoreServerAPI)_api).WorldManager.LoadChunkColumnPriority(chunkX, chunkZ, new ChunkLoadOptions()
+                ((ICoreServerAPI)_api).WorldManager.LoadChunkColumnPriority(chunkX, chunkZ, new ChunkLoadOptions
                 {
                     OnLoaded = delegate
                     {
@@ -166,7 +169,9 @@ namespace TeleportationNetwork
         private class RemoveTeleportMessage
         {
             public BlockPos Pos { get; set; }
+
             protected RemoveTeleportMessage() => Pos = null!;
+
             public RemoveTeleportMessage(BlockPos pos) => Pos = pos;
         }
 
@@ -174,7 +179,9 @@ namespace TeleportationNetwork
         private class SyncTeleportListMessage
         {
             public TeleportList Points { get; set; }
+
             protected SyncTeleportListMessage() => Points = null!;
+
             public SyncTeleportListMessage(TeleportList points) => Points = points;
         }
 
@@ -182,7 +189,9 @@ namespace TeleportationNetwork
         private class SyncTeleportMessage
         {
             public Teleport Teleport { get; set; }
+
             protected SyncTeleportMessage() => Teleport = null!;
+
             public SyncTeleportMessage(Teleport teleport) => Teleport = teleport;
         }
 
@@ -190,7 +199,9 @@ namespace TeleportationNetwork
         private class TeleportPlayerMessage
         {
             public BlockPos Pos { get; private set; }
+
             private TeleportPlayerMessage() => Pos = null!;
+
             public TeleportPlayerMessage(BlockPos pos) => Pos = pos;
         }
     }

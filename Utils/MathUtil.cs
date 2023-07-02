@@ -7,7 +7,7 @@ namespace TeleportationNetwork
 {
     public static class MathUtil
     {
-        static Random? _rand;
+        private static Random? _rand;
 
         public static Vec3d RandomPosOnCircleEdge(float radius, Vec3d center)
         {
@@ -17,8 +17,7 @@ namespace TeleportationNetwork
             return new Vec3d(
                 center.X + Math.Cos(angle) * (radius - 1 / 16),
                 center.Y,
-                center.Z + Math.Sin(angle) * (radius - 1 / 16)
-            );
+                center.Z + Math.Sin(angle) * (radius - 1 / 16));
         }
 
         public static Entity[] GetInCircleEntities(ICoreAPI api, float radius, Vec3d center)

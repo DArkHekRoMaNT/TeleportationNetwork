@@ -108,7 +108,7 @@ namespace TeleportationNetwork
                     if (block.Code.Path.StartsWith("rock-"))
                     {
                         string code = block.Code.Path.Replace("rock-", "");
-                        Block rockBlock = blockAccessor.GetBlock(new AssetLocation("rock-" + code));
+                        Block rockBlock = blockAccessor.GetBlock(new AssetLocation($"rock-{code}"));
                         if (rockBlock != null)
                         {
                             return code;

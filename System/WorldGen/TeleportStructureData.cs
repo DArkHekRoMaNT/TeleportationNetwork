@@ -70,13 +70,13 @@ namespace TeleportationNetwork
             if (name.EndsWith("*"))
             {
                 string subName = name.Substring(0, name.Length - 1);
-                assets = _api.Assets.GetManyInCategory("worldgen", "schematics/" + subName).ToArray();
+                assets = _api.Assets.GetManyInCategory("worldgen", $"schematics/{subName}").ToArray();
             }
             else
             {
                 assets = new IAsset[]
                 {
-                    _api.Assets.Get("worldgen/schematics/" + name + ".json")
+                    _api.Assets.Get($"worldgen/schematics/{name}.json")
                 };
             }
 
