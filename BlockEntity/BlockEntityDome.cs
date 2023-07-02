@@ -6,19 +6,13 @@ namespace TeleportationNetwork
     public class BlockEntityDome : BlockEntity
     {
         private long _listenerId;
-        private SimpleParticleProperties particles;
-        private int radius => 3;
+        private SimpleParticleProperties _particles = null!;
 
         public override void Initialize(ICoreAPI api)
         {
             base.Initialize(api);
-            _listenerId = RegisterGameTickListener(OnGameTick, 1000);
 
-            OnLongGameTick(0);
-        }
-
-        private void OnLongGameTick(float dt)
-        {
+            float radius = 3;
             Api.World.BlockAccessor.SearchFluidBlocks(
                 Pos.AddCopy(-radius, 0, -radius),
                 Pos.AddCopy(radius, radius * 2, radius),
@@ -27,12 +21,9 @@ namespace TeleportationNetwork
                     Api.World.BlockAccessor.SetBlock(0, pos, BlockLayersAccess.Fluid);
                     return true;
                 });
-        }
 
-        private void OnGameTick(float dt)
-        {
             float speed = 0.1f;
-            particles = new SimpleParticleProperties
+            _particles = new SimpleParticleProperties
             {
                 MinQuantity = 10,
                 MinPos = Pos.ToVec3d().AddCopy(-radius, 0, -radius),
@@ -50,7 +41,12 @@ namespace TeleportationNetwork
                 Async = true
             };
 
-            Api.World.SpawnParticles(particles);
+            _listenerId = RegisterGameTickListener(OnGameTick, 1000);
+        }
+
+        private void OnGameTick(float dt)
+        {
+            Api.World.SpawnParticles(_particles);
         }
 
         public override void OnBlockUnloaded()

@@ -1,6 +1,6 @@
 /*
-    Based on https://github.com/copygirl/CarryCapacity/blob/master/src/Client/HudOverlayRenderer.cs
-*/
+ *  Based on https://github.com/copygirl/CarryCapacity/blob/master/src/Client/HudOverlayRenderer.cs
+ */
 
 using System;
 using Vintagestory.API.Client;
@@ -13,10 +13,10 @@ namespace TeleportationNetwork
         private HudCircleSettings Settings { get; }
         private ICoreClientAPI Api { get; }
 
-        private MeshRef? _circleMesh = null;
+        private MeshRef? _circleMesh;
 
-        private float _circleAlpha = 0.0F;
-        private float _circleProgress = 0.0F;
+        private float _circleAlpha;
+        private float _circleProgress;
 
         public bool CircleVisible { get; set; }
 
@@ -28,7 +28,7 @@ namespace TeleportationNetwork
             get => _circleProgress;
             set
             {
-                _circleProgress = GameMath.Clamp(value, 0.0F, 1.0F);
+                _circleProgress = GameMath.Clamp(value, 0, 1);
                 CircleVisible = true;
             }
         }
@@ -44,7 +44,7 @@ namespace TeleportationNetwork
         private void UpdateCirceMesh(float progress)
         {
             var ringSize = Settings.InnerRadius / Settings.OuterRadius;
-            var stepSize = 1.0F / Settings.MaxSteps;
+            var stepSize = 1f / Settings.MaxSteps;
 
             var steps = 1 + (int)Math.Ceiling(Settings.MaxSteps * progress);
             var data = new MeshData(steps * 2, steps * 6, false, false, true, false);
@@ -85,27 +85,27 @@ namespace TeleportationNetwork
             var rend = Api.Render;
             var shader = rend.CurrentActiveShader;
 
-            _circleAlpha = Math.Max(0.0F, Math.Min(1.0F, _circleAlpha
+            _circleAlpha = Math.Max(0f, Math.Min(1f, _circleAlpha
                 + deltaTime / (CircleVisible ? Settings.AlphaIn : -Settings.AlphaOut)));
 
             // TODO: Do some smoothing between frames?
-            if (CircleProgress <= 0.0F || _circleAlpha <= 0.0F)
+            if (CircleProgress <= 0 || _circleAlpha <= 0)
             {
                 return;
             }
 
             UpdateCirceMesh(CircleProgress);
 
-            var r = (Settings.Color >> 16 & 0xFF) / 255.0F;
-            var g = (Settings.Color >> 8 & 0xFF) / 255.0F;
-            var b = (Settings.Color & 0xFF) / 255.0F;
+            var r = (Settings.Color >> 16 & 0xFF) / 255f;
+            var g = (Settings.Color >> 8 & 0xFF) / 255f;
+            var b = (Settings.Color & 0xFF) / 255f;
             var color = new Vec4f(r, g, b, _circleAlpha);
 
             shader.Uniform("rgbaIn", color);
             shader.Uniform("extraGlow", 0);
             shader.Uniform("applyColor", 0);
             shader.Uniform("tex2d", 0);
-            shader.Uniform("noTexture", 1.0F);
+            shader.Uniform("noTexture", 1f);
             shader.UniformMatrix("projectionMatrix", rend.CurrentProjectionMatrix);
 
             int x, y;
@@ -137,27 +137,5 @@ namespace TeleportationNetwork
                 Api.Render.DeleteMesh(_circleMesh);
             }
         }
-    }
-
-    public class HudCircleSettings
-    {
-        /// <summary>
-        /// Circle color
-        /// </summary>
-        public int Color { get; set; } = 0xCCCCCC;
-
-        /// <summary>
-        /// How quickly circle fades in (seconds)
-        /// </summary>
-        public float AlphaIn { get; set; } = 0.2F;
-
-        /// <summary>
-        /// How quickly circle fades out (seconds)
-        /// </summary>
-        public float AlphaOut { get; set; } = 0.4F;
-
-        public int MaxSteps { get; set; } = 16;
-        public float OuterRadius { get; set; } = 24;
-        public float InnerRadius { get; set; } = 18;
     }
 }

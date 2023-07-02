@@ -6,27 +6,13 @@ namespace TeleportationNetwork
     public class BlockEntityWaterBarrier : BlockEntity
     {
         private long _listenerId;
-
-        private SimpleParticleProperties particles;
+        private SimpleParticleProperties _particles = null!;
 
         public override void Initialize(ICoreAPI api)
         {
             base.Initialize(api);
-            _listenerId = RegisterGameTickListener(OnGameTick, 1000, Api.World.Rand.Next(1000));
-            _listenerId = RegisterGameTickListener(OnGameTick, 1000, Api.World.Rand.Next(1000));
-            _listenerId = RegisterGameTickListener(OnGameTick, 1000, Api.World.Rand.Next(1000));
-            _listenerId = RegisterGameTickListener(OnGameTick, 1000, Api.World.Rand.Next(1000));
-            _listenerId = RegisterGameTickListener(OnGameTick, 1000, Api.World.Rand.Next(1000));
-            _listenerId = RegisterGameTickListener(OnGameTick, 1000, Api.World.Rand.Next(1000));
-            _listenerId = RegisterGameTickListener(OnGameTick, 1000, Api.World.Rand.Next(1000));
-            _listenerId = RegisterGameTickListener(OnGameTick, 1000, Api.World.Rand.Next(1000));
-            _listenerId = RegisterGameTickListener(OnGameTick, 1000, Api.World.Rand.Next(1000));
-            _listenerId = RegisterGameTickListener(OnGameTick, 1000, Api.World.Rand.Next(1000));
-            _listenerId = RegisterGameTickListener(OnGameTick, 1000, Api.World.Rand.Next(1000));
-            _listenerId = RegisterGameTickListener(OnGameTick, 1000, Api.World.Rand.Next(1000));
-            _listenerId = RegisterGameTickListener(OnGameTick, 1000, Api.World.Rand.Next(1000));
 
-            particles = new SimpleParticleProperties
+            _particles = new SimpleParticleProperties
             {
                 MinQuantity = 1f,
                 AddQuantity = 0,
@@ -46,62 +32,62 @@ namespace TeleportationNetwork
                 WindAffected = false,
                 Async = true
             };
+
+            _listenerId = RegisterGameTickListener(OnGameTick, 1000, Api.World.Rand.Next(1000));
         }
 
         private void OnGameTick(float dt)
         {
-            return;
+            _particles.MinPos = Pos.ToVec3d().Add(1, 1, 1);
+            _particles.MinVelocity = new Vec3f(-1, 0, 0);
+            Api.World.SpawnParticles(_particles);
 
-            particles.MinPos = Pos.ToVec3d().Add(1, 1, 1);
-            particles.MinVelocity = new Vec3f(-1, 0, 0);
-            Api.World.SpawnParticles(particles);
+            _particles.MinPos = Pos.ToVec3d().Add(1, 1, 1);
+            _particles.MinVelocity = new Vec3f(0, -1, 0);
+            Api.World.SpawnParticles(_particles);
 
-            particles.MinPos = Pos.ToVec3d().Add(1, 1, 1);
-            particles.MinVelocity = new Vec3f(0, -1, 0);
-            Api.World.SpawnParticles(particles);
-
-            particles.MinPos = Pos.ToVec3d().Add(1, 1, 1);
-            particles.MinVelocity = new Vec3f(0, 0, -1);
-            Api.World.SpawnParticles(particles);
+            _particles.MinPos = Pos.ToVec3d().Add(1, 1, 1);
+            _particles.MinVelocity = new Vec3f(0, 0, -1);
+            Api.World.SpawnParticles(_particles);
 
 
-            particles.MinPos = Pos.ToVec3d().Add(0, 1, 0);
-            particles.MinVelocity = new Vec3f(1, 0, 0);
-            Api.World.SpawnParticles(particles);
+            _particles.MinPos = Pos.ToVec3d().Add(0, 1, 0);
+            _particles.MinVelocity = new Vec3f(1, 0, 0);
+            Api.World.SpawnParticles(_particles);
 
-            particles.MinPos = Pos.ToVec3d().Add(0, 1, 0);
-            particles.MinVelocity = new Vec3f(0, -1, 0);
-            Api.World.SpawnParticles(particles);
+            _particles.MinPos = Pos.ToVec3d().Add(0, 1, 0);
+            _particles.MinVelocity = new Vec3f(0, -1, 0);
+            Api.World.SpawnParticles(_particles);
 
-            particles.MinPos = Pos.ToVec3d().Add(0, 1, 0);
-            particles.MinVelocity = new Vec3f(0, 0, 1);
-            Api.World.SpawnParticles(particles);
-
-
-            particles.MinPos = Pos.ToVec3d().Add(0, 0, 1);
-            particles.MinVelocity = new Vec3f(1, 0, 0);
-            Api.World.SpawnParticles(particles);
-
-            particles.MinPos = Pos.ToVec3d().Add(0, 0, 1);
-            particles.MinVelocity = new Vec3f(0, 1, 0);
-            Api.World.SpawnParticles(particles);
-
-            particles.MinPos = Pos.ToVec3d().Add(0, 0, 1);
-            particles.MinVelocity = new Vec3f(0, 0, -1);
-            Api.World.SpawnParticles(particles);
+            _particles.MinPos = Pos.ToVec3d().Add(0, 1, 0);
+            _particles.MinVelocity = new Vec3f(0, 0, 1);
+            Api.World.SpawnParticles(_particles);
 
 
-            particles.MinPos = Pos.ToVec3d().Add(1, 0, 0);
-            particles.MinVelocity = new Vec3f(-1, 0, 0);
-            Api.World.SpawnParticles(particles);
+            _particles.MinPos = Pos.ToVec3d().Add(0, 0, 1);
+            _particles.MinVelocity = new Vec3f(1, 0, 0);
+            Api.World.SpawnParticles(_particles);
 
-            particles.MinPos = Pos.ToVec3d().Add(1, 0, 0);
-            particles.MinVelocity = new Vec3f(0, 1, 0);
-            Api.World.SpawnParticles(particles);
+            _particles.MinPos = Pos.ToVec3d().Add(0, 0, 1);
+            _particles.MinVelocity = new Vec3f(0, 1, 0);
+            Api.World.SpawnParticles(_particles);
 
-            particles.MinPos = Pos.ToVec3d().Add(1, 0, 0);
-            particles.MinVelocity = new Vec3f(0, 0, 1);
-            Api.World.SpawnParticles(particles);
+            _particles.MinPos = Pos.ToVec3d().Add(0, 0, 1);
+            _particles.MinVelocity = new Vec3f(0, 0, -1);
+            Api.World.SpawnParticles(_particles);
+
+
+            _particles.MinPos = Pos.ToVec3d().Add(1, 0, 0);
+            _particles.MinVelocity = new Vec3f(-1, 0, 0);
+            Api.World.SpawnParticles(_particles);
+
+            _particles.MinPos = Pos.ToVec3d().Add(1, 0, 0);
+            _particles.MinVelocity = new Vec3f(0, 1, 0);
+            Api.World.SpawnParticles(_particles);
+
+            _particles.MinPos = Pos.ToVec3d().Add(1, 0, 0);
+            _particles.MinVelocity = new Vec3f(0, 0, 1);
+            Api.World.SpawnParticles(_particles);
         }
 
         public override void OnBlockUnloaded()
