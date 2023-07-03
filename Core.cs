@@ -22,6 +22,7 @@ namespace TeleportationNetwork
             api.RegisterBlockClass("BlockBrokenTeleport", typeof(BlockTeleport));
             api.RegisterBlockClass("BlockNormalTeleport", typeof(BlockTeleport));
             api.RegisterBlockEntityClass("BETeleport", typeof(BlockEntityTeleport));
+
             api.RegisterBlockEntityClass("WaterBarrier", typeof(BlockEntityWaterBarrier));
             api.RegisterBlockEntityClass("Dome", typeof(BlockEntityDome));
 
@@ -44,6 +45,7 @@ namespace TeleportationNetwork
         public override void StartServerSide(ICoreServerAPI api)
         {
             _ = new SchematicChatCommand(api);
+            _ = new RemoveAllTeleportsChatCommand(api);
         }
     }
 }
