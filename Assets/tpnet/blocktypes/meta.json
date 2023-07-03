@@ -1,5 +1,8 @@
 {
   "code": "meta",
+  "classByType": {
+    "@*-(water|lava|air)": "WorldGenReplaceMetaBlock"
+  },
   "entityClassByType": {
     "*-waterbarrier": "WaterBarrier",
     "*-dome": "Dome"
@@ -7,9 +10,14 @@
   "attributes": {
     "handbook": {
       "exclude": true
+    },
+    "worldGenReplaceByType": {
+      "*-water": "water-still-7",
+      "*-lava": "lava-still-7",
+      "*-air": "air"
     }
   },
-  "variantgroups": [{ "code": "type", "states": [ "teleport", "waterbarrier", "dome" ]}],
+  "variantgroups": [{ "code": "type", "states": [ "teleport", "waterbarrier", "dome", "lava", "water" ]}],
   "shape": { "base": "game:block/basic/cube" },
   "drawtype": "cube",
   "creativeinventory": { "meta": ["*"], "tpnet":  ["*"] },
