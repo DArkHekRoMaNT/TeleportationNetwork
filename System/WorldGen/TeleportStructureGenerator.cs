@@ -253,10 +253,32 @@ namespace TeleportationNetwork
                 }
             }
 
+            // Fix depth
+            int extraDepth = 0;
+            if (structure.Props.PillarAlwaysTop)
+            {
+                extraDepth = y - min - 1;
+
+                if (extraDepth > 0 && structure.Base != null)
+                {
+                    extraDepth -= structure.Base.SizeY;
+                }
+
+                if (structure.Pillar != null)
+                {
+                    while (extraDepth > 0)
+                    {
+                        extraDepth -= structure.Pillar.SizeY;
+                    }
+                }
+
+                extraDepth = extraDepth >= 0 ? 0 : -extraDepth;
+            }
+
             // Generate
             lock (_generatedStructures)
             {
-                var pos = new BlockPos(x, y, z);
+                var pos = new BlockPos(x, y + extraDepth, z);
                 var areas = new List<Cuboidi>();
 
                 _blockRandomizer.Next(_worldgenBlockAccessor, pos, _posRandom, structure);
@@ -265,7 +287,7 @@ namespace TeleportationNetwork
 
                 areas.Add(PlaceSchematic(structure.Teleport, pos));
 
-                int depth = y - min;
+                int depth = pos.Y - min;
                 if (depth > 0 && structure.Base != null)
                 {
                     int height = structure.Base.SizeY;

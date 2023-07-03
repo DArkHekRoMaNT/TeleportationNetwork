@@ -23,6 +23,7 @@ namespace TeleportationNetwork
         /// <summary>
         /// Place on the sea bottom only
         /// </summary>
+        [JsonProperty] public bool PillarAlwaysTop { get; private set; } = false;
         [JsonProperty] public bool Underwater { get; private set; } = false;
         [JsonProperty] public int MaxDepth { get; private set; } = 15;
         [JsonProperty] public int MinDepth { get; private set; } = 0;

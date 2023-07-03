@@ -134,6 +134,7 @@
       "buildProtected": true,
       "buildProtectionDesc": "Trader Perimenter",
       "buildProtectionName": "Trader",
+      "pillarAlwaysTop": true,
       "maxDepth": 100,
       "chance": 0.5
     },
