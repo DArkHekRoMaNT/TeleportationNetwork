@@ -137,14 +137,6 @@
       "pillarAlwaysTop": true,
       "maxDepth": 100,
       "chance": 0.5
-    },
-    {
-      "code": "tpnet_teleport_dome",
-      "schematics": [ "tpnet/teleport/dome" ],
-      "chance": 5,
-      "minDepth": 15,
-      "maxDepth": 999999,
-      "underwater": true
     }
   ]
 }

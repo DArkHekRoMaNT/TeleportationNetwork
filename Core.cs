@@ -24,7 +24,6 @@ namespace TeleportationNetwork
             api.RegisterBlockEntityClass("BETeleport", typeof(BlockEntityTeleport));
 
             api.RegisterBlockClass("WorldGenReplaceMetaBlock", typeof(WorldGenReplaceMetaBlock));
-            api.RegisterBlockEntityClass("WaterBarrier", typeof(BlockEntityWaterBarrier));
             api.RegisterBlockEntityClass("Dome", typeof(BlockEntityDome));
 
             api.ChatCommands

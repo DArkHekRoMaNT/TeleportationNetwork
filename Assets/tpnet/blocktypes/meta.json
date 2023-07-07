@@ -4,7 +4,6 @@
     "@*-(water|lava|air)": "WorldGenReplaceMetaBlock"
   },
   "entityClassByType": {
-    "*-waterbarrier": "WaterBarrier",
     "*-dome": "Dome"
   },
   "attributes": {
