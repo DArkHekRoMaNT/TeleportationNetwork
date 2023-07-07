@@ -103,8 +103,10 @@ namespace TeleportationNetwork
         {
             if (_api is ICoreServerAPI sapi)
             {
-                foreach (var teleport in Points.GetAll())
+                foreach (Teleport teleport in Points.GetAll())
                 {
+                    teleport.Name = teleport.Name; // 1.12.0 -> 1.12.1 legacy name fix
+
                     int chunkSize = sapi.WorldManager.ChunkSize;
                     int chunkX = teleport.Pos.X / chunkSize;
                     int chunkZ = teleport.Pos.Z / chunkSize;

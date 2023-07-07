@@ -8,8 +8,17 @@ namespace TeleportationNetwork
     [ProtoContract(ImplicitFields = ImplicitFields.AllPublic)]
     public class Teleport
     {
+        private string _name = "";
+
         public BlockPos Pos { get; private set; }
-        public string Name { get; set; }
+        public string Name
+        {
+            get => _name ?? "null";
+            set
+            {
+                _name = value?.Replace("{", "").Replace("}", "") ?? "null";
+            }
+        }
         public bool Enabled { get; set; }
 
         public List<Teleport> Neighbours { get; private set; }
