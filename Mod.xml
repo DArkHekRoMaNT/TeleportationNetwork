@@ -2,7 +2,7 @@
 	<PropertyGroup>
 		<Name>Teleportation Network</Name>
 		<ModId>tpnet</ModId>
-		<Version>1.12.1</Version>
+		<Version>1.13.0</Version>
 		<Authors>DArkHekRoMaNT</Authors>
 		<MinimalGameVersion>1.18.0</MinimalGameVersion>
 		<GameVersion>1.18.6</GameVersion>
@@ -11,7 +11,7 @@
 	</PropertyGroup>
 	<ItemGroup>
 		<Dependencies Include="commonlib">
-			<Version>2.1.1</Version>
+			<Version>2.2.0</Version>
 		</Dependencies>
 
 		<IncludeFiles Include="modicon.png" />
