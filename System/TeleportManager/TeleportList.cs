@@ -1,4 +1,3 @@
-using MonoMod.Utils;
 using ProtoBuf;
 using System;
 using System.Collections.Generic;
@@ -87,7 +86,10 @@ namespace TeleportationNetwork
         public void SetFrom(TeleportList points)
         {
             _teleports.Clear();
-            _teleports.AddRange(points._teleports);
+            foreach (KeyValuePair<BlockPos, Teleport> teleport in points._teleports)
+            {
+                _teleports.Add(teleport.Key, teleport.Value);
+            }
             Changed?.Invoke();
         }
 
