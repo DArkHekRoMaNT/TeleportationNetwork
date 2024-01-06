@@ -29,10 +29,10 @@ namespace TeleportationNetwork
         {
             Name = "null";
             Enabled = false;
-            Pos = new BlockPos();
-            Neighbours = new List<Teleport>();
-            ActivatedByPlayers = new List<string>();
-            ClientData = new Dictionary<string, TeleportClientData>();
+            Pos = new BlockPos(0);
+            Neighbours = [];
+            ActivatedByPlayers = [];
+            ClientData = [];
         }
 
         public Teleport(BlockPos pos) : this()
@@ -49,7 +49,7 @@ namespace TeleportationNetwork
 
         public TeleportClientData GetClientData(string playerUID)
         {
-            ClientData.TryGetValue(playerUID, out TeleportClientData data);
+            ClientData.TryGetValue(playerUID, out TeleportClientData? data);
             return data?.Clone() ?? new TeleportClientData();
         }
 

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,7 +9,7 @@ namespace TeleportationNetwork
 {
     public class TeleportMapLayer : MapLayer
     {
-        private readonly List<MapComponent> _components = new();
+        private readonly List<MapComponent> _components = [];
         private readonly WaypointMapLayer _waypointMapLayer;
 
         public Dictionary<string, LoadedTexture> TexturesByIcon => _waypointMapLayer.texturesByIcon;
@@ -27,7 +28,7 @@ namespace TeleportationNetwork
             manager.Points.Changed += RebuildMapComponents;
 
             var mapLayers = api.ModLoader.GetModSystem<WorldMapManager>().MapLayers;
-            _waypointMapLayer = (WaypointMapLayer)mapLayers.FirstOrDefault(ml => ml is WaypointMapLayer);
+            _waypointMapLayer = (WaypointMapLayer)mapLayers.First(ml => ml is WaypointMapLayer);
         }
 
         public override void Render(GuiElementMap mapElem, float dt)
