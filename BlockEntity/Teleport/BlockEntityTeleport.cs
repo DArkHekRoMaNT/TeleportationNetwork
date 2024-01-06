@@ -17,7 +17,7 @@ namespace TeleportationNetwork
         public static AssetLocation DefaultFrameCode => new("game:stonebricks-granite");
 
         private float _activeTime;
-        private Dictionary<string, TeleportingPlayerData> ActivePlayers { get; } = new();
+        private Dictionary<string, TeleportingPlayerData> ActivePlayers { get; } = [];
 
         private GuiDialogTeleportList? _teleportDlg;
         private GuiDialogEditTeleport? _editDlg;

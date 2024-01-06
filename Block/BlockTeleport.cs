@@ -66,6 +66,37 @@ namespace TeleportationNetwork
             });
         }
 
+        public override bool AllowSnowCoverage(IWorldAccessor world, BlockPos blockPos)
+        {
+            return true;
+        }
+
+        public override double GetBlastResistance(IWorldAccessor world, BlockPos pos, Vec3f blastDirectionVector, EnumBlastType blastType)
+        {
+            return double.MaxValue;
+        }
+
+        public override BlockDropItemStack[] GetDropsForHandbook(ItemStack handbookStack, IPlayer forPlayer)
+        {
+            return [];
+        }
+
+        public override int GetRetention(BlockPos pos, BlockFacing facing, EnumRetentionType type)
+        {
+            if (api.World.BlockAccessor.GetBlockEntity(pos) is BlockEntityTeleport be &&
+                be.FrameStack?.Block != null)
+            {
+                return be.FrameStack.Block.GetRetention(pos, facing, type);
+            }
+
+            return base.GetRetention(pos, facing, type);
+        }
+
+        public override float GetResistance(IBlockAccessor blockAccessor, BlockPos pos)
+        {
+            return Core.Config.Unbreakable ? 100000 : base.GetResistance(blockAccessor, pos);
+        }
+
         public override void OnEntityCollide(IWorldAccessor world, Entity entity, BlockPos pos, BlockFacing facing, Vec3d collideSpeed, bool isImpact)
         {
             if (api.World.BlockAccessor.GetBlockEntity(pos) is BlockEntityTeleport be)
@@ -140,7 +171,7 @@ namespace TeleportationNetwork
             if (api.Side == EnumAppSide.Client)
             {
                 var core = api.ModLoader.GetModSystem<Core>();
-                core.HudCircleRenderer!.CircleVisible = false;
+                core.HudCircleRenderer.CircleVisible = false;
             }
 
             if (api.Side == EnumAppSide.Server)

@@ -10,7 +10,7 @@ namespace TeleportationNetwork
     {
         public static Config Config { get; private set; } = null!;
 
-        public HudCircleRenderer? HudCircleRenderer { get; private set; }
+        public HudCircleRenderer HudCircleRenderer { get; private set; } = null!;
 
         public override void StartPre(ICoreAPI api)
         {
