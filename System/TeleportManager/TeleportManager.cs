@@ -14,7 +14,7 @@ namespace TeleportationNetwork
         private IClientNetworkChannel? _clientChannel;
         private ICoreAPI _api = null!;
 
-        public List<string> DefaultNames { get; private set; } = new() { "null" };
+        public List<string> DefaultNames { get; private set; } = ["null"];
         public TeleportList Points { get; } = new();
 
         public override void StartPre(ICoreAPI api)
