@@ -246,7 +246,7 @@ namespace TeleportationNetwork
                     ModLogger.Error("Creating teleport on client side!");
                 }
 
-                string name = TeleportManager.GetRandomName();
+                string name = TeleportManager.NameGenerator.Next();
                 var teleport = new Teleport(Pos, name, Repaired);
                 TeleportManager.Points.Set(teleport);
             }

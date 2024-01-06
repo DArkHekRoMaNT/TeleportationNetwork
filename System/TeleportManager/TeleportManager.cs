@@ -1,5 +1,4 @@
 using ProtoBuf;
-using System.Collections.Generic;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
 using Vintagestory.API.MathTools;
@@ -14,8 +13,8 @@ namespace TeleportationNetwork
         private IClientNetworkChannel? _clientChannel;
         private ICoreAPI _api = null!;
 
-        public List<string> DefaultNames { get; private set; } = ["null"];
         public TeleportList Points { get; } = new();
+        public TeleportNameGenerator NameGenerator { get; } = new();
 
         public override void StartPre(ICoreAPI api)
         {
@@ -73,19 +72,7 @@ namespace TeleportationNetwork
 
         public override void AssetsLoaded(ICoreAPI api)
         {
-            IAsset names = api.Assets.Get(new AssetLocation(Constants.ModId, "config/names.json"));
-            DefaultNames = names?.ToObject<List<string>>() ?? DefaultNames;
-        }
-
-        public string GetRandomName()
-        {
-            if (DefaultNames.Count == 0)
-            {
-                return "null";
-            }
-
-            int index = _api.World.Rand.Next(0, DefaultNames.Count);
-            return DefaultNames[index];
+            NameGenerator.Init(api);
         }
 
         public void TeleportPlayerTo(BlockPos pos)
