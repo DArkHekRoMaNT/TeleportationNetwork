@@ -19,6 +19,8 @@ namespace TeleportationNetwork
         public override string Title => "TpNetOverlay";
         public override EnumMapAppSide DataSide => EnumMapAppSide.Client;
 
+        public override string LayerGroupCode => _waypointMapLayer.LayerGroupCode;
+
         public TeleportMapLayer(ICoreClientAPI api, IWorldMapManager mapSink) : base(api, mapSink)
         {
             var manager = api.ModLoader.GetModSystem<TeleportManager>();

@@ -214,7 +214,7 @@ namespace TeleportationNetwork
                         baseMesh.AddMeshData(frameMesh);
                     }
 
-                    return capi.Render.UploadMesh(baseMesh);
+                    return capi.Render.UploadMultiTextureMesh(baseMesh);
                 });
             }
             base.OnBeforeRender(capi, itemstack, target, ref renderinfo);

@@ -68,7 +68,7 @@ namespace TeleportationNetwork
         public override void StartClientSide(ICoreClientAPI api)
         {
             var mapManager = api.ModLoader.GetModSystem<WorldMapManager>();
-            mapManager.RegisterMapLayer<TeleportMapLayer>(Mod.Info.ModID);
+            mapManager.RegisterMapLayer<TeleportMapLayer>(Mod.Info.ModID, 1.0);
         }
 
         public override void AssetsLoaded(ICoreAPI api)

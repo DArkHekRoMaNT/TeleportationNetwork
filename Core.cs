@@ -1,4 +1,5 @@
 using CommonLib.Config;
+using CommonLib.UI;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
 using Vintagestory.API.Server;
