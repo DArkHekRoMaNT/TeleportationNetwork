@@ -17,10 +17,12 @@ namespace TeleportationNetwork
         public MeshRef QuadModel => _waypointMapLayer.quadModel;
         public string[] WaypointIcons => _waypointMapLayer.WaypointIcons.Select(e => e.Key).ToArray();
 
+        public new bool Active => base.Active && Core.Config.ShowTeleportOnMap;
+
         public override string Title => "TpNetOverlay";
         public override EnumMapAppSide DataSide => EnumMapAppSide.Client;
 
-        public override string LayerGroupCode => _waypointMapLayer.LayerGroupCode;
+        public override string LayerGroupCode => "tpnetwaypoints";
 
         public TeleportMapLayer(ICoreClientAPI api, IWorldMapManager mapSink) : base(api, mapSink)
         {
@@ -33,12 +35,14 @@ namespace TeleportationNetwork
 
         public override void Render(GuiElementMap mapElem, float dt)
         {
-            if (Core.Config.ShowTeleportOnMap)
+            if (!Active)
             {
-                foreach (var component in _components)
-                {
-                    component.Render(mapElem, dt);
-                }
+                return;
+            }
+
+            foreach (var component in _components)
+            {
+                component.Render(mapElem, dt);
             }
         }
 
@@ -70,6 +74,11 @@ namespace TeleportationNetwork
 
         public override void OnMouseMoveClient(MouseEvent args, GuiElementMap mapElem, StringBuilder hoverText)
         {
+            if (!Active)
+            {
+                return;
+            }
+
             foreach (var component in _components)
             {
                 component.OnMouseMove(args, mapElem, hoverText);
@@ -78,6 +87,11 @@ namespace TeleportationNetwork
 
         public override void OnMouseUpClient(MouseEvent args, GuiElementMap mapElem)
         {
+            if (!Active)
+            {
+                return;
+            }
+
             foreach (var component in _components)
             {
                 component.OnMouseUpOnElement(args, mapElem);

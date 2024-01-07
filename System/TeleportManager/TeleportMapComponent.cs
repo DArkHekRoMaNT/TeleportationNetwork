@@ -60,32 +60,31 @@ namespace TeleportationNetwork
 
             ICoreClientAPI api = map.Api;
 
-            IShaderProgram prog = api.Render.GetEngineShader(EnumShaderProgram.Gui);
-            prog.Uniform("rgbaIn", _color);
-            prog.Uniform("extraGlow", 0);
-            prog.Uniform("applyColor", 0);
-            prog.Uniform("noTexture", 0f);
+            IShaderProgram engineShader = api.Render.GetEngineShader(EnumShaderProgram.Gui);
+            engineShader.Uniform("rgbaIn", _color);
+            engineShader.Uniform("extraGlow", 0);
+            engineShader.Uniform("applyColor", 0);
+            engineShader.Uniform("noTexture", 0f);
 
-            float hover = (_mouseOver ? 6 : 0) - 1.5f * Math.Max(1, 1 / map.ZoomLevel);
+            float hover = (_mouseOver ? 6 : 0) - 1.5f * Math.Max(1f, 1f / map.ZoomLevel);
 
-            if (!_teleportLayer.TexturesByIcon.TryGetValue(_data.Icon, out LoadedTexture tex))
+            if (!_teleportLayer.TexturesByIcon.TryGetValue(_data.Icon, out var tex))
             {
                 _teleportLayer.TexturesByIcon.TryGetValue("circle", out tex);
             }
 
             if (tex != null)
             {
-                prog.BindTexture2D("tex2d", tex.TextureId, 0);
-
-                _mvMat
-                    .Set(api.Render.CurrentModelviewMatrix)
-                    .Translate(x, y, 60)
-                    .Scale(tex.Width + hover, tex.Height + hover, 0)
-                    .Scale(0.5f, 0.5f, 0);
-
-                prog.UniformMatrix("projectionMatrix", api.Render.CurrentProjectionMatrix);
-                prog.UniformMatrix("modelViewMatrix", _mvMat.Values);
-
+                engineShader.BindTexture2D("tex2d", tex.TextureId, 0);
+                engineShader.UniformMatrix("projectionMatrix", api.Render.CurrentProjectionMatrix);
+                _mvMat.Set(api.Render.CurrentModelviewMatrix).Translate(x, y, 60f).Scale(tex.Width + hover, tex.Height + hover, 0f)
+                    .Scale(0.5f * WaypointMapComponent.IconScale, 0.5f * WaypointMapComponent.IconScale, 0f);
+                Matrixf matrixf = _mvMat.Clone().Scale(1.25f, 1.25f, 1.25f);
+                engineShader.Uniform("rgbaIn", new Vec4f(0f, 0f, 0f, 0.6f));
+                engineShader.UniformMatrix("modelViewMatrix", matrixf.Values);
+                api.Render.RenderMesh(_teleportLayer.QuadModel);
+                engineShader.Uniform("rgbaIn", _color);
+                engineShader.UniformMatrix("modelViewMatrix", _mvMat.Values);
                 api.Render.RenderMesh(_teleportLayer.QuadModel);
             }
 

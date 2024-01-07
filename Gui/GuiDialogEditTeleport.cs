@@ -31,11 +31,11 @@ namespace TeleportationNetwork
             if (layer == null)
             {
                 var mapManager = capi.ModLoader.GetModSystem<WorldMapManager>();
-                layer = (TeleportMapLayer)mapManager.MapLayers.FirstOrDefault(l => l is TeleportMapLayer);
+                layer = (TeleportMapLayer)mapManager.MapLayers.First(l => l is TeleportMapLayer);
             }
 
-            _icons = layer?.WaypointIcons.ToArray() ?? Array.Empty<string>();
-            _colors = layer?.WaypointColors.ToArray() ?? Array.Empty<int>();
+            _icons = layer?.WaypointIcons ?? [];
+            _colors = layer?.WaypointColors.ToArray() ?? [];
             _manager = capi.ModLoader.GetModSystem<TeleportManager>();
         }
 
@@ -61,10 +61,7 @@ namespace TeleportationNetwork
 
         private void ComposeDialog()
         {
-            if (SingleComposer != null)
-            {
-                SingleComposer.Dispose();
-            }
+            SingleComposer?.Dispose();
 
             if (!_colors.Contains(TeleportClientData.DefaultColor))
             {
