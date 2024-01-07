@@ -2,7 +2,7 @@
 	<PropertyGroup>
 		<Name>Teleportation Network</Name>
 		<ModId>tpnet</ModId>
-		<Version>1.14.1</Version>
+		<Version>1.14.2</Version>
 		<Authors>DArkHekRoMaNT</Authors>
 		<MinimalGameVersion>1.19.0-rc.5</MinimalGameVersion>
 		<GameVersion>1.19.0-rc.5</GameVersion>
