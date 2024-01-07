@@ -1,6 +1,6 @@
 {
-  "block-teleport-broken": "Broken Teleport",
-  "block-teleport-normal": "Teleport",
+  "block-teleport-broken-*": "Broken teleport",
+  "block-teleport-normal-*": "Teleport",
 
   "tpdlg-title": "Available Points",
   "tpdlg-empty": "No available teleports",
@@ -10,11 +10,6 @@
 
   "blockhelp-teleport-edit": "Edit",
   "blockhelp-teleport-change-frame": "Change frame",
-
-  "config-unbreakable": "Unbreakable teleports now is {0}",
-  "config-shared": "Shared teleports now is {0}",
-
-  "game:tabname-tpnet": "TpNet",
 
   "block-brokenlantern-copper-*": "Broken copper lantern",
   "block-brokenlantern-brass-*": "Broken brass lantern",
@@ -30,5 +25,7 @@
   "block-brokenlantern-meteoriciron-*": "Broken meteoric iron lantern",
 
   "edittpdlg-title": "Edit teleport",
-  "edittpdlg-order-label": "Sort"
+  "edittpdlg-order-label": "Sort",
+
+  "game:maplayer-tpnetwaypoints": "Teleports"
 }
