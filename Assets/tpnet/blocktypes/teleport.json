@@ -23,16 +23,16 @@
     { "code": "state", "states": [ "broken", "normal" ] },
     { "code": "side", "loadFromProperties": "abstract/horizontalorientation" }
   ],
-  "creativeinventoryStacks": [
-    {
+  "creativeinventoryStacksByType": {
+    "*-north": [{
       "tabs": [ "general", "decorative", "tpnet" ],
       "stacks": [{
-          "type": "block",
-          "code": "teleport-{state}-north",
-          "attributes": { "frameCode": "game:cobblestone-granite" }
+        "type": "block",
+        "code": "teleport-{state}-north",
+        "attributes": { "frameCode": "game:cobblestone-granite" }
       }]
-    }
-  ],
+    }]
+  },
   "replaceable": 200,
   "resistance": 4,
   "lightAbsorption": 0,
