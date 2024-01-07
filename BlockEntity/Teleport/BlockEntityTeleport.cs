@@ -72,6 +72,15 @@ namespace TeleportationNetwork
         {
             base.Initialize(api);
 
+            // Legacy add side at 1.19.0-rc.5
+            if (Block.Code == new AssetLocation("tpnet:teleport-normal") ||
+                Block.Code == new AssetLocation("tpnet:teleport-broken"))
+            {
+                var sidedBlock = api.World.GetBlock(Block.Code.WithPathAppendix("-north"));
+                api.World.BlockAccessor.ExchangeBlock(sidedBlock.Id, Pos);
+                api.World.BlockAccessor.MarkBlockDirty(Pos);
+            }
+
             _modLogger = api.ModLoader.GetModSystem<Core>().Mod.Logger;
 
             _frameStack ??= new ItemStack(api.World.GetBlock(DefaultFrameCode));
@@ -393,9 +402,11 @@ namespace TeleportationNetwork
         {
             if (Api is ICoreClientAPI capi && _frameStack != null)
             {
+                var facing = BlockFacing.FromCode(Block.LastCodePart()) ?? BlockFacing.NORTH;
+                float rotation = facing.HorizontalAngleIndex * 90 - 90;
                 var shapeCode = new AssetLocation(Constants.ModId, "shapes/block/teleport/frame.json");
                 Shape frameShape = Api.Assets.Get<Shape>(shapeCode);
-                capi.Tesselator.TesselateShape(_frameStack.Collectible, frameShape, out _frameMesh);
+                capi.Tesselator.TesselateShape(_frameStack.Collectible, frameShape, out _frameMesh, new Vec3f(0, rotation, 0));
             }
         }
 

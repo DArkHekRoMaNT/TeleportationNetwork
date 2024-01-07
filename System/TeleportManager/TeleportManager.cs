@@ -92,7 +92,8 @@ namespace TeleportationNetwork
             {
                 foreach (Teleport teleport in Points.GetAll())
                 {
-                    teleport.Name = teleport.Name; // 1.12.0 -> 1.12.1 legacy name fix
+                    // 1.12.0 -> 1.12.1 legacy name fix
+                    teleport.Name = teleport.Name;
 
                     int chunkSize = sapi.WorldManager.ChunkSize;
                     int chunkX = teleport.Pos.X / chunkSize;
@@ -102,6 +103,7 @@ namespace TeleportationNetwork
                     {
                         OnLoaded = delegate
                         {
+                            // Check teleport exists
                             BlockEntity be = sapi.World.BlockAccessor.GetBlockEntity(teleport.Pos);
                             if (be is not BlockEntityTeleport)
                             {

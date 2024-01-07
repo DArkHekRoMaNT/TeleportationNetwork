@@ -13,8 +13,8 @@ namespace TeleportationNetwork
     {
         private List<WorldInteraction> WorldInteractions { get; } = new();
 
-        public bool IsBroken => LastCodePart() == "broken";
-        public bool IsNormal => LastCodePart() == "normal";
+        public bool IsBroken => Variant["state"] == "broken";
+        public bool IsNormal => Variant["state"] == "normal";
 
         public TeleportParticleController? ParticleController { get; private set; }
 
@@ -253,7 +253,7 @@ namespace TeleportationNetwork
 
         public override ItemStack[] GetDrops(IWorldAccessor world, BlockPos pos, IPlayer byPlayer, float dropQuantityMultiplier = 1)
         {
-            return new ItemStack[] { OnPickBlock(world, pos) };
+            return [OnPickBlock(world, pos)];
         }
 
         public override WorldInteraction[] GetPlacedBlockInteractionHelp(IWorldAccessor world, BlockSelection selection, IPlayer forPlayer)

@@ -20,12 +20,15 @@ namespace TeleportationNetwork
 
         public override void Start(ICoreAPI api)
         {
-            api.RegisterBlockClass("BlockBrokenTeleport", typeof(BlockTeleport));
-            api.RegisterBlockClass("BlockNormalTeleport", typeof(BlockTeleport));
+            api.RegisterBlockClass("BlockTeleport", typeof(BlockTeleport));
             api.RegisterBlockEntityClass("BETeleport", typeof(BlockEntityTeleport));
 
             api.RegisterBlockClass("WorldGenReplaceMetaBlock", typeof(WorldGenReplaceMetaBlock));
             api.RegisterBlockEntityClass("Dome", typeof(BlockEntityDome));
+
+            // Legacy (before 1.19)
+            api.RegisterBlockClass("BlockBrokenTeleport", typeof(BlockTeleport));
+            api.RegisterBlockClass("BlockNormalTeleport", typeof(BlockTeleport));
 
             api.ChatCommands
                 .GetOrCreate("tpnet")
