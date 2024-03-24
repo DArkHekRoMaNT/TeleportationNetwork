@@ -31,7 +31,6 @@ namespace TeleportationNetwork
         private string _currentLantern = "";
         private string _currentClay = "";
 
-        private readonly BlockPos _tmpPos = new();
         private readonly Dictionary<AssetLocation, int> _replaceBlockIds = new();
 
         public TeleportStructureBlockRandomizer(TeleportStructureGeneratorProperties props, ICoreServerAPI api, ILogger logger)
@@ -43,12 +42,12 @@ namespace TeleportationNetwork
             var woodProps = api.Assets.Get("game:worldproperties/block/wood.json").ToObject<WoodWorldProperty>();
             Woods = woodProps.Variants.Select(v => v.Code.ToShortString()).AddItem("aged").ToArray();
 
-            Clays = new string[] {
+            Clays = [
                 "blue",
                 "fire",
                 "red",
                 "brown"
-            };
+            ];
 
             foreach (string lightBlock in props.LightBlocks)
             {
@@ -104,7 +103,8 @@ namespace TeleportationNetwork
             {
                 for (int i = blockAccessor.GetTerrainMapheightAt(pos); i > 0; i--)
                 {
-                    Block block = blockAccessor.GetBlock(pos.X, i, pos.Z);
+                    var bpos = new BlockPos(pos.X, i, pos.Y, pos.dimension);
+                    Block block = blockAccessor.GetBlock(bpos);
                     if (block.Code.Path.StartsWith("rock-"))
                     {
                         string code = block.Code.Path.Replace("rock-", "");
@@ -136,7 +136,7 @@ namespace TeleportationNetwork
             {
                 AssetLocation newCode = blockCode.Clone();
 
-                if (!Core.Config.BiomlessTeleports && ReplaceByBlocks.TryGetValue(blockCode, out string[] variants))
+                if (!Core.Config.BiomlessTeleports && ReplaceByBlocks.TryGetValue(blockCode, out string[]? variants))
                 {
                     string selected = variants[rand.NextInt(variants.Length)]
                         .Replace("{rock}", _currentRock)
@@ -174,10 +174,9 @@ namespace TeleportationNetwork
             }
         }
 
-        public void AfterPlaceBlockRandomization(int x, int y, int z, IBlockAccessor blockAccessor)
+        public void AfterPlaceBlockRandomization(BlockPos pos, IBlockAccessor blockAccessor)
         {
-            _tmpPos.Set(x, y, z);
-            BlockEntity be = blockAccessor.GetBlockEntity(_tmpPos);
+            BlockEntity be = blockAccessor.GetBlockEntity(pos);
 
             if (be is BlockEntityTeleport tbe && tbe.FrameStack != null)
             {
@@ -195,7 +194,7 @@ namespace TeleportationNetwork
 
             if (_currentStructure.Props.Ruin && be is null)
             {
-                Block block = blockAccessor.GetBlock(_tmpPos);
+                Block block = blockAccessor.GetBlock(pos);
 
                 bool attachDecor = true;
                 foreach (string pattern in _props.IgnoreRuin)
@@ -219,7 +218,7 @@ namespace TeleportationNetwork
                             Block decorBlock = blockAccessor.GetBlock(new AssetLocation(nextPlant));
                             if (decorBlock != null)
                             {
-                                blockAccessor.SetDecor(decorBlock, _tmpPos, face);
+                                blockAccessor.SetDecor(decorBlock, pos, face);
                             }
                         }
                     }

@@ -33,12 +33,11 @@ namespace TeleportationNetwork
             if (IsBroken)
             {
                 var temporalGear = api.World.GetItem(new AssetLocation("gear-temporal"));
-
                 WorldInteractions.Add(new WorldInteraction
                 {
                     ActionLangCode = "blockhelp-translocator-repair-2",
                     MouseButton = EnumMouseButton.Right,
-                    Itemstacks = new ItemStack[] { new(temporalGear) }
+                    Itemstacks = [new(temporalGear)]
                 });
             }
 

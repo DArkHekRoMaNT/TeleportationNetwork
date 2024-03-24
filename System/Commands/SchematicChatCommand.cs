@@ -101,9 +101,9 @@ namespace TeleportationNetwork
                 return null;
             }
 
-            string path;
-            string dir = Path.GetDirectoryName(schema.Origin.OriginPath);
-            if (dir.EndsWith(schema.Location.Domain))
+            string? path;
+            string? dir = Path.GetDirectoryName(schema.Origin.OriginPath);
+            if (dir != null && dir.EndsWith(schema.Location.Domain))
             {
                 path = Path.Combine(schema.Origin.OriginPath, schema.Location.Path);
             }

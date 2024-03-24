@@ -118,7 +118,7 @@ namespace TeleportationNetwork
                             continue;
                         }
 
-                        if (TryGenerateStructure(structure, pos.X + dx, pos.Z + dz))
+                        if (TryGenerateStructure(structure, pos.X + dx, pos.Z + dz, pos.dimension))
                         {
                             break;
                         }
@@ -148,9 +148,9 @@ namespace TeleportationNetwork
             return true;
         }
 
-        private bool TryGenerateStructure(TeleportStructureData structure, int x, int z)
+        private bool TryGenerateStructure(TeleportStructureData structure, int x, int z, int dim)
         {
-            var tmpPos = new BlockPos();
+            var tmpPos = new BlockPos(dim);
 
             _posRandom.InitPositionSeed(x, z);
             structure.Randomize(_posRandom);
@@ -194,7 +194,7 @@ namespace TeleportationNetwork
             int waterLevel = 0;
             for (int i = _worldgenBlockAccessor.GetTerrainMapheightAt(tmpPos.Set(x, 0, z)); i < _worldheight - 15; i++)
             {
-                Block? block = _worldgenBlockAccessor.GetBlock(x, i, z, BlockLayersAccess.Fluid);
+                Block? block = _worldgenBlockAccessor.GetBlock(tmpPos.Set(x, i, z), BlockLayersAccess.Fluid);
                 if (block != null && block.Id != 0)
                 {
                     waterLevel++;
@@ -210,7 +210,7 @@ namespace TeleportationNetwork
             int glacierLevel = 0;
             for (int i = _worldgenBlockAccessor.GetTerrainMapheightAt(tmpPos.Set(x, 0, z)); i > 0; i--)
             {
-                Block? block = _worldgenBlockAccessor.GetBlock(x, i, z, BlockLayersAccess.MostSolid);
+                Block? block = _worldgenBlockAccessor.GetBlock(tmpPos.Set(x, i, z), BlockLayersAccess.MostSolid);
                 if (block.Code.ToString() == "game:glacierice" || block.Code.ToString() == "game:showblock")
                 {
                     glacierLevel++;
@@ -244,7 +244,7 @@ namespace TeleportationNetwork
                 {
                     for (int k = 0; k < structure.Teleport.SizeX; k++)
                     {
-                        Block block = _worldgenBlockAccessor.GetBlock(x, y, z, BlockLayersAccess.MostSolid);
+                        Block block = _worldgenBlockAccessor.GetBlock(tmpPos.Set(x, y, z), BlockLayersAccess.MostSolid);
                         if (block.Id != 0 && !structure.Props.Underwater)
                         {
                             return false;
@@ -278,7 +278,7 @@ namespace TeleportationNetwork
             // Generate
             lock (_generatedStructures)
             {
-                var pos = new BlockPos(x, y + extraDepth, z);
+                var pos = new BlockPos(x, y + extraDepth, z, dim);
                 var areas = new List<Cuboidi>();
 
                 _blockRandomizer.Next(_worldgenBlockAccessor, pos, _posRandom, structure);

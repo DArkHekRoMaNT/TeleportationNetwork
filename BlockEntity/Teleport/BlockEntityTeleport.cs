@@ -121,7 +121,7 @@ namespace TeleportationNetwork
                     return;
                 }
 
-                if (!ActivePlayers.TryGetValue(player.PlayerUID, out TeleportingPlayerData tpe))
+                if (!ActivePlayers.TryGetValue(player.PlayerUID, out TeleportingPlayerData? tpe))
                 {
                     ActivePlayers[player.PlayerUID] = tpe = new TeleportingPlayerData(player);
                 }

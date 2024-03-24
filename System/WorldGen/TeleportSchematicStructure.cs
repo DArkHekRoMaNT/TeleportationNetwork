@@ -12,7 +12,7 @@ namespace TeleportationNetwork
         public int PlaceWithReplaceBlockIds(IBlockAccessor blockAccessor, IWorldAccessor world, BlockPos pos,
             TeleportStructureBlockRandomizer blockRandomizer)
         {
-            var curPos = new BlockPos();
+            var curPos = new BlockPos(pos.dimension);
             int placed = 0;
 
             PlaceBlockDelegate handler = ReplaceMode switch
@@ -65,13 +65,14 @@ namespace TeleportationNetwork
             if (blockAccessor is not IBlockAccessorRevertable)
             {
                 PlaceEntitiesAndBlockEntities(blockAccessor, world, pos, BlockCodesTmpForRemap, ItemCodes);
+                var tmpPos = new BlockPos(pos.dimension);
                 for (int i = 0; i < Indices.Count; i++)
                 {
                     uint index = Indices[i];
                     int x = pos.X + (int)(index & 0x1ff);
                     int y = pos.Y + (int)((index >> 20) & 0x1ff);
                     int z = pos.Z + (int)((index >> 10) & 0x1ff);
-                    blockRandomizer.AfterPlaceBlockRandomization(x, y, z, blockAccessor);
+                    blockRandomizer.AfterPlaceBlockRandomization(tmpPos.Set(x, y, z), blockAccessor);
                 }
             }
 

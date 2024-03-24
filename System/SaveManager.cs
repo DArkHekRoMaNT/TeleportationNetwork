@@ -140,9 +140,9 @@ namespace TeleportationNetwork
                 {
                     Name = "null";
                     Enabled = false;
-                    Pos = new BlockPos();
-                    Neighbours = new List<Teleport>();
-                    ActivatedByPlayers = new List<string>();
+                    Pos = new BlockPos(0);
+                    Neighbours = [];
+                    ActivatedByPlayers = [];
                     Icon = "";
                     Color = 0;
                 }
@@ -178,13 +178,12 @@ namespace TeleportationNetwork
                 {
                     Name = "null";
                     Enabled = false;
-                    Pos = new BlockPos();
-                    Neighbours = new List<Teleport>();
-                    ActivatedByPlayers = new List<string>();
+                    Pos = new BlockPos(0);
+                    Neighbours = [];
+                    ActivatedByPlayers = [];
                 }
             }
         }
-
 
         private class LegacyTeleportLoader_v1_7 : LegacyTeleportLoader
         {
@@ -223,9 +222,9 @@ namespace TeleportationNetwork
                 {
                     Enabled = false;
                     Name = "null";
-                    Pos = new BlockPos();
-                    ActivatedByPlayers = new List<string>();
-                    Neighbours = new List<BlockPos>();
+                    Pos = new BlockPos(0);
+                    ActivatedByPlayers = [];
+                    Neighbours = [];
                 }
             }
         }

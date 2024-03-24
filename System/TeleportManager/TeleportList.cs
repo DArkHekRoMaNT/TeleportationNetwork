@@ -23,7 +23,7 @@ namespace TeleportationNetwork
 
         public Teleport? this[BlockPos pos]
         {
-            get => _teleports.TryGetValue(pos, out Teleport value) ? value : null;
+            get => _teleports.TryGetValue(pos, out Teleport? value) ? value : null;
             set
             {
                 if (value != null)
