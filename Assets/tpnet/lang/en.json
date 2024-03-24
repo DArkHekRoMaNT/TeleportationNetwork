@@ -10,6 +10,7 @@
 
   "blockhelp-teleport-edit": "Edit",
   "blockhelp-teleport-change-frame": "Change frame",
+  "blockhelp-teleport-unknownitem": "Unknown repair item, check config",
 
   "block-brokenlantern-copper-*": "Broken copper lantern",
   "block-brokenlantern-brass-*": "Broken brass lantern",

@@ -63,5 +63,7 @@ namespace TeleportationNetwork
         [Range(0, int.MaxValue)]
         [Description("Minimal distance between teleport structures")]
         public int MinTeleportDistance { get; set; } = 4096;
+
+        public string TeleportRepairItem { get; set; } = "game:gear-temporal";
     }
 }

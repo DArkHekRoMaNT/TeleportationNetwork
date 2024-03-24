@@ -1,3 +1,5 @@
+using CommonLib.Extensions;
+using CommonLib.Utils;
 using System.Collections.Generic;
 using System.Linq;
 using Vintagestory.API.Client;
@@ -11,7 +13,7 @@ namespace TeleportationNetwork
 {
     public class BlockTeleport : Block
     {
-        private List<WorldInteraction> WorldInteractions { get; } = new();
+        private WorldInteraction FrameInteraction { get; set; } = new();
 
         public bool IsBroken => Variant["state"] == "broken";
         public bool IsNormal => Variant["state"] == "normal";
@@ -30,39 +32,18 @@ namespace TeleportationNetwork
 
         private void InitWorldInteractions()
         {
-            if (IsBroken)
-            {
-                var temporalGear = api.World.GetItem(new AssetLocation("gear-temporal"));
-                WorldInteractions.Add(new WorldInteraction
-                {
-                    ActionLangCode = "blockhelp-translocator-repair-2",
-                    MouseButton = EnumMouseButton.Right,
-                    Itemstacks = [new(temporalGear)]
-                });
-            }
-
-            if (IsNormal)
-            {
-                WorldInteractions.Add(new WorldInteraction
-                {
-                    ActionLangCode = $"{Constants.ModId}:blockhelp-teleport-edit",
-                    MouseButton = EnumMouseButton.Right,
-                    HotKeyCode = "sneak"
-                });
-            }
-
             var frames = api.World.Blocks
                 .Where((b) => b.DrawType == EnumDrawType.Cube)
                 .Select((Block b) => new ItemStack(b))
                 .ToArray();
 
-            WorldInteractions.Add(new WorldInteraction
+            FrameInteraction = new WorldInteraction
             {
                 ActionLangCode = $"{Constants.ModId}:blockhelp-teleport-change-frame",
                 MouseButton = EnumMouseButton.Right,
                 HotKeyCode = "sprint",
                 Itemstacks = frames
-            });
+            };
         }
 
         public override bool AllowSnowCoverage(IWorldAccessor world, BlockPos blockPos)
@@ -118,7 +99,7 @@ namespace TeleportationNetwork
                 if (!activeSlot.Empty)
                 {
                     // repair
-                    if (IsBroken && activeSlot.Itemstack.Collectible is ItemTemporalGear)
+                    if (IsBroken && activeSlot.Itemstack.Collectible.Code == GetRepairItem())
                     {
                         Block newBlock = world.GetBlock(CodeWithVariant("state", "normal"));
                         world.BlockAccessor.ExchangeBlock(newBlock.BlockId, blockSel.Position);
@@ -257,8 +238,49 @@ namespace TeleportationNetwork
 
         public override WorldInteraction[] GetPlacedBlockInteractionHelp(IWorldAccessor world, BlockSelection selection, IPlayer forPlayer)
         {
-            return base.GetPlacedBlockInteractionHelp(world, selection, forPlayer)
-                .Append(WorldInteractions.ToArray());
+            var interactions = base.GetPlacedBlockInteractionHelp(world, selection, forPlayer);
+
+            var repairItem = api.World.GetCollectibleObject(GetRepairItem());
+            if (IsBroken)
+            {
+                if (repairItem != null)
+                {
+                    interactions = interactions.Append(new WorldInteraction
+                    {
+                        ActionLangCode = "blockhelp-translocator-repair-2",
+                        MouseButton = EnumMouseButton.Right,
+                        Itemstacks = [new(repairItem)]
+                    });
+                }
+                else
+                {
+                    interactions = interactions.Append(new WorldInteraction
+                    {
+                        ActionLangCode = $"{Constants.ModId}:blockhelp-teleport-unknownitem",
+                        MouseButton = EnumMouseButton.Right
+                    });
+                }
+            }
+
+            if (IsNormal)
+            {
+                interactions = interactions.Append(new WorldInteraction
+                {
+                    ActionLangCode = $"{Constants.ModId}:blockhelp-teleport-edit",
+                    MouseButton = EnumMouseButton.Right,
+                    HotKeyCode = "sneak"
+                });
+            }
+
+            return interactions.Append(FrameInteraction);
+        }
+
+        public AssetLocation GetRepairItem()
+        {
+            string item = Core.Config.TeleportRepairItem;
+            if (item == null || api.World.GetCollectibleObject(new AssetLocation(item)) == null)
+                return new AssetLocation("unknown");
+            return new AssetLocation(item);
         }
     }
 }
