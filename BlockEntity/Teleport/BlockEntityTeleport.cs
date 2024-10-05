@@ -25,6 +25,8 @@ namespace TeleportationNetwork
         private BlockEntityAnimationUtil? AnimUtil => GetBehavior<BEBehaviorAnimatable>()?.animUtil;
 
         private SealRenderer SealRenderer { get; set; } = null!;
+        private NewTeleportRenderer TeleportRiftRenderer { get; set; } = null!;
+
         private TeleportParticleController? ParticleController => (Block as BlockTeleport)?.ParticleController;
 
         private ILoadedSound? _sound;
@@ -94,6 +96,7 @@ namespace TeleportationNetwork
             if (api is ICoreClientAPI capi)
             {
                 SealRenderer = new SealRenderer(Pos, capi);
+                TeleportRiftRenderer = new NewTeleportRenderer(Pos, capi);
 
                 _sound = capi.World.LoadSound(new SoundParams
                 {
@@ -354,6 +357,7 @@ namespace TeleportationNetwork
         {
             base.OnBlockUnloaded();
             SealRenderer?.Dispose();
+            TeleportRiftRenderer?.Dispose();
             _sound?.Dispose();
         }
 

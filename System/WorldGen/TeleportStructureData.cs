@@ -35,7 +35,7 @@ namespace TeleportationNetwork
             _logger = logger;
 
             var blockLayerConfig = api.Assets.Get("game:worldgen/blocklayers.json").ToObject<BlockLayerConfig>();
-            blockLayerConfig.ResolveBlockIds(api);
+            //blockLayerConfig.ResolveBlockIds(api);
 
             _structures = LoadSchematicList(blockLayerConfig, props.Schematics);
             _bases = LoadSchematicList(blockLayerConfig, props.BaseSchematics);
