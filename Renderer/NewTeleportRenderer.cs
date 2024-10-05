@@ -1,6 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
 using Vintagestory.API.Client;
 using Vintagestory.API.MathTools;
+using Vintagestory.GameContent;
 
 namespace TeleportationNetwork
 {
@@ -8,6 +9,9 @@ namespace TeleportationNetwork
     {
         public double RenderOrder => 0.05;
         public int RenderRange => 100;
+
+        public bool Enabled { get; set; }
+        public float Speed { get; set; }
 
         private readonly ICoreClientAPI _api;
         private readonly BlockPos _pos;
@@ -23,6 +27,9 @@ namespace TeleportationNetwork
             _api = api;
             _pos = pos;
 
+            Enabled = false;
+            Speed = 0;
+
             api.Event.RegisterRenderer(this, EnumRenderStage.AfterBlit, $"{Constants.ModId}-teleport-rift");
             MeshData mesh = QuadMeshUtil.GetQuad();
             _meshref = _api.Render.UploadMesh(mesh);
@@ -34,13 +41,14 @@ namespace TeleportationNetwork
 
         public void OnRenderFrame(float deltaTime, EnumRenderStage stage)
         {
-            var playerPos = _api.World.Player.Entity.Pos;
+            var camPos = _api.World.Player.Entity.CameraPos;
 
-            //var temporalBehavior = _api.World.Player.Entity.GetBehavior<EntityBehaviorTemporalStabilityAffected>();
-            //if (temporalBehavior != null)
-            //{
-            //    temporalBehavior.stabilityOffset = 0;
-            //}
+            var glichEffectStrength = 0.0f;
+            var temporalBehavior = _api.World.Player.Entity.GetBehavior<EntityBehaviorTemporalStabilityAffected>();
+            if (temporalBehavior != null)
+            {
+                glichEffectStrength = (float)temporalBehavior.GlichEffectStrength;
+            }
 
             //if (modsys.nearestRifts.Length > 0)
             //{
@@ -65,9 +73,12 @@ namespace TeleportationNetwork
             //}
 
             _counter += deltaTime;
-            if (_api.World.Rand.NextDouble() < 0.012)
+            if (glichEffectStrength > 0.1)
             {
-                _counter += 20 * (float)_api.World.Rand.NextDouble();
+                if (_api.World.Rand.NextDouble() < 0.012)
+                {
+                    _counter += 20 * (float)_api.World.Rand.NextDouble();
+                }
             }
 
             _api.Render.GLDepthMask(false);
@@ -92,6 +103,7 @@ namespace TeleportationNetwork
 
             _prog.Uniform("counterSmooth", bf);
             _prog.Uniform("invFrameSize", new Vec2f(1f / width, 1f / height));
+            _prog.Uniform("glich", GameMath.Min(glichEffectStrength * 2, 1));
             int riftIndex = 0;
 
             _cnt = (_cnt + 1) % 3;
@@ -110,11 +122,13 @@ namespace TeleportationNetwork
             //float dy = (float)(rift.Position.Y - playerPos.Y);
             //float dz = (float)(rift.Position.Z - playerPos.Z);
 
-            float dx = (float)(_pos.X - playerPos.X + 0.5f);
-            float dy = (float)(_pos.Y - playerPos.Y + 3);
-            float dz = (float)(_pos.Z - playerPos.Z + 0.5f);
+            float dx = (float)(_pos.X - camPos.X + 0.5f);
+            float dy = (float)(_pos.Y - camPos.Y + 3f);
+            float dz = (float)(_pos.Z - camPos.Z + 0.5f);
 
+            var playerPos = _api.World.Player.Entity.Pos;
             _matrixf.Translate(dx, dy, dz);
+            //_matrixf.Rotate(GameMath.PIHALF, 0, -playerPos.Yaw);
             _matrixf.ReverseMul(_api.Render.CameraMatrixOriginf);
 
             _matrixf.Values[0] = 1f;
@@ -131,6 +145,9 @@ namespace TeleportationNetwork
 
             //float size = rift.GetNowSize(_api);
             //_matrixf.Scale(size, size, size);
+            float wMod = 0.85f + 1 * 0.15f;
+            float size = .75f * 3;
+            _matrixf.Scale(size * wMod, size, size * wMod);
 
             _prog.UniformMatrix("modelViewMatrix", _matrixf.Values);
             _prog.Uniform("worldPos", new Vec4f(dx, dy, dz, 0));

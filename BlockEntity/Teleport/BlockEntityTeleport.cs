@@ -24,8 +24,8 @@ namespace TeleportationNetwork
 
         private BlockEntityAnimationUtil? AnimUtil => GetBehavior<BEBehaviorAnimatable>()?.animUtil;
 
-        private SealRenderer SealRenderer { get; set; } = null!;
-        private NewTeleportRenderer TeleportRiftRenderer { get; set; } = null!;
+        private SealRenderer? SealRenderer { get; set; }
+        private NewTeleportRenderer? TeleportRiftRenderer { get; set; }
 
         private TeleportParticleController? ParticleController => (Block as BlockTeleport)?.ParticleController;
 
@@ -95,7 +95,7 @@ namespace TeleportationNetwork
 
             if (api is ICoreClientAPI capi)
             {
-                SealRenderer = new SealRenderer(Pos, capi);
+                //SealRenderer = new SealRenderer(Pos, capi);
                 TeleportRiftRenderer = new NewTeleportRenderer(Pos, capi);
 
                 _sound = capi.World.LoadSound(new SoundParams
@@ -151,11 +151,22 @@ namespace TeleportationNetwork
                     }
 
                     ParticleController?.SpawnSealEdgeParticle(Pos);
-                    SealRenderer.Enabled = true;
-                    SealRenderer.Speed = (float)(1 + Math.Exp(_activeTime) * 1f);
+
+                    if (SealRenderer != null)
+                    {
+                        SealRenderer.Enabled = true;
+                        SealRenderer.Speed = (float)(1 + Math.Exp(_activeTime) * 1f);
+                    }
 
                     if (Active)
                     {
+
+                        if (TeleportRiftRenderer != null)
+                        {
+                            TeleportRiftRenderer.Enabled = true;
+                            TeleportRiftRenderer.Speed = Math.Clamp(_activeTime, 0, 1);
+                        }
+
                         ParticleController?.SpawnActiveParticles(Pos, _activeTime);
 
                         _soundVolume = Math.Min(1f, _soundVolume + dt / 3);
@@ -163,6 +174,13 @@ namespace TeleportationNetwork
                     }
                     else
                     {
+
+                        if (TeleportRiftRenderer != null)
+                        {
+                            TeleportRiftRenderer.Enabled = false;
+                            TeleportRiftRenderer.Speed = 0;
+                        }
+
                         _soundVolume = Math.Max(0.5f, _soundVolume - dt);
                         _soundPith = Math.Max(0.5f, _soundPith - dt);
                     }
@@ -172,7 +190,14 @@ namespace TeleportationNetwork
                 }
                 else
                 {
-                    SealRenderer.Enabled = false;
+                    if (SealRenderer != null)
+                    {
+                        SealRenderer.Enabled = false;
+                    }
+                    if (TeleportRiftRenderer != null)
+                    {
+                        TeleportRiftRenderer.Enabled = false;
+                    }
                     _sound?.Stop();
                 }
             }
@@ -371,6 +396,7 @@ namespace TeleportationNetwork
             }
 
             SealRenderer?.Dispose();
+            TeleportRiftRenderer?.Dispose();
             _sound?.Dispose();
         }
 
