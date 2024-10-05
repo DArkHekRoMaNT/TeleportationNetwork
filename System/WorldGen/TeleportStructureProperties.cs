@@ -7,8 +7,8 @@ namespace TeleportationNetwork
     {
         [JsonProperty, JsonRequired] public string Code { get; private set; } = null!;
         [JsonProperty, JsonRequired] public string[] Schematics { get; private set; } = null!;
-        [JsonProperty] public string[] PillarSchematics { get; private set; } = Array.Empty<string>();
-        [JsonProperty] public string[] BaseSchematics { get; private set; } = Array.Empty<string>();
+        [JsonProperty] public string[] PillarSchematics { get; private set; } = [];
+        [JsonProperty] public string[] BaseSchematics { get; private set; } = [];
 
         [JsonProperty] public bool Ruin { get; private set; } = false;
         [JsonProperty] public bool Special { get; private set; } = false;

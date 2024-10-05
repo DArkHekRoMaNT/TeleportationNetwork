@@ -13,24 +13,15 @@ using Vintagestory.GameContent;
 
 namespace TeleportationNetwork
 {
-    public class GuiDialogTeleportList : GuiDialogGeneric
+    public class GuiDialogTeleportList(ICoreClientAPI capi, BlockPos? blockEntityPos) : GuiDialogGeneric(Lang.Get($"{Constants.ModId}:tpdlg-title"), capi)
     {
-        private TeleportManager TeleportManager { get; }
-        private BlockPos? Pos { get; }
+        private TeleportManager TeleportManager { get; } = capi.ModLoader.GetModSystem<TeleportManager>();
+        private BlockPos? Pos { get; } = blockEntityPos;
 
         private long? _listenerId;
 
         private bool IsUnstableWorld { get; set; }
-        private List<Teleport> _allPoints;
-
-        public GuiDialogTeleportList(ICoreClientAPI capi, BlockPos? blockEntityPos)
-            : base(Lang.Get($"{Constants.ModId}:tpdlg-title"), capi)
-        {
-            Pos = blockEntityPos;
-            TeleportManager = capi.ModLoader.GetModSystem<TeleportManager>();
-
-            _allPoints = new();
-        }
+        private readonly List<Teleport> _allPoints = [];
 
         public override bool TryOpen()
         {
@@ -190,7 +181,8 @@ namespace TeleportationNetwork
                 }
 
                 stacklist.Add(new GuiElementTeleportButton(capi,
-                    name, tp.Pos, nameFont,
+                    name,
+                    nameFont,
                     data.Pinned ?
                         CairoFont.WhiteSmallText().WithWeight(FontWeight.Bold) :
                         CairoFont.WhiteSmallText(),
@@ -198,6 +190,7 @@ namespace TeleportationNetwork
                     buttons[i],
                     EnumButtonStyle.Normal)
                 {
+                    TeleportPos = tp.Pos,
                     Enabled = IsPointEnabled(tp)
                 });
             }
@@ -212,21 +205,23 @@ namespace TeleportationNetwork
         {
             _allPoints.Clear();
 
+            IEnumerable<Teleport> Sort(IEnumerable<Teleport> points)
+            {
+                return points
+                    .OrderBy(tp => tp.Name)
+                    .OrderBy(tp => -tp.GetClientData(capi).SortOrder);
+            }
+
             if (capi.World.Player.WorldData.CurrentGameMode == EnumGameMode.Creative)
             {
-                _allPoints = TeleportManager.Points.GetAll().ToList();
+                _allPoints.AddRange(Sort(TeleportManager.Points.GetAll()));
             }
             else
             {
-                _allPoints = TeleportManager.Points.GetAll((tp) =>
+                _allPoints.AddRange(Sort(TeleportManager.Points.GetAll((tp) =>
                     tp.Enabled &&
-                    tp.ActivatedByPlayers.Contains(capi.World.Player.PlayerUID)).ToList();
+                    tp.ActivatedByPlayers.Contains(capi.World.Player.PlayerUID))));
             }
-
-            _allPoints = _allPoints
-                .OrderBy(tp => tp.Name)
-                .OrderBy(tp => -tp.GetClientData(capi).SortOrder)
-                .ToList();
         }
 
         private void GetStability()

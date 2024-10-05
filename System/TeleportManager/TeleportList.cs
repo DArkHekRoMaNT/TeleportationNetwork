@@ -13,7 +13,7 @@ namespace TeleportationNetwork
     {
         [ProtoMember(1)]
         [SuppressMessage("Style", "IDE0044:Add readonly modifier", Justification = "Used by ProtoBuf")]
-        private Dictionary<BlockPos, Teleport> _teleports = new();
+        private Dictionary<BlockPos, Teleport> _teleports = [];
 
         public event Action? Changed;
         public event Action<Teleport>? ValueChanged;

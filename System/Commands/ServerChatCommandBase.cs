@@ -3,14 +3,9 @@ using Vintagestory.API.Server;
 
 namespace TeleportationNetwork
 {
-    public class ServerChatCommandBase
+    public class ServerChatCommandBase(ICoreServerAPI api)
     {
-        protected ICoreServerAPI Api { get; }
+        protected ICoreServerAPI Api { get; } = api;
         protected CommandArgumentParsers Parsers => Api.ChatCommands.Parsers;
-
-        public ServerChatCommandBase(ICoreServerAPI api)
-        {
-            Api = api;
-        }
     }
 }

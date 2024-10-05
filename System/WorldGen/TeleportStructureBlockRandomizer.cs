@@ -21,8 +21,8 @@ namespace TeleportationNetwork
         private string[] Woods { get; }
         private string[] Clays { get; }
 
-        private Dictionary<AssetLocation, string[]> ReplaceByBlocks { get; } = new();
-        private List<AssetLocation> LightBlocks { get; } = new();
+        private Dictionary<AssetLocation, string[]> ReplaceByBlocks { get; } = [];
+        private List<AssetLocation> LightBlocks { get; } = [];
 
         private TeleportStructureData _currentStructure = null!;
 
@@ -31,7 +31,7 @@ namespace TeleportationNetwork
         private string _currentLantern = "";
         private string _currentClay = "";
 
-        private readonly Dictionary<AssetLocation, int> _replaceBlockIds = new();
+        private readonly Dictionary<AssetLocation, int> _replaceBlockIds = [];
 
         public TeleportStructureBlockRandomizer(TeleportStructureGeneratorProperties props, ICoreServerAPI api, ILogger logger)
         {
@@ -67,7 +67,7 @@ namespace TeleportationNetwork
                 {
                     string blockPattern = pattern;
 
-                    if (pattern.Contains("*"))
+                    if (pattern.Contains('*'))
                     {
                         string value = WildcardUtil.GetWildcardValue(code, block.Code);
                         blockPattern = pattern.Replace("*", value);
@@ -80,7 +80,7 @@ namespace TeleportationNetwork
                     }
                     else
                     {
-                        foundCodes = new string[] { blockPattern };
+                        foundCodes = [blockPattern];
                     }
 
                     var cleanedCodes = new List<string>();

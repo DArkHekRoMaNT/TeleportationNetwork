@@ -7,12 +7,12 @@ using Vintagestory.ServerMods;
 
 namespace TeleportationNetwork
 {
-    public class TeleportStructureGenerator : ModSystem
+    public class TeleportStructureGeneratorSystem : ModSystem
     {
         private static int MaxHeightDiff => 5;
 
-        private readonly List<TeleportStructureData> _structures = new();
-        private List<BlockPos> _generatedStructures = new();
+        private readonly List<TeleportStructureData> _structures = [];
+        private List<BlockPos> _generatedStructures = [];
 
         private ICoreServerAPI _api = null!;
         private IWorldGenBlockAccessor _worldgenBlockAccessor = null!;
@@ -56,7 +56,7 @@ namespace TeleportationNetwork
 
         private void OnLoadGame()
         {
-            _generatedStructures = _api.WorldManager.SaveGame.GetData<List<BlockPos>>("TPNetData_GeneratedStructures") ?? new();
+            _generatedStructures = _api.WorldManager.SaveGame.GetData<List<BlockPos>>("TPNetData_GeneratedStructures") ?? [];
         }
 
         private void InitWorldGen()

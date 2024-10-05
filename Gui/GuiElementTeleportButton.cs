@@ -4,16 +4,16 @@ using Vintagestory.API.MathTools;
 
 namespace TeleportationNetwork
 {
-    public class GuiElementTeleportButton : GuiElementTextButton
+    public class GuiElementTeleportButton(
+        ICoreClientAPI capi,
+        string text,
+        CairoFont font,
+        CairoFont hoverFont,
+        ActionConsumable onClick,
+        ElementBounds bounds,
+        EnumButtonStyle style = EnumButtonStyle.Normal) :
+        GuiElementTextButton(capi, text, font, hoverFont, onClick, bounds, style)
     {
-        public BlockPos TeleportPos { get; set; }
-
-        public GuiElementTeleportButton(ICoreClientAPI capi, string text, BlockPos teleportPos,
-            CairoFont font, CairoFont hoverFont, ActionConsumable onClick,
-            ElementBounds bounds, EnumButtonStyle style = EnumButtonStyle.Normal)
-            : base(capi, text, font, hoverFont, onClick, bounds, style)
-        {
-            TeleportPos = teleportPos;
-        }
+        public required BlockPos TeleportPos { get; set; }
     }
 }

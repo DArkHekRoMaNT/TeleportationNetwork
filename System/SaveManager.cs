@@ -243,7 +243,7 @@ namespace TeleportationNetwork
             {
                 [ProtoMember(1)] public string name = "";
                 [ProtoMember(2)] public bool available = false;
-                [ProtoMember(3)] public List<string> activatedBy = new();
+                [ProtoMember(3)] public List<string> activatedBy = [];
             }
         }
     }
