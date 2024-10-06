@@ -43,6 +43,17 @@ namespace TeleportationNetwork
         {
             var camPos = _api.World.Player.Entity.CameraPos;
 
+            float viewDistance = _api.World.Player.WorldData.LastApprovedViewDistance;
+            if (_api.IsSinglePlayer)
+            {
+                viewDistance = _api.World.Player.WorldData.DesiredViewDistance;
+            }
+            viewDistance *= 0.85f;
+            if (_pos.DistanceSqTo(camPos.X, camPos.Y, camPos.Z) > viewDistance * viewDistance)
+            {
+                return;
+            }
+
             var glichEffectStrength = 0.0f;
             var temporalBehavior = _api.World.Player.Entity.GetBehavior<EntityBehaviorTemporalStabilityAffected>();
             if (temporalBehavior != null)
