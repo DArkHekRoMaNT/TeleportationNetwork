@@ -12,12 +12,10 @@ in float fogAmount;
 out vec4 outColor;
 // ? out vev4 outGlow;
 
-uniform int riftIndex;
 uniform sampler2D primaryFb;
 uniform sampler2D depthTex;
 uniform vec2 invFrameSize;
-uniform float counter;
-uniform float counterSmooth;
+uniform float time;
 uniform float glich;
 
 #include noise2d.ash
@@ -75,14 +73,14 @@ void main()
 	//if (aDiff > 2) discard;
 	if (aDiff > 0) discard; // No visible behind other blocks (at all)
 	
-	//float f = length(uv - 0.5) * (1.5 - sin(counter/5) * 0.25) * 1.75;
+	//float f = length(uv - 0.5) * (1.5 - sin(time/5) * 0.25) * 1.75;
     vec2 st = uv - 0.5;
 	float f = length(st) * 2.4;
 	
 	float noise = 
-		  cnoise(vec2(gl_FragCoord.x / 300.0, gl_FragCoord.y / 300.0 - counter / 3))  / 50.0
-		+ cnoise(vec2(gl_FragCoord.x / 200.0, gl_FragCoord.y / 200.0 - counter / 4))  / 75.0
-		+ cnoise(vec2(gl_FragCoord.x / 2.0, gl_FragCoord.y / 2.0 - counter)) / 200.0;
+		  cnoise2(vec2(gl_FragCoord.x / 300, gl_FragCoord.y / 300 - time / 3))  / 50.0
+		+ cnoise2(vec2(gl_FragCoord.x / 200, gl_FragCoord.y / 200 - time / 4))  / 75.0
+		+ cnoise2(vec2(gl_FragCoord.x / 2, gl_FragCoord.y / 2 - time)) / 200.0;
 	
 	vec4 col = texture(primaryFb, vec2(x,y) + noise);
 
@@ -97,8 +95,8 @@ void main()
 	vec3 tp1 = vec3(0.15, 0.84, 0.64);
 	vec3 tp2 = vec3(0.00, 0.65, 0.45);
 
-    //float pulse = 0.5 + 0.5 * sin(counter);
-    //float edgeNoise = cnoise2((uv - 0.5) * 13.0 + counter) * 0.3;
+    //float pulse = 0.5 + 0.5 * sin(time);
+    //float edgeNoise = cnoise2((uv - 0.5) * 13.0 + time) * 0.3;
     //float ring = smoothstep(0.2 + edgeNoise, 0.25 + edgeNoise, dist) * 
     //            (1.0 - smoothstep(0.4 + edgeNoise, 0.45 + edgeNoise, dist));
     //vec3 portalColor = mix(tp1, tp2, pulse);
@@ -114,7 +112,6 @@ void main()
 	//col.g += portalColor.g;
 	//col.b += portalColor.b;
 
-	float time = counter * 1.1;
 	vec2 uv2 = uv - 0.5;
 	st  = vec2(
             atan(uv2.y, uv2.x) ,
@@ -144,7 +141,6 @@ void main()
 	col.r = rust.r * glich + col.r * (1-glich);
 	col.g = rust.g * glich + col.g * (1-glich);
 	col.b = rust.b * glich + col.b * (1-glich);
-	
 
 	outColor = applyFog(col, fogAmount);
 }

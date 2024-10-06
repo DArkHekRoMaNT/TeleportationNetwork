@@ -109,10 +109,7 @@ namespace TeleportationNetwork
 
             int width = _api.Render.FrameWidth;
             int height = _api.Render.FrameHeight;
-            _prog.Uniform("counter", _counter);
-            float bf = 200 + (float)GameMath.Sin(_api.InWorldEllapsedMilliseconds / 24000.0) * 100;
-
-            _prog.Uniform("counterSmooth", bf);
+            _prog.Uniform("time", _counter);
             _prog.Uniform("invFrameSize", new Vec2f(1f / width, 1f / height));
             _prog.Uniform("glich", GameMath.Min(glichEffectStrength * 2, 1));
             int riftIndex = 0;
@@ -162,7 +159,7 @@ namespace TeleportationNetwork
 
             _prog.UniformMatrix("modelViewMatrix", _matrixf.Values);
             _prog.Uniform("worldPos", new Vec4f(dx, dy, dz, 0));
-            _prog.Uniform("riftIndex", riftIndex);
+            //_prog.Uniform("riftIndex", riftIndex);
 
             _api.Render.RenderMesh(_meshref);
 
