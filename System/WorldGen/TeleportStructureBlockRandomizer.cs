@@ -106,19 +106,12 @@ namespace TeleportationNetwork
         {
             string GetRock()
             {
-                for (int i = blockAccessor.GetTerrainMapheightAt(pos); i > 0; i--)
+                var topRockIds = blockAccessor.GetMapChunkAtBlockPos(pos).TopRockIdMap;
+                if (topRockIds != null && topRockIds.Length > 0)
                 {
-                    var bpos = new BlockPos(pos.X, i, pos.Y, pos.dimension);
-                    Block block = blockAccessor.GetBlock(bpos);
-                    if (block.Code.Path.StartsWith("rock-"))
-                    {
-                        string code = block.Code.Path.Replace("rock-", "");
-                        Block rockBlock = blockAccessor.GetBlock(new AssetLocation($"rock-{code}"));
-                        if (rockBlock != null)
-                        {
-                            return code;
-                        }
-                    }
+                    var rockBlock = blockAccessor.GetBlock(topRockIds[0]);
+                    var code = rockBlock.Code.Path.Replace("rock-", "");
+                    return code;
                 }
                 return "granite";
             }
