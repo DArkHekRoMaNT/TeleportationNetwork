@@ -56,14 +56,14 @@
     "supportbeam-aged": "supportbeam-{wood}",
 
     /* Clay */
-    "slantedroofing-blue*":  "slantedroofing-{clay}*",
-    "slantedroofingcornerinner-blue*":  "slantedroofingcornerinner-{clay}*",
-    "slantedroofingcornerouter-blue*":  "slantedroofingcornerouter-{clay}*",
-    "slantedroofingridge-blue*":  "slantedroofingridge-{clay}*",
-    "slantedroofingtip-blue*":  "slantedroofingtip-{clay}*",
-    "clayshingleblock-blue":  "clayshingleblock-{clay}",
-    "clayshinglelabs-blue-*":  "clayshinglelabs-{clay}-*",
-    "clayshinglestairs-blue-*":  "clayshinglestairs-{clay}-*",
+    "slantedroofing-gray*":  "slantedroofing-{clay}*",
+    "slantedroofingcornerinner-gray*":  "slantedroofingcornerinner-{clay}*",
+    "slantedroofingcornerouter-gray*":  "slantedroofingcornerouter-{clay}*",
+    "slantedroofingridge-gray*":  "slantedroofingridge-{clay}*",
+    "slantedroofingtip-gray*":  "slantedroofingtip-{clay}*",
+    "clayshingleblock-gray":  "clayshingleblock-{clay}",
+    "clayshinglelabs-gray-*":  "clayshinglelabs-{clay}-*",
+    "clayshinglestairs-gray-*":  "clayshinglestairs-{clay}-*",
 
 
     /* Other */

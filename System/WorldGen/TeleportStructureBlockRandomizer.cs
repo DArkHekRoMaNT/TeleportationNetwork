@@ -43,10 +43,15 @@ namespace TeleportationNetwork
             Woods = woodProps.Variants.Select(v => v.Code.ToShortString()).AddItem("aged").ToArray();
 
             Clays = [
-                "blue",
                 "fire",
+                "black",
+                "brown",
+                "cream",
+                "gray",
+                "orange",
                 "red",
-                "brown"
+                "tan",
+                "clinker"
             ];
 
             foreach (string lightBlock in props.LightBlocks)
