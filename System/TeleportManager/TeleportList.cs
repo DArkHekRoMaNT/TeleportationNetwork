@@ -21,20 +21,35 @@ namespace TeleportationNetwork
 
         public int Count => _teleports.Count;
 
+        private readonly object _pointsLock = new();
+
         public Teleport? this[BlockPos pos]
         {
-            get => _teleports.TryGetValue(pos, out Teleport? value) ? value : null;
+            get
+            {
+                lock (_pointsLock)
+                {
+                    if (_teleports.TryGetValue(pos, out Teleport? value))
+                    {
+                        return value;
+                    }
+                    return null;
+                }
+            }
             set
             {
                 if (value != null)
                 {
-                    if (_teleports.ContainsKey(pos))
+                    lock (_pointsLock)
                     {
-                        _teleports[pos] = value;
-                    }
-                    else
-                    {
-                        _teleports.Add(value.Pos, value);
+                        if (_teleports.ContainsKey(pos))
+                        {
+                            _teleports[pos] = value;
+                        }
+                        else
+                        {
+                            _teleports.Add(value.Pos, value);
+                        }
                     }
 
                     ValueChanged?.Invoke(value);
@@ -49,8 +64,11 @@ namespace TeleportationNetwork
 
         public IReadOnlyList<Teleport> GetAll(Predicate<Teleport>? predicate = null)
         {
-            var list = _teleports.Values.ToList();
-            return predicate == null ? list : list.FindAll(predicate);
+            lock (_pointsLock)
+            {
+                var list = _teleports.Values.ToList();
+                return predicate == null ? list : list.FindAll(predicate);
+            }
         }
 
         public void Set(Teleport teleport)
@@ -60,7 +78,12 @@ namespace TeleportationNetwork
 
         public bool Remove(BlockPos pos)
         {
-            if (_teleports.Remove(pos))
+            var removed = false;
+            lock (_pointsLock)
+            {
+                removed = _teleports.Remove(pos);
+            }
+            if (removed)
             {
                 ValueRemoved?.Invoke(pos);
                 Changed?.Invoke();
@@ -71,12 +94,19 @@ namespace TeleportationNetwork
 
         public bool Contains(BlockPos pos)
         {
-            return _teleports.ContainsKey(pos);
+            lock (_pointsLock)
+            {
+                return _teleports.ContainsKey(pos);
+            }
         }
 
         public void MarkDirty(BlockPos pos)
         {
-            Teleport? value = this[pos];
+            var value = (Teleport?)null;
+            lock (_pointsLock)
+            {
+                value = this[pos];
+            }
             if (value != null)
             {
                 ValueChanged?.Invoke(value);
@@ -85,32 +115,41 @@ namespace TeleportationNetwork
 
         public void SetFrom(TeleportList points)
         {
-            _teleports.Clear();
-            foreach (KeyValuePair<BlockPos, Teleport> teleport in points._teleports)
+            lock (_pointsLock)
             {
-                _teleports.Add(teleport.Key, teleport.Value);
+                _teleports.Clear();
+                foreach (var (pos, teleport) in points._teleports)
+                {
+                    _teleports.Add(pos, teleport);
+                }
             }
             Changed?.Invoke();
         }
 
         public void SetFrom(IEnumerable<Teleport> points)
         {
-            _teleports.Clear();
-            foreach (var teleport in points)
+            lock (_pointsLock)
             {
-                _teleports.Add(teleport.Pos, teleport);
+                _teleports.Clear();
+                foreach (var teleport in points)
+                {
+                    _teleports.Add(teleport.Pos, teleport);
+                }
             }
             Changed?.Invoke();
         }
 
         public TeleportList ForPlayer(IServerPlayer player)
         {
-            var list = new TeleportList();
-            foreach (var teleport in _teleports)
+            lock (_pointsLock)
             {
-                list[teleport.Key] = teleport.Value.ForPlayer(player.PlayerUID);
+                var list = new TeleportList();
+                foreach (var teleport in _teleports)
+                {
+                    list[teleport.Key] = teleport.Value.ForPlayer(player.PlayerUID);
+                }
+                return list;
             }
-            return list;
         }
     }
 }
