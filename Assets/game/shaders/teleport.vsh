@@ -6,8 +6,8 @@ layout(location = 1) in vec2 uvIn;
 layout(location = 2) in int flags;
 
 uniform mat4 projectionMatrix;
-uniform mat4 modelViewMatrix;
-uniform vec4 worldPos;
+uniform mat4 viewMatrix;
+uniform mat4 modelMatrix;
 
 uniform vec4 rgbaTint;
 uniform vec3 rgbaAmbientIn;
@@ -24,6 +24,7 @@ out float dist;
 
 out vec4 rgbaFog;
 out float fogAmount;
+out vec4 worldPos;
 
 #include vertexflagbits.ash
 #include fogandlight.vsh
@@ -31,13 +32,13 @@ out float fogAmount;
 
 void main () {
 	uv = uvIn;
-	vec4 camPos = modelViewMatrix * vec4(vertexPosition, 1.0);
+
+	worldPos = modelMatrix * vec4(vertexPosition, 1.0);
 	if (dontWarpVertices == 0) {
-		camPos = applyVertexWarping(flags | addRenderFlags, camPos);
-		camPos = applyGlobalWarping(camPos);
+		worldPos = applyVertexWarping(flags | addRenderFlags, worldPos);
+		worldPos = applyGlobalWarping(worldPos);
 	}
-	gl_Position = projectionMatrix * camPos;		
-	
+	gl_Position = projectionMatrix * viewMatrix *  worldPos;
 	fogAmount = getFogLevel(worldPos, fogMinIn, fogDensityIn);
 	
 	rgbaFog = rgbaFogIn;

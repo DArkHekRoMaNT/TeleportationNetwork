@@ -10,13 +10,14 @@ in float fogAmount;
 
 
 out vec4 outColor;
-// ? out vev4 outGlow;
+// ? out vec4 outGlow;
 
 uniform sampler2D primaryFb;
 uniform sampler2D depthTex;
 uniform vec2 invFrameSize;
 uniform float time;
 uniform float glich;
+uniform float stage;
 
 #include noise2d.ash
 #include fogandlight.fsh
@@ -32,7 +33,7 @@ float fbm(vec2 p) {
 
 float circle(vec2 p) {
     float r = length(p);
-    float radius = 0.4;
+    float radius = 0.4 * stage;
     float height = 1.0; 
     float width = 150.0;
     return height - pow(r - radius, 2.0) * width;
@@ -111,12 +112,13 @@ void main()
 		+ cnoise2(vec2(gl_FragCoord.x / 200, gl_FragCoord.y / 200 - time / 4))  / 75.0
 		+ cnoise2(vec2(gl_FragCoord.x / 2, gl_FragCoord.y / 2 - time)) / 200.0;
 	
-	vec4 col = texture(primaryFb, vec2(x,y) + noise);
+	//vec4 col = texture(primaryFb, vec2(x,y) + noise);
+    vec4 col = vec4(vec3(0.15, 0.84, 0.64)/1.6, 1);
 
 	//float angle = mod(1, 2 * PI);
 	//float k = cnoise2(vec2(angle * 20, 1))/4 + cnoise2(vec2(angle * 5, 1))/4 + cnoise2(vec2(1, angle));
 
-	col.a = clamp(pow(1 - f, 0.01), 0, 1); // To circle
+	col.a = clamp(pow(1*stage - f, 0.01), 0, 1) * stage; // To circle
 	//col.a = clamp(col.a - aDiff, 0, 1); // No visible behind other blocks (smooth)
 	// col.a -= clamp((dist * (1 + fogAmount/2.0) - 50) / 40, 0, 0.7 + fogAmount * 0.3); // Do nothing? 
 
@@ -148,12 +150,12 @@ void main()
     
     vec3 color = vec3(1, 3, 5) * tp1;
     vec2 wv = uv3 * 0.075;
-    float d = length(wv);
+    float d = length(wv) / stage;
     float w = 0.022 / d;
     w = w * w * w;
     color *= w;
 
-    if (l > 0.41) {
+    if (l > 0.41 * stage) {
         col = vec4(color, (color.r + color.g + color.b)/3 - 0.4);
     }
     else {

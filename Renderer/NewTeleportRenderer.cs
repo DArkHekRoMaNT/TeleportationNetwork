@@ -112,6 +112,8 @@ namespace TeleportationNetwork
             _prog.Uniform("time", _counter);
             _prog.Uniform("invFrameSize", new Vec2f(1f / width, 1f / height));
             _prog.Uniform("glich", GameMath.Min(glichEffectStrength * 2, 1));
+            _prog.Uniform("glich", GameMath.Min(glichEffectStrength * 2, 1));
+            _prog.Uniform("stage", (1.5f + GameMath.Sin(_counter/5f)*0 + 1f) / 2f);
             int riftIndex = 0;
 
             _cnt = (_cnt + 1) % 3;
@@ -138,7 +140,6 @@ namespace TeleportationNetwork
             _matrixf.Translate(dx, dy, dz + 0.01 + 3.85f/16f);
             //_matrixf.Rotate(GameMath.PIHALF, 0, -playerPos.Yaw);
             //_matrixf.Rotate(GameMath.PIHALF, 0, 0);
-            _matrixf.ReverseMul(_api.Render.CameraMatrixOriginf);
             //_matrixf.Rotate(0, playerPos.Yaw, 0);
 
             //_matrixf.Values[0] = 1f;
@@ -159,8 +160,9 @@ namespace TeleportationNetwork
             float size = .75f * 3;
             _matrixf.Scale(size * wMod, size, size * wMod);
 
-            _prog.UniformMatrix("modelViewMatrix", _matrixf.Values);
-            _prog.Uniform("worldPos", new Vec4f(dx, dy, dz, 0));
+            _prog.UniformMatrix("modelMatrix", _matrixf.Values);
+            _prog.UniformMatrix("viewMatrix", _api.Render.CameraMatrixOriginf);
+            //_prog.Uniform("worldPos", new Vec4f(dx, dy, dz, 0));
             //_prog.Uniform("riftIndex", riftIndex);
 
             _api.Render.RenderMesh(_meshref);
