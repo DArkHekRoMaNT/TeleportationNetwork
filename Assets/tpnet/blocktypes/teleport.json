@@ -4,7 +4,7 @@
   "entityclass": "BETeleport",
   "blockmaterial": "Stone",
   "shapeByType": {
-    "*-broken-*": { "base": "block/teleport/broken" },
+    "*-broken-*": { "base": "block/gate" },
     "*-normal-*": { "base": "block/teleport/normal" }
   },
   "behaviors": [{ "name": "WrenchOrientable", "properties": { "baseCode": "teleport-{state}"  } }],
