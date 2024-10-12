@@ -9,35 +9,15 @@ namespace TeleportationNetwork
 {
     public static class TeleportUtil
     {
-        public static void AreaTeleportToPoint(IServerPlayer player, Vec3d startPoint, BlockPos targetPoint,
-            float radius, ILogger logger, Action<Entity>? onTeleported = null)
+
+        public static void StabilityRelatedTeleportTo(this Entity entity, Vec3d pos, ILogger logger, Action? onTeleported = null)
         {
-            var sapi = (ICoreServerAPI)player.Entity.Api;
-            var manager = sapi.ModLoader.GetModSystem<TeleportManager>();
-            string? targetName = manager.Points[targetPoint]?.Name;
-
-            var entities = MathUtil.GetInCircleEntities(player.Entity.Api, radius, startPoint);
-            foreach (var entity in entities)
-            {
-                Vec3d point = targetPoint.ToVec3d();
-                point += entity.Pos.XYZ - startPoint;
-                point += new Vec3d(0.5, 1.5, 0.5);
-
-                if (entity is EntityPlayer entityPlayer)
-                {
-                    StabilityRelatedTeleportTo(entityPlayer, point, logger, () => onTeleported?.Invoke(entity));
-                }
-                else
-                {
-                    entity.TeleportTo(point, () => onTeleported?.Invoke(entity));
-                }
-
-                logger.Notification($"{entity?.GetName()} teleported to {point} ({targetName})");
-            }
+            var entityPos = entity.Pos.Copy();
+            entityPos.SetPos(pos);
+            StabilityRelatedTeleportTo(entity, entityPos, logger, onTeleported);
         }
 
-        public static void StabilityRelatedTeleportTo(this EntityPlayer entity, Vec3d pos,
-            ILogger logger, Action? onTeleported = null)
+        public static void StabilityRelatedTeleportTo(this Entity entity, EntityPos pos, ILogger logger, Action? onTeleported = null)
         {
             if (entity.Api is not ICoreServerAPI sapi)
             {
@@ -46,7 +26,7 @@ namespace TeleportationNetwork
 
             var stabilitySystem = sapi.ModLoader.GetModSystem<SystemTemporalStability>();
             bool stabilityEnabled = sapi.World.Config.GetBool("temporalStability", true);
-            entity.SetActivityRunning($"{Constants.ModId}_teleportCooldown", Core.Config.TeleportCooldown);
+            entity.SetActivityRunning(Constants.TeleportCooldownActivityName, Core.Config.TeleportCooldown);
 
             bool unstableTeleport = false;
 
@@ -73,9 +53,9 @@ namespace TeleportationNetwork
                 }
             }
 
-            if (Core.Config.StabilityTeleportMode != "off" && unstableTeleport)
+            if (Core.Config.StabilityTeleportMode != "off" && unstableTeleport && entity is EntityPlayer entityPlayer)
             {
-                CommonLib.Utils.TeleportUtil.RandomTeleport((IServerPlayer)entity.Player, new()
+                CommonLib.Utils.TeleportUtil.RandomTeleport((IServerPlayer)entityPlayer.Player, new()
                 {
                     Range = Core.Config.UnstableTeleportRange,
                     CenterPos = pos.AsBlockPos.ToVec3i()

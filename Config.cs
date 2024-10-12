@@ -26,7 +26,7 @@ namespace TeleportationNetwork
 
         [Range(0, int.MaxValue)]
         [Description("Cooldown between teleports in milliseconds")]
-        public int TeleportCooldown { get; set; } = 5000;
+        public int TeleportCooldown { get; set; } = 500;
 
         [Description("Remove all paper and metal lanterns from teleport structures if True")]
         public bool DarknessMode { get; set; } = false;

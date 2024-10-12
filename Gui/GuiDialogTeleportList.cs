@@ -259,7 +259,7 @@ namespace TeleportationNetwork
                 using var ms = new MemoryStream();
                 using var writer = new BinaryWriter(ms);
                 targetPoint.ToBytes(writer);
-                capi.Network.SendBlockEntityPacket(Pos, Constants.TeleportPlayerPacketId, ms.ToArray());
+                capi.Network.SendBlockEntityPacket(Pos, Constants.OpenTeleportPacketId, ms.ToArray());
             }
             else
             {

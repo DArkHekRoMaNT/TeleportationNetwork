@@ -176,15 +176,6 @@ namespace TeleportationNetwork
         {
             BlockEntity be = blockAccessor.GetBlockEntity(pos);
 
-            if (be is BlockEntityTeleport tbe && tbe.FrameStack != null)
-            {
-                if (_replaceBlockIds.TryGetValue(tbe.FrameStack.Collectible.Code, out int blockId))
-                {
-                    Block block = blockAccessor.GetBlock(blockId);
-                    tbe.FrameStack = new ItemStack(block);
-                }
-            }
-
             if (be is BELantern lbe)
             {
                 lbe.material = _currentLantern;

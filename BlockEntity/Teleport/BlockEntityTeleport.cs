@@ -1,6 +1,7 @@
 using System;
-using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.Linq;
 using System.Text;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
@@ -9,48 +10,34 @@ using Vintagestory.API.Datastructures;
 using Vintagestory.API.MathTools;
 using Vintagestory.API.Server;
 using Vintagestory.GameContent;
+using static Microsoft.WindowsAPICodePack.Shell.PropertySystem.SystemProperties.System;
 
 namespace TeleportationNetwork
 {
     public class BlockEntityTeleport : BlockEntity
     {
-        public static AssetLocation DefaultFrameCode => new("game:stonebricks-granite");
-
-        private float _activeTime;
-        private Dictionary<string, TeleportingPlayerData> ActivePlayers { get; } = [];
+        [MemberNotNullWhen(true, nameof(_currentTargetTeleportPos))]
+        public bool Active => _currentTargetTeleportPos != null && _activationTime > Constants.TeleportActivationTime;
+        public bool Repaired => (Block as BlockTeleport)?.IsNormal ?? false;
+        public float Size => (Block as BlockTeleport)?.Variant["type"] == "smallgate" ? 5f : 10f; //TODO: Move to attributes
 
         private GuiDialogTeleportList? _teleportDlg;
         private GuiDialogEditTeleport? _editDlg;
 
         private BlockEntityAnimationUtil? AnimUtil => GetBehavior<BEBehaviorAnimatable>()?.animUtil;
 
-        private SealRenderer? SealRenderer { get; set; }
         private NewTeleportRenderer? TeleportRiftRenderer { get; set; }
 
         private TeleportParticleController? ParticleController => (Block as BlockTeleport)?.ParticleController;
+        private TeleportManager TeleportManager { get; set; } = null!;
 
+        private ILogger? _modLogger;
         private ILoadedSound? _sound;
         private float _soundVolume;
         private float _soundPith;
 
-        private MeshData? _frameMesh;
-        private ItemStack? _frameStack;
-
-        private ILogger? _modLogger;
-
-        public bool Active { get; set; }
-        public bool Repaired => (Block as BlockTeleport)?.IsNormal ?? false;
-
-        public TeleportManager TeleportManager { get; private set; } = null!;
-        public ItemStack? FrameStack
-        {
-            get => _frameStack;
-            set
-            {
-                _frameStack = value;
-                Update();
-            }
-        }
+        private float _activationTime;
+        private BlockPos? _currentTargetTeleportPos;
 
         public Teleport Teleport
         {
@@ -74,18 +61,7 @@ namespace TeleportationNetwork
         {
             base.Initialize(api);
 
-            // Legacy add side at 1.19.0-rc.5
-            if (Block.Code == new AssetLocation("tpnet:teleport-normal") ||
-                Block.Code == new AssetLocation("tpnet:teleport-broken"))
-            {
-                var sidedBlock = api.World.GetBlock(Block.Code.WithPathAppendix("-north"));
-                api.World.BlockAccessor.ExchangeBlock(sidedBlock.Id, Pos);
-                api.World.BlockAccessor.MarkBlockDirty(Pos);
-            }
-
             _modLogger = api.ModLoader.GetModSystem<Core>().Mod.Logger;
-
-            _frameStack ??= new ItemStack(api.World.GetBlock(DefaultFrameCode));
             TeleportManager = api.ModLoader.GetModSystem<TeleportManager>();
 
             if (api.Side == EnumAppSide.Server)
@@ -95,8 +71,14 @@ namespace TeleportationNetwork
 
             if (api is ICoreClientAPI capi)
             {
-                //SealRenderer = new SealRenderer(Pos, capi);
-                TeleportRiftRenderer = new NewTeleportRenderer(Pos, capi);
+                TeleportRiftRenderer = new NewTeleportRenderer(Pos, capi, Block.LastCodePart() switch
+                {
+                    "north" => 0,
+                    "west" => 90,
+                    "south" => 180,
+                    "east" => 270,
+                    _ => 0
+                }, Size);
 
                 _sound = capi.World.LoadSound(new SoundParams
                 {
@@ -108,161 +90,116 @@ namespace TeleportationNetwork
                     Volume = 0
                 });
 
-                UpdateFrameMesh();
                 UpdateAnimator();
             }
 
             RegisterGameTickListener(OnGameTick, 50);
         }
 
-        public void OnEntityCollide(Entity entity)
+        private void OnGameTick(float dt)
         {
-            if (Repaired && entity is EntityPlayer player)
+            if (!Repaired) return;
+
+            if (_currentTargetTeleportPos != null)
+                _activationTime += dt;
+
+            TeleportRiftRenderer?.SetActivationProgress(_activationTime / Constants.TeleportActivationTime);
+
+            UpdateSound(dt);
+
+            if (!Active) return;
+
+            var target = TeleportManager.Points[_currentTargetTeleportPos];
+            if (target == null)
             {
-                if (player.IsActivityRunning($"{Constants.ModId}_teleportCooldown"))
+                _currentTargetTeleportPos = null;
+                return;
+            }
+
+            if (Api is ICoreServerAPI sapi)
+            {
+                static Vec3d ToGateCenter(BlockPos pos, BlockFacing facing, float size)
                 {
-                    return;
+                    return pos.ToVec3d().Add(0.5) - facing.Normalf.ToVec3d().Mul(0.25 * (size / 5f));
                 }
 
-                if (!ActivePlayers.TryGetValue(player.PlayerUID, out TeleportingPlayerData? tpe))
-                {
-                    ActivePlayers[player.PlayerUID] = tpe = new TeleportingPlayerData(player);
-                }
+                var orientation = BlockFacing.FromCode(Block.LastCodePart());
+                var center = ToGateCenter(Pos, orientation, Size);
+                var entities = MathUtil.GetInCyllinderEntities(Api, Size / 2f, 0.5f, center, orientation);
 
-                tpe.LastCollideMs = Api.World.ElapsedMilliseconds;
-                Active = true;
+                if (entities.Length > 0)
+                {
+                    ModLogger.Notification($"Entities {string.Join(", ", entities.Select(x => x.GetName()))} at {Api.Side}");
+                    if (Api.World.BlockAccessor.GetBlock(target.Pos) is not BlockTeleport targetBlock ||
+                        Api.World.BlockAccessor.GetBlockEntity(target.Pos) is not BlockEntityTeleport targetBE)
+                    {
+                        _currentTargetTeleportPos = null;
+                        return;
+                    }
+
+                    var targetOrientation = BlockFacing.FromCode(targetBlock.LastCodePart());
+                    var targetCenter = ToGateCenter(target.Pos, targetOrientation, targetBE.Size);
+                    foreach (var entity in entities)
+                    {
+                        if (entity.IsActivityRunning(Constants.TeleportCooldownActivityName))
+                            continue;
+
+                        var point = targetCenter;
+                        point += entity.Pos.XYZ - center;
+                        point -= targetOrientation.Normalf.ToVec3d();
+
+                        var entityPos = entity.Pos.Copy();
+                        entityPos.SetPos(point);
+                        if (orientation.IsHorizontal && targetOrientation.IsHorizontal)
+                        {
+                            var diff = orientation.Index - targetOrientation.Index;
+                            entityPos.Yaw += diff * GameMath.PIHALF;
+                            if (entity is EntityPlayer playerEntity && playerEntity.Player is IServerPlayer serverPlayer)
+                            {
+                                sapi.Network.SendBlockEntityPacket(serverPlayer, Pos, Constants.PlayerTeleportedPacketId, [(byte)diff]);
+                            }
+                        }
+
+                        TeleportUtil.StabilityRelatedTeleportTo(entity, entityPos, ModLogger, () => AfterTeleportEntity(entity));
+                        ModLogger.Notification($"{entity?.GetName()} teleported to {point} ({target.Name})");
+                    }
+                }
             }
         }
 
-        private void OnGameTick(float dt)
+        private void AfterTeleportEntity(Entity entity)
         {
-            if (Repaired && Active)
-            {
-                CheckActivePlayers(dt);
-            }
+            var soundLoc = new AssetLocation("sounds/effect/translocate-breakdimension.ogg");
+            entity.World.PlaySoundAt(soundLoc, entity, null, true, 32, .5f);
+            ((ICoreServerAPI)Api).Network.BroadcastBlockEntityPacket(
+                _currentTargetTeleportPos,
+                Constants.EntityTeleportedPacketId,
+                BitConverter.GetBytes(entity.EntityId));
+        }
 
+        private void UpdateSound(float dt)
+        {
             if (Api.Side == EnumAppSide.Client)
             {
-                if (Repaired)
+                if (_sound?.IsPlaying == false)
                 {
-                    if (_sound?.IsPlaying == false)
-                    {
-                        _sound.Start();
-                    }
+                    _sound.Start();
+                }
 
-                    ParticleController?.SpawnSealEdgeParticle(Pos);
-
-                    if (SealRenderer != null)
-                    {
-                        SealRenderer.Enabled = true;
-                        SealRenderer.Speed = (float)(1 + Math.Exp(_activeTime) * 1f);
-                    }
-
-                    if (Active)
-                    {
-
-                        if (TeleportRiftRenderer != null)
-                        {
-                            TeleportRiftRenderer.Enabled = true;
-                            TeleportRiftRenderer.Speed = Math.Clamp(_activeTime, 0, 1);
-                        }
-
-                        ParticleController?.SpawnActiveParticles(Pos, _activeTime);
-
-                        _soundVolume = Math.Min(1f, _soundVolume + dt / 3);
-                        _soundPith = Math.Min(1.5f, _soundPith + dt / 3);
-                    }
-                    else
-                    {
-
-                        if (TeleportRiftRenderer != null)
-                        {
-                            TeleportRiftRenderer.Enabled = false;
-                            TeleportRiftRenderer.Speed = 0;
-                        }
-
-                        _soundVolume = Math.Max(0.5f, _soundVolume - dt);
-                        _soundPith = Math.Max(0.5f, _soundPith - dt);
-                    }
-
-                    _sound?.SetVolume(_soundVolume);
-                    _sound?.SetPitch(_soundPith);
+                if (Active)
+                {
+                    _soundVolume = Math.Min(1f, _soundVolume + dt / 3);
+                    _soundPith = Math.Min(1.5f, _soundPith + dt / 3);
                 }
                 else
                 {
-                    if (SealRenderer != null)
-                    {
-                        SealRenderer.Enabled = false;
-                    }
-                    if (TeleportRiftRenderer != null)
-                    {
-                        TeleportRiftRenderer.Enabled = false;
-                    }
-                    _sound?.Stop();
+                    _soundVolume = Math.Max(0.5f, _soundVolume - dt);
+                    _soundPith = Math.Max(0.5f, _soundPith - dt);
                 }
+
+                _sound?.SetVolume(_soundVolume);
+                _sound?.SetPitch(_soundPith);
             }
-        }
-
-        private void CheckActivePlayers(float dt)
-        {
-            var toRemove = new List<string>();
-
-            float maxSecondsPassed = 0;
-            foreach (KeyValuePair<string, TeleportingPlayerData> activePlayer in ActivePlayers)
-            {
-                if (activePlayer.Value.State == TeleportingPlayerData.EnumState.None)
-                {
-                    ActivateTeleportByPlayer(activePlayer.Key);
-                    activePlayer.Value.State = TeleportingPlayerData.EnumState.Active;
-                }
-
-                activePlayer.Value.SecondsPassed += Math.Min(0.5f, dt);
-
-                if (Api.World.ElapsedMilliseconds - activePlayer.Value.LastCollideMs > 300)
-                {
-                    // Make sure its not just server lag (from BlockEntity/BETeleporter.cs)
-                    Block block = Api.World.CollisionTester.GetCollidingBlock(Api.World.BlockAccessor,
-                        activePlayer.Value.Player.SelectionBox, activePlayer.Value.Player.Pos.XYZ, true);
-
-                    // Check what is not other teleport
-                    bool otherTp = activePlayer.Value.Player.Pos.AsBlockPos.DistanceTo(Pos) > 2;
-
-                    if (block is not BlockTeleport || otherTp)
-                    {
-                        toRemove.Add(activePlayer.Key);
-                        continue;
-                    }
-                }
-
-                if (activePlayer.Value.SecondsPassed > Constants.BeforeTeleportShowGUITime &&
-                    activePlayer.Value.State == TeleportingPlayerData.EnumState.Active)
-                {
-                    activePlayer.Value.State = TeleportingPlayerData.EnumState.UI;
-
-                    if (Api.Side == EnumAppSide.Client && _teleportDlg?.IsOpened() != true)
-                    {
-                        _teleportDlg?.Dispose();
-
-                        _teleportDlg = new GuiDialogTeleportList((ICoreClientAPI)Api, Pos);
-                        _teleportDlg.TryOpen();
-                    }
-                }
-
-                maxSecondsPassed = Math.Max(activePlayer.Value.SecondsPassed, maxSecondsPassed);
-            }
-
-            foreach (string playerUID in toRemove)
-            {
-                ActivePlayers.Remove(playerUID);
-
-                if (Api.Side == EnumAppSide.Client)
-                {
-                    _teleportDlg?.TryClose();
-                }
-            }
-
-            Active = ActivePlayers.Count > 0;
-            _activeTime = Math.Min(1, maxSecondsPassed / Constants.BeforeTeleportShowGUITime);
         }
 
         public void ActivateTeleportByPlayer(string playerUID)
@@ -294,7 +231,6 @@ namespace TeleportationNetwork
             if (Api is ICoreClientAPI capi)
             {
                 _editDlg ??= new GuiDialogEditTeleport(capi, Pos);
-
                 if (!_editDlg.IsOpened())
                 {
                     _editDlg.TryOpen();
@@ -302,45 +238,29 @@ namespace TeleportationNetwork
             }
         }
 
-        public override bool OnTesselation(ITerrainMeshPool mesher, ITesselatorAPI tessThreadTesselator)
+        public void OpenTeleportDialog()
         {
-            if (_frameMesh != null)
+            if (Api is ICoreClientAPI capi)
             {
-                mesher.AddMeshData(_frameMesh);
+                _teleportDlg ??= new GuiDialogTeleportList(capi, Pos);
+                if (!_teleportDlg.IsOpened())
+                {
+                    _teleportDlg.TryOpen();
+                }
             }
-
-            return base.OnTesselation(mesher, tessThreadTesselator);
         }
 
         public override void OnReceivedClientPacket(IPlayer fromPlayer, int packetid, byte[] data)
         {
             base.OnReceivedClientPacket(fromPlayer, packetid, data);
 
-            if (packetid == Constants.TeleportPlayerPacketId)
+            if (packetid == Constants.OpenTeleportPacketId)
             {
                 using var ms = new MemoryStream(data);
                 using var reader = new BinaryReader(ms);
-                {
-                    BlockPos targetPoint = BlockPos.CreateFromBytes(reader);
-                    if (fromPlayer is IServerPlayer player)
-                    {
-                        Vec3d startPoint = Pos.ToVec3d().AddCopy(.5, 1, .5);
-                        TeleportUtil.AreaTeleportToPoint(player, startPoint, targetPoint, Constants.SealRadius,
-                        ModLogger, (entity) =>
-                        {
-                            // one per tp
-                            if (entity is EntityPlayer entityPlayer && entityPlayer.PlayerUID == player.PlayerUID)
-                            {
-                                var soundLoc = new AssetLocation("sounds/effect/translocate-breakdimension.ogg");
-                                entity.World.PlaySoundAt(soundLoc, entity, null, true, 32, .5f);
-                            }
-                           ((ICoreServerAPI)Api).Network.BroadcastBlockEntityPacket(
-                               targetPoint,
-                               Constants.EntityTeleportedPacketId,
-                               BitConverter.GetBytes(entity.EntityId));
-                        });
-                    }
-                }
+                _currentTargetTeleportPos = BlockPos.CreateFromBytes(reader);
+                _activationTime = 0;
+                (Api as ICoreServerAPI)?.Network.BroadcastBlockEntityPacket(Pos, Constants.OpenTeleportPacketId, data);
             }
         }
 
@@ -350,11 +270,31 @@ namespace TeleportationNetwork
 
             if (packetid == Constants.EntityTeleportedPacketId)
             {
-                Entity entity = Api.World.GetEntityById(BitConverter.ToInt64(data, 0));
+                var entity = Api.World.GetEntityById(BitConverter.ToInt64(data, 0));
                 if (entity != null)
                 {
                     ParticleController?.SpawnTeleportParticles(entity);
                 }
+            }
+
+            else if (packetid == Constants.PlayerTeleportedPacketId)
+            {
+                if (Api is ICoreClientAPI capi)
+                {
+                    var addYaw = (2f + data[0]) * GameMath.PIHALF;
+                    capi.Input.MouseYaw += addYaw;
+                    capi.World.Player.Entity.BodyYaw += addYaw * 4f;
+                    capi.World.Player.Entity.WalkYaw += addYaw * 4f;
+                    capi.World.Player.Entity.Pos.Yaw += addYaw * 4f;
+                }
+            }
+
+            else if (packetid == Constants.OpenTeleportPacketId)
+            {
+                using var ms = new MemoryStream(data);
+                using var reader = new BinaryReader(ms);
+                _currentTargetTeleportPos = BlockPos.CreateFromBytes(reader);
+                _activationTime = 0;
             }
         }
 
@@ -369,7 +309,6 @@ namespace TeleportationNetwork
 
             if (forPlayer.WorldData.CurrentGameMode == EnumGameMode.Creative)
             {
-                dsc.AppendLine($"Frame code: {_frameStack?.Collectible?.Code}");
                 dsc.AppendLine("Neighbours:");
                 foreach (Teleport node in Teleport.Neighbours)
                 {
@@ -381,7 +320,6 @@ namespace TeleportationNetwork
         public override void OnBlockUnloaded()
         {
             base.OnBlockUnloaded();
-            SealRenderer?.Dispose();
             TeleportRiftRenderer?.Dispose();
             _sound?.Dispose();
         }
@@ -395,7 +333,6 @@ namespace TeleportationNetwork
                 TeleportManager.Points.Remove(Pos);
             }
 
-            SealRenderer?.Dispose();
             TeleportRiftRenderer?.Dispose();
             _sound?.Dispose();
         }
@@ -403,45 +340,20 @@ namespace TeleportationNetwork
         public override void ToTreeAttributes(ITreeAttribute tree)
         {
             base.ToTreeAttributes(tree);
-            tree.SetString("frameCode", _frameStack?.Collectible.Code.ToString());
+            if (_currentTargetTeleportPos != null)
+                tree.SetBlockPos("activeTeleport", _currentTargetTeleportPos);
         }
 
         public override void FromTreeAttributes(ITreeAttribute tree, IWorldAccessor worldAccessForResolve)
         {
             base.FromTreeAttributes(tree, worldAccessForResolve);
-
-            string? frame = tree.GetString("frameCode");
-            if (frame != null)
-            {
-                Block? block = worldAccessForResolve.GetBlock(new AssetLocation(frame));
-                if (block != null)
-                {
-                    _frameStack = new ItemStack(block);
-                }
-            }
-            else // Legacy 1.12
-            {
-                _frameStack = tree.GetItemstack("frameStack");
-                _frameStack?.ResolveBlockOrItem(worldAccessForResolve);
-            }
-
-            UpdateFrameMesh();
-        }
-
-        private void UpdateFrameMesh()
-        {
-            if (Api is ICoreClientAPI capi && _frameStack != null)
-            {
-                var facing = BlockFacing.FromCode(Block.LastCodePart()) ?? BlockFacing.NORTH;
-                float rotation = facing.HorizontalAngleIndex * 90 - 90;
-                var shapeCode = new AssetLocation(Constants.ModId, "shapes/block/teleport/frame.json");
-                Shape frameShape = Api.Assets.Get<Shape>(shapeCode);
-                capi.Tesselator.TesselateShape(_frameStack.Collectible, frameShape, out _frameMesh, new Vec3f(0, rotation, 0));
-            }
+            _currentTargetTeleportPos = tree.GetBlockPos("activeTeleport", null);
         }
 
         private void UpdateAnimator()
         {
+            return;
+
             if (AnimUtil != null && Api.Side == EnumAppSide.Client)
             {
                 if (AnimUtil.animator != null)
@@ -486,7 +398,6 @@ namespace TeleportationNetwork
             {
                 if (Api.Side == EnumAppSide.Client)
                 {
-                    UpdateFrameMesh();
                     UpdateAnimator();
                 }
 

@@ -56,45 +56,6 @@ namespace TeleportationNetwork
             _temporalGear = api.World.GetItem(new AssetLocation("gear-temporal"));
         }
 
-        private void SpawnCircleEdgeParticle(float radius, Vec3d pos)
-        {
-            _circleParticles.MinPos.Set(MathUtil.RandomPosOnCircleEdge(radius, pos));
-            _circleParticles.Color = GetRandomColor();
-            _api.World.SpawnParticles(_circleParticles);
-        }
-
-        private void SpawnCircleEdgeParticle(float radius, Vec3d pos, int quantity)
-        {
-            for (int i = 0; i < quantity; i++)
-            {
-                SpawnCircleEdgeParticle(radius, pos);
-            }
-        }
-
-        public void SpawnSealEdgeParticle(BlockPos pos)
-        {
-            SpawnCircleEdgeParticle(Constants.SealRadius, GetSealCenter(pos), 3);
-        }
-
-        public void SpawnActiveParticles(BlockPos pos, float time)
-        {
-            _circleParticles.LifeLength = 0.5f + (float)Math.Exp(time) * 0.1f;
-
-            SpawnCircleEdgeParticle(Constants.SealRadius, GetSealCenter(pos), 3 + (int)Math.Exp(time));
-
-            Entity[] entities = MathUtil.GetInCircleEntities(_api, Constants.SealRadius, GetSealCenter(pos));
-            foreach (Entity entity in entities)
-            {
-                float radius = entity.CollisionBox.Width / 1.5f;
-                Vec3d entityPos = entity.SidedPos.XYZ;
-
-                int quantity = (int)(entity.CollisionBox.Width * entity.CollisionBox.Width * (5 + Math.Exp(time)));
-                SpawnCircleEdgeParticle(radius, entityPos, quantity);
-            }
-
-            _circleParticles.LifeLength = 0.5f;
-        }
-
         public void SpawnTeleportParticles(Entity entity)
         {
             float width = entity.CollisionBox.Width;
@@ -108,7 +69,5 @@ namespace TeleportationNetwork
         {
             return _temporalGear.GetRandomColor(_api, null);
         }
-
-        private static Vec3d GetSealCenter(BlockPos pos) => pos.ToVec3d().Add(0.5, 1, 0.5);
     }
 }

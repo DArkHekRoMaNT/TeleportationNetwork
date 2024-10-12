@@ -10,9 +10,6 @@ namespace TeleportationNetwork
         public double RenderOrder => 0.05;
         public int RenderRange => 100;
 
-        public bool Enabled { get; set; }
-        public float Speed { get; set; }
-
         private readonly ICoreClientAPI _api;
         private readonly BlockPos _pos;
         private readonly MeshRef _meshref;
@@ -21,14 +18,16 @@ namespace TeleportationNetwork
         private IShaderProgram _prog;
         private float _counter;
         private int _cnt;
+        private float _rotation;
+        private float _size;
+        private float _activationProgress;
 
-        public NewTeleportRenderer(BlockPos pos, ICoreClientAPI api)
+        public NewTeleportRenderer(BlockPos pos, ICoreClientAPI api, float rotation, float size)
         {
             _api = api;
             _pos = pos;
-
-            Enabled = false;
-            Speed = 0;
+            _rotation = rotation;
+            _size = size;
 
             api.Event.RegisterRenderer(this, EnumRenderStage.AfterBlit, $"{Constants.ModId}-teleport-rift");
             MeshData mesh = QuadMeshUtil.GetQuad();
@@ -37,6 +36,11 @@ namespace TeleportationNetwork
 
             _api.Event.ReloadShader += LoadShader;
             LoadShader();
+        }
+
+        public void SetActivationProgress(float stage)
+        {
+            _activationProgress = GameMath.Clamp(stage, 0, 1);
         }
 
         public void OnRenderFrame(float deltaTime, EnumRenderStage stage)
@@ -113,7 +117,7 @@ namespace TeleportationNetwork
             _prog.Uniform("invFrameSize", new Vec2f(1f / width, 1f / height));
             _prog.Uniform("glich", GameMath.Min(glichEffectStrength * 2, 1));
             _prog.Uniform("glich", GameMath.Min(glichEffectStrength * 2, 1));
-            _prog.Uniform("stage", (1.5f + GameMath.Sin(_counter/5f)*0 + 1f) / 2f);
+            _prog.Uniform("stage", 0.1f + _activationProgress * 0.9f);
             int riftIndex = 0;
 
             _cnt = (_cnt + 1) % 3;
@@ -133,11 +137,14 @@ namespace TeleportationNetwork
             //float dz = (float)(rift.Position.Z - playerPos.Z);
 
             float dx = (float)(_pos.X - camPos.X + 0.5f);
-            float dy = (float)(_pos.Y - camPos.Y + 3.5f);
+            float dy = (float)(_pos.Y - camPos.Y + 0.5f);
             float dz = (float)(_pos.Z - camPos.Z + 0.5f);
 
             var playerPos = _api.World.Player.Entity.Pos;
-            _matrixf.Translate(dx, dy, dz + 0.01 + 3.85f/16f);
+            _matrixf.Translate(dx, dy, dz);
+            _matrixf.RotateYDeg(_rotation);
+            if (_size == 5)
+                _matrixf.Translate(0, 0, 0.25);
             //_matrixf.Rotate(GameMath.PIHALF, 0, -playerPos.Yaw);
             //_matrixf.Rotate(GameMath.PIHALF, 0, 0);
             //_matrixf.Rotate(0, playerPos.Yaw, 0);
@@ -157,7 +164,7 @@ namespace TeleportationNetwork
             //float size = rift.GetNowSize(_api);
             //_matrixf.Scale(size, size, size);
             float wMod = 0.85f + 1 * 0.15f;
-            float size = .75f * 3;
+            float size = .54f * _size;
             _matrixf.Scale(size * wMod, size, size * wMod);
 
             _prog.UniformMatrix("modelMatrix", _matrixf.Values);

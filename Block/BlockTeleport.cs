@@ -5,13 +5,12 @@ using Vintagestory.API.Common;
 using Vintagestory.API.Common.Entities;
 using Vintagestory.API.MathTools;
 using Vintagestory.API.Util;
+using Vintagestory.GameContent;
 
 namespace TeleportationNetwork
 {
-    public class BlockTeleport : Block
+    public class BlockTeleport : Block, IMultiBlockColSelBoxes
     {
-        private WorldInteraction FrameInteraction { get; set; } = new();
-
         public bool IsBroken => Variant["state"] == "broken";
         public bool IsNormal => Variant["state"] == "normal";
 
@@ -20,27 +19,10 @@ namespace TeleportationNetwork
         public override void OnLoaded(ICoreAPI api)
         {
             base.OnLoaded(api);
-            InitWorldInteractions();
             if (api is ICoreClientAPI capi)
             {
                 ParticleController = new TeleportParticleController(capi);
             }
-        }
-
-        private void InitWorldInteractions()
-        {
-            var frames = api.World.Blocks
-                .Where((b) => b.DrawType == EnumDrawType.Cube)
-                .Select((Block b) => new ItemStack(b))
-                .ToArray();
-
-            FrameInteraction = new WorldInteraction
-            {
-                ActionLangCode = $"{Constants.ModId}:blockhelp-teleport-change-frame",
-                MouseButton = EnumMouseButton.Right,
-                HotKeyCode = "sprint",
-                Itemstacks = frames
-            };
         }
 
         public override bool AllowSnowCoverage(IWorldAccessor world, BlockPos blockPos)
@@ -58,28 +40,9 @@ namespace TeleportationNetwork
             return [];
         }
 
-        public override int GetRetention(BlockPos pos, BlockFacing facing, EnumRetentionType type)
-        {
-            if (api.World.BlockAccessor.GetBlockEntity(pos) is BlockEntityTeleport be &&
-                be.FrameStack?.Block != null)
-            {
-                return be.FrameStack.Block.GetRetention(pos, facing, type);
-            }
-
-            return base.GetRetention(pos, facing, type);
-        }
-
         public override float GetResistance(IBlockAccessor blockAccessor, BlockPos pos)
         {
             return Core.Config.Unbreakable ? 100000 : base.GetResistance(blockAccessor, pos);
-        }
-
-        public override void OnEntityCollide(IWorldAccessor world, Entity entity, BlockPos pos, BlockFacing facing, Vec3d collideSpeed, bool isImpact)
-        {
-            if (api.World.BlockAccessor.GetBlockEntity(pos) is BlockEntityTeleport be)
-            {
-                be.OnEntityCollide(entity);
-            }
         }
 
         public override bool OnBlockInteractStart(IWorldAccessor world, IPlayer byPlayer, BlockSelection blockSel)
@@ -92,10 +55,17 @@ namespace TeleportationNetwork
                     return true;
                 }
 
+                // select target
+                if (IsNormal)
+                {
+                    be.OpenTeleportDialog();
+                    return true;
+                }
+
+                // repair
                 ItemSlot activeSlot = byPlayer.InventoryManager.ActiveHotbarSlot;
                 if (!activeSlot.Empty)
                 {
-                    // repair
                     if (IsBroken && activeSlot.Itemstack.Collectible.Code == GetRepairItem())
                     {
                         Block newBlock = world.GetBlock(CodeWithVariant("state", "normal"));
@@ -115,22 +85,6 @@ namespace TeleportationNetwork
 
                         world.PlaySoundAt(new AssetLocation("sounds/effect/latch"), blockSel.Position.X + 0.5, blockSel.Position.Y, blockSel.Position.Z + 0.5, byPlayer, true, 16);
                         return true;
-                    }
-
-                    // change frame
-                    if (byPlayer.Entity.Controls.Sprint &&
-                        activeSlot.Itemstack.Class == EnumItemClass.Block &&
-                        activeSlot.Itemstack.Block.DrawType == EnumDrawType.Cube &&
-                        !activeSlot.Itemstack.Collectible.Equals(activeSlot.Itemstack, be.FrameStack))
-                    {
-                        if (byPlayer.WorldData.CurrentGameMode == EnumGameMode.Creative ||
-                            world.Claims.TryAccess(byPlayer, blockSel.Position, EnumBlockAccessFlags.BuildOrBreak))
-                        {
-                            api.World.SpawnItemEntity(be.FrameStack, blockSel.Position.ToVec3d().Add(TopMiddlePos));
-                            be.FrameStack = activeSlot.TakeOut(1);
-                            be.MarkDirty(true);
-                            return true;
-                        }
                     }
                 }
             }
@@ -160,11 +114,17 @@ namespace TeleportationNetwork
             base.OnBlockBroken(world, pos, byPlayer, dropQuantityMultiplier);
         }
 
+        public override bool CanPlaceBlock(IWorldAccessor world, IPlayer byPlayer, BlockSelection blockSel, ref string failureCode)
+        {
+            ;
+            return base.CanPlaceBlock(world, byPlayer, blockSel.AddPosCopy(0, 1, 0), ref failureCode);
+        }
+
         public override bool DoPlaceBlock(IWorldAccessor world, IPlayer byPlayer, BlockSelection blockSel, ItemStack byItemStack)
         {
-            bool flag = base.DoPlaceBlock(world, byPlayer, blockSel, byItemStack);
+            bool flag = base.DoPlaceBlock(world, byPlayer, blockSel.AddPosCopy(0, 1, 0), byItemStack);
 
-            if (world.BlockAccessor.GetBlockEntity(blockSel.Position) is BlockEntityTeleport be)
+            if (world.BlockAccessor.GetBlockEntity(blockSel.Position.AddCopy(0, 1, 0)) is BlockEntityTeleport be)
             {
                 if (api.Side == EnumAppSide.Server)
                 {
@@ -173,59 +133,9 @@ namespace TeleportationNetwork
                         be.ActivateTeleportByPlayer(byPlayer.PlayerUID);
                     }
                 }
-
-                string? frameCode = byItemStack?.Attributes.GetString("frameCode");
-                if (frameCode != null)
-                {
-                    Block? frameBlock = world.GetBlock(new AssetLocation(frameCode));
-                    if (frameBlock != null)
-                    {
-                        be.FrameStack = new ItemStack(frameBlock);
-                    }
-                }
             }
 
             return flag;
-        }
-
-        public override ItemStack OnPickBlock(IWorldAccessor world, BlockPos pos)
-        {
-            ItemStack stack = base.OnPickBlock(world, pos) ?? new(this);
-            if (world.BlockAccessor.GetBlockEntity(pos) is BlockEntityTeleport be)
-            {
-                AssetLocation? frameCode = be.FrameStack?.Collectible?.Code;
-                if (frameCode != null)
-                {
-                    stack.Attributes.SetString("frameCode", frameCode.ToString());
-                }
-            }
-            return stack;
-        }
-
-        public override void OnBeforeRender(ICoreClientAPI capi, ItemStack itemstack,
-            EnumItemRenderTarget target, ref ItemRenderInfo renderinfo)
-        {
-            string? frameStackCode = itemstack.Attributes.GetString("frameCode");
-            if (frameStackCode != null)
-            {
-                string key = $"{Constants.ModId}_teleportFrameMesh_{Code}_{frameStackCode}";
-                renderinfo.ModelRef = ObjectCacheUtil.GetOrCreate(capi, key, () =>
-                {
-                    capi.Tesselator.TesselateBlock(this, out MeshData baseMesh);
-
-                    Block? frameBlock = capi.World.GetBlock(new AssetLocation(frameStackCode));
-                    if (frameBlock != null)
-                    {
-                        var shapeCode = new AssetLocation(Constants.ModId, "shapes/block/teleport/frame.json");
-                        Shape frameShape = capi.Assets.Get<Shape>(shapeCode);
-                        capi.Tesselator.TesselateShape(frameBlock, frameShape, out MeshData frameMesh);
-                        baseMesh.AddMeshData(frameMesh);
-                    }
-
-                    return capi.Render.UploadMultiTextureMesh(baseMesh);
-                });
-            }
-            base.OnBeforeRender(capi, itemstack, target, ref renderinfo);
         }
 
         public override ItemStack[] GetDrops(IWorldAccessor world, BlockPos pos, IPlayer byPlayer, float dropQuantityMultiplier = 1)
@@ -269,7 +179,7 @@ namespace TeleportationNetwork
                 });
             }
 
-            return interactions.Append(FrameInteraction);
+            return interactions;
         }
 
         public AssetLocation GetRepairItem()
@@ -278,6 +188,28 @@ namespace TeleportationNetwork
             if (item == null || api.World.GetCollectibleObject(new AssetLocation(item)) == null)
                 return new AssetLocation("unknown");
             return new AssetLocation(item);
+        }
+
+        public override Cuboidf[] GetCollisionBoxes(IBlockAccessor blockAccessor, BlockPos pos)
+        {
+            return [];
+        }
+
+        public Cuboidf[] MBGetCollisionBoxes(IBlockAccessor blockAccessor, BlockPos pos, Vec3i offset)
+        {
+            return [];
+        }
+
+        public override Cuboidf[] GetSelectionBoxes(IBlockAccessor blockAccessor, BlockPos pos)
+        {
+            if (api is ICoreClientAPI capi && !capi.World.Player.Entity.Controls.CtrlKey)
+                return [];
+            return base.GetSelectionBoxes(blockAccessor, pos);
+        }
+
+        public Cuboidf[] MBGetSelectionBoxes(IBlockAccessor blockAccessor, BlockPos pos, Vec3i offset)
+        {
+            return GetSelectionBoxes(blockAccessor, pos + offset.ToBlockPos());
         }
     }
 }

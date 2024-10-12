@@ -4,10 +4,29 @@
   "entityclass": "BETeleport",
   "blockmaterial": "Stone",
   "shapeByType": {
-    "*-broken-*": { "base": "block/gate" },
-    "*-normal-*": { "base": "block/teleport/normal" }
+    "*-broken-*": { "base": "block/newteleport/{type}", "rotateYByType": { "*-north": 0, "*-west": 90, "*-south": 180, "*-east": 270 } },
+    "*-normal-*": { "base": "block/newteleport/{type}", "rotateYByType": { "*-north": 0, "*-west": 90, "*-south": 180, "*-east": 270 } }
   },
-  "behaviors": [{ "name": "WrenchOrientable", "properties": { "baseCode": "teleport-{state}"  } }],
+  "behaviors": [
+    { "name": "HorizontalOrientable" },
+    { "name": "WrenchOrientable", "properties": { "baseCode": "teleport-{state}"  } },
+    {
+      "name": "Multiblock",
+      "propertiesByType": {
+        "*": {
+          "sizexByType": { "@(.*)-(north|south)": 3, "@(.*)-(east|west)": 1 },
+          "sizey": 3,
+          "sizezByType": { "@(.*)-(north|south)": 1, "@(.*)-(east|west)": 3 },
+          "cpositionByType": {
+            "*-north": { "x": 1, "y": 1, "z": 0 },
+            "*-east": { "x": 0, "y": 1, "z": 1 },
+            "*-south": { "x": 1, "y": 1, "z": 0 },
+            "*-west": { "x": 0, "y": 1, "z": 1 }
+          }
+        }
+      }
+    }
+  ],
   "textures": {
     "darkwood": { "base": "game:block/machine/statictranslocator/base_darkwood" },
     "rusty": { "base": "game:block/machine/statictranslocator/rusty" },
@@ -20,6 +39,7 @@
     "seal": { "base": "block/teleport/seal" }
   },
   "variantgroups": [
+    { "code": "type", "states": ["smallgate", "largegate"] },
     { "code": "state", "states": [ "broken", "normal" ] },
     { "code": "side", "loadFromProperties": "abstract/horizontalorientation" }
   ],
@@ -28,8 +48,7 @@
       "tabs": [ "general", "decorative", "tpnet" ],
       "stacks": [{
         "type": "block",
-        "code": "teleport-{state}-north",
-        "attributes": { "frameCode": "game:cobblestone-granite" }
+        "code": "teleport-{type}-{state}-{side}"
       }]
     }]
   },
@@ -49,5 +68,8 @@
     "translation": { "x": -1.2, "y": -1.1, "z": -0.8 },
     "rotation": { "x": -2, "y": 25, "z": -78 },
     "scale": 0.37
-  }
+  },
+  "guiTransform": {
+		"scale": 0.31
+	}
 }
