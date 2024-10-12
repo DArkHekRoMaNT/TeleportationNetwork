@@ -61,6 +61,35 @@ float cnoise(vec2 x) {
     return mix(a, b, u.x) + (c - a) * u.y * (1.0 - u.x) + (d - b) * u.x * u.y;
 }
 
+
+float rand(vec2 n) { 
+    return fract(sin(dot(n, vec2(12.9898, 4.1414))) * 43758.5453);
+}
+
+float snoise(vec2 p){
+    vec2 ip = floor(p);
+    vec2 u = fract(p);
+    u = u*u*(3.0-2.0*u);
+
+    float res = mix(
+        mix(rand(ip),rand(ip+vec2(1.0,0.0)),u.x),
+        mix(rand(ip+vec2(0.0,1.0)),rand(ip+vec2(1.0,1.0)),u.x),u.y);
+    return res*res;
+}
+
+vec4 rusty(vec4 col) {
+	vec3 rust = vec3(
+		(col.r * 0.393) + (col.g * 0.769) + (col.b * 0.189),
+		(col.r * 0.349) + (col.g * 0.686) + (col.b * 0.168),
+		(col.r * 0.272) + (col.g * 0.534) + (col.b * 0.131));
+
+	col.r = rust.r * glich + col.r * (1-glich);
+	col.g = rust.g * glich + col.g * (1-glich);
+	col.b = rust.b * glich + col.b * (1-glich);
+
+    return col;
+}
+
 void main()
 {
 	float x = gl_FragCoord.x * invFrameSize.x;
@@ -112,35 +141,62 @@ void main()
 	//col.g += portalColor.g;
 	//col.b += portalColor.b;
 
+    
 	vec2 uv2 = uv - 0.5;
-	st  = vec2(
+    vec2 uv3 = uv - 0.5;
+    float l = length(uv3);
+    
+    vec3 color = vec3(1, 3, 5) * tp1;
+    vec2 wv = uv3 * 0.075;
+    float d = length(wv);
+    float w = 0.022 / d;
+    w = w * w * w;
+    color *= w;
+
+    if (l > 0.41) {
+        col = vec4(color, (color.r + color.g + color.b)/3 - 0.4);
+    }
+    else {
+        //uv3 = uv * 0.01;
+        //float speed = 0.7;
+        //float size = 100.0;
+        //float a = snoise(vec2(uv3.x*size*5.0+3.0*speed*time, uv3.y*size*3.0+3.0*speed*time));
+        //float b = snoise(vec2(uv3.x*size*8.0+2.0*speed*time, uv3.y*size*8.0-2.0*speed*time));
+        //float c = snoise(vec2(uv3.x*size*6.0-2.5*speed*time, uv3.y*size*6.0+1.0*speed*time));
+        //float d = snoise(vec2(uv3.x*size*4.0-1.0*speed*time, uv3.y*size*5.0-2.0*speed*time));
+        //a = 0.1 / a;
+        //b = 0.1 / b;
+        //c = 0.1 / c;
+        //d = 0.1 / d;
+        //vec3 color1 = vec3(1, 3, 5);
+        //vec3 color2 = vec3(1, 5, 3);
+        //vec3 color3 = vec3(3, 1, 5);
+        //vec3 color4 = vec3(1, 1, 3);
+        //color = (a*color1+b*color2+c*color3+d*color4)/7.0;
+        //fragColor = vec4(color, 1.0);
+        //fragColor = vec4(c*color1, 1.0);
+
+        st  = vec2(
             atan(uv2.y, uv2.x) ,
             length(uv2) * 1. + time * 0.1
         );
-    st.x += st.y * 1.1;// - time * 0.3;
-    st.x = mod(st.x , TWO_PI);
+        st.x += st.y * 1.1;// - time * 0.3;
+        st.x = mod(st.x , TWO_PI);
     
-    float n = fbm(st) * 1.5 - 1.0;
-    n = max(n, 0.1);
-    float circle = max(1.0 - circle(uv2), 0.0);
+        float n = fbm(st) * 1.5 - 1.0;
+        n = max(n, 0.1);
+        float circle = max(1.0 - circle(uv2), 0.0);
     
-    float a = n/circle;
-    float mask = smoothstep(0.41, 0.4, length(uv2));
-    a *= 0.4 - mask * 0.2;
+        float a = n/circle;
+        float mask = smoothstep(0.41, 0.4, length(uv2));
+        a *= 0.4 - mask * 0.2;
 
-	vec3 portalColor = mix(tp1 * 0.5, tp2 * 1.1, noise);
-	col.r += portalColor.r * a;
-	col.g += portalColor.g * a;
-	col.b += portalColor.b * a;
+	    vec3 portalColor = mix(tp1 * 0.5, tp2 * 1.1, noise);
+	    col.r += portalColor.r * a;
+	    col.g += portalColor.g * a;
+	    col.b += portalColor.b * a;
+    }
 
-	vec3 rust = vec3(
-		(col.r * 0.393) + (col.g * 0.769) + (col.b * 0.189),
-		(col.r * 0.349) + (col.g * 0.686) + (col.b * 0.168),
-		(col.r * 0.272) + (col.g * 0.534) + (col.b * 0.131));
-
-	col.r = rust.r * glich + col.r * (1-glich);
-	col.g = rust.g * glich + col.g * (1-glich);
-	col.b = rust.b * glich + col.b * (1-glich);
-
-	outColor = applyFog(col, fogAmount);
+	outColor = applyFog(rusty(col), fogAmount);
+    return;
 }

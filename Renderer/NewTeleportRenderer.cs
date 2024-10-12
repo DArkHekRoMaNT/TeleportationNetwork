@@ -131,25 +131,27 @@ namespace TeleportationNetwork
             //float dz = (float)(rift.Position.Z - playerPos.Z);
 
             float dx = (float)(_pos.X - camPos.X + 0.5f);
-            float dy = (float)(_pos.Y - camPos.Y + 3f);
+            float dy = (float)(_pos.Y - camPos.Y + 3.5f);
             float dz = (float)(_pos.Z - camPos.Z + 0.5f);
 
             var playerPos = _api.World.Player.Entity.Pos;
-            _matrixf.Translate(dx, dy, dz);
+            _matrixf.Translate(dx, dy, dz + 0.01 + 3.85f/16f);
             //_matrixf.Rotate(GameMath.PIHALF, 0, -playerPos.Yaw);
+            //_matrixf.Rotate(GameMath.PIHALF, 0, 0);
             _matrixf.ReverseMul(_api.Render.CameraMatrixOriginf);
+            //_matrixf.Rotate(0, playerPos.Yaw, 0);
 
-            _matrixf.Values[0] = 1f;
-            _matrixf.Values[1] = 0f;
-            _matrixf.Values[2] = 0f;
-
-            //matrixf.Values[4] = 0f;
-            //matrixf.Values[5] = 1f;
-            //matrixf.Values[6] = 0f;
-
-            _matrixf.Values[8] = 0f;
-            _matrixf.Values[9] = 0f;
-            _matrixf.Values[10] = 1f;
+            //_matrixf.Values[0] = 1f;
+            //_matrixf.Values[1] = 0f;
+            //_matrixf.Values[2] = 0f;
+            //
+            ////_matrixf.Values[4] = 0f;
+            ////_matrixf.Values[5] = 1f;
+            ////_matrixf.Values[6] = 0f;
+            //
+            //_matrixf.Values[8] = 0f;
+            //_matrixf.Values[9] = 0f;
+            //_matrixf.Values[10] = 1f;
 
             //float size = rift.GetNowSize(_api);
             //_matrixf.Scale(size, size, size);
