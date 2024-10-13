@@ -76,6 +76,36 @@ namespace TeleportationNetwork
             this[teleport.Pos] = teleport;
         }
 
+        public void SetSafe(Teleport teleport, long lastUpdateTime)
+        {
+            var passed = false;
+
+            lock (_pointsLock)
+            {
+                if (_teleports.TryGetValue(teleport.Pos, out Teleport? value))
+                {
+                    if (lastUpdateTime >= value.LastUpdateTime)
+                    {
+                        _teleports[teleport.Pos] = teleport;
+                        teleport.LastUpdateTime = lastUpdateTime;
+                        passed = true;
+                    }
+                }
+                else
+                {
+                    _teleports.Add(teleport.Pos, teleport);
+                    teleport.LastUpdateTime = lastUpdateTime;
+                    passed = true;
+                }
+            }
+
+            if (passed)
+            {
+                ValueChanged?.Invoke(teleport);
+                Changed?.Invoke();
+            }
+        }
+
         public bool Remove(BlockPos pos)
         {
             var removed = false;
@@ -146,7 +176,7 @@ namespace TeleportationNetwork
                 var list = new TeleportList();
                 foreach (var teleport in _teleports)
                 {
-                    list[teleport.Key] = teleport.Value.ForPlayer(player.PlayerUID);
+                    list[teleport.Key] = teleport.Value.ForPlayerOnly(player.PlayerUID);
                 }
                 return list;
             }

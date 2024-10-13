@@ -1,51 +1,60 @@
 using ProtoBuf;
+using System;
 using System.Collections.Generic;
+using System.Xml.Linq;
 using Vintagestory.API.Client;
+using Vintagestory.API.Common;
 using Vintagestory.API.MathTools;
 
 namespace TeleportationNetwork
 {
-    [ProtoContract(ImplicitFields = ImplicitFields.AllPublic)]
+    [ProtoContract]
     public class Teleport
     {
-        private string _name = "";
+        [ProtoMember(1)] public BlockPos Pos { get; private set; }
 
-        public BlockPos Pos { get; private set; }
+        [ProtoMember(2)]
         public string Name
         {
-            get => _name ?? "null";
-            set
-            {
-                _name = value?.Replace("{", "").Replace("}", "") ?? "null";
-            }
+            get => _name;
+            set => _name = string.IsNullOrEmpty(value) ? "Unknown" : value.Replace("{", "").Replace("}", "");
         }
-        public bool Enabled { get; set; }
 
-        public List<Teleport> Neighbours { get; private set; }
-        public List<string> ActivatedByPlayers { get; private set; }
-        public Dictionary<string, TeleportClientData> ClientData { get; private set; }
+        [ProtoMember(3)] public bool Enabled { get; set; }
+        [ProtoMember(4)] public BlockPos? Target { get; set; }
+        [ProtoMember(5)] public float Size { get; set; }
+        [ProtoMember(6)] public int OrientationIndex { get; set; }
+        [ProtoMember(7)] public List<string> ActivatedByPlayers { get; private set; }
+        [ProtoMember(8)] public Dictionary<string, TeleportClientData> ClientData { get; private set; }
+
+        public long LastUpdateTime { get; set; }
+
+        public BlockFacing? Orientation => OrientationIndex == -1 ? null : BlockFacing.ALLFACES[OrientationIndex];
+
+        private string _name = string.Empty;
 
         private Teleport()
         {
-            Name = "null";
+            Name = "Not setted";
             Enabled = false;
             Pos = new BlockPos(0);
-            Neighbours = [];
+            Target = null;
+            Size = 0;
+            OrientationIndex = -1;
             ActivatedByPlayers = [];
             ClientData = [];
+            LastUpdateTime = 0;
         }
 
-        public Teleport(BlockPos pos) : this()
-        {
-            Pos = pos;
-        }
-
-        public Teleport(BlockPos pos, string name, bool enabled = false) : this()
+        public Teleport(BlockPos pos, string name, bool enabled, Block block) : this()
         {
             Pos = pos;
             Name = name;
             Enabled = enabled;
+            UpdateBlockInfo(block);
         }
+
+        public TeleportClientData GetClientData(ICoreClientAPI capi) => GetClientData(capi.World.Player.PlayerUID);
 
         public TeleportClientData GetClientData(string playerUID)
         {
@@ -53,8 +62,7 @@ namespace TeleportationNetwork
             return data?.Clone() ?? new TeleportClientData();
         }
 
-        public TeleportClientData GetClientData(ICoreClientAPI capi)
-            => GetClientData(capi.World.Player.PlayerUID);
+        public void SetClientData(ICoreClientAPI capi, TeleportClientData data) => SetClientData(capi.World.Player.PlayerUID, data);
 
         public void SetClientData(string playerUID, TeleportClientData data)
         {
@@ -68,10 +76,7 @@ namespace TeleportationNetwork
             }
         }
 
-        public void SetClientData(ICoreClientAPI capi, TeleportClientData data)
-            => SetClientData(capi.World.Player.PlayerUID, data);
-
-        public Teleport ForPlayer(string playerUID)
+        public Teleport ForPlayerOnly(string playerUID)
         {
             var teleport = (Teleport)MemberwiseClone();
             teleport.ClientData = new Dictionary<string, TeleportClientData>
@@ -79,6 +84,12 @@ namespace TeleportationNetwork
                 { playerUID, GetClientData(playerUID) }
             };
             return teleport;
+        }
+
+        public void UpdateBlockInfo(Block block)
+        {
+            OrientationIndex = BlockFacing.FromCode(block.LastCodePart())?.Index ?? -1;
+            Size = block.Attributes["gateSize"].AsFloat(0f);
         }
     }
 }

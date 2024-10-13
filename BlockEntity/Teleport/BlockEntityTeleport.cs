@@ -1,7 +1,6 @@
 using System;
-using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Text;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
@@ -10,52 +9,34 @@ using Vintagestory.API.Datastructures;
 using Vintagestory.API.MathTools;
 using Vintagestory.API.Server;
 using Vintagestory.GameContent;
-using static Microsoft.WindowsAPICodePack.Shell.PropertySystem.SystemProperties.System;
 
 namespace TeleportationNetwork
 {
     public class BlockEntityTeleport : BlockEntity
     {
-        [MemberNotNullWhen(true, nameof(_currentTargetTeleportPos))]
-        public bool Active => _currentTargetTeleportPos != null && _activationTime > Constants.TeleportActivationTime;
+        public ILogger ModLogger => _modLogger ?? Api.Logger;
+        public bool Active => Teleport.Target != null && _activationTime >= Constants.TeleportActivationTime;
         public bool Repaired => (Block as BlockTeleport)?.IsNormal ?? false;
-        public float Size => (Block as BlockTeleport)?.Variant["type"] == "smallgate" ? 5f : 10f; //TODO: Move to attributes
+        public Teleport Teleport => _teleportCached ??= GetOrCreateTeleport();
+        public Teleport? TargetTeleport => Teleport.Target == null ? null : _targetTeleportCached ??= TeleportManager.Points[Teleport.Target];
 
-        private GuiDialogTeleportList? _teleportDlg;
-        private GuiDialogEditTeleport? _editDlg;
-
+        private TeleportManager TeleportManager { get; set; } = null!;
+        private TeleportParticleController? ParticleController => (Block as BlockTeleport)?.ParticleController;
         private BlockEntityAnimationUtil? AnimUtil => GetBehavior<BEBehaviorAnimatable>()?.animUtil;
 
-        private NewTeleportRenderer? TeleportRiftRenderer { get; set; }
-
-        private TeleportParticleController? ParticleController => (Block as BlockTeleport)?.ParticleController;
-        private TeleportManager TeleportManager { get; set; } = null!;
+        // Client side only
+        private TeleportRiftRenderer? _teleportRiftRenderer;
+        private GuiDialogTeleportList? _teleportDlg;
+        private GuiDialogEditTeleport? _editDlg;
 
         private ILogger? _modLogger;
         private ILoadedSound? _sound;
         private float _soundVolume;
         private float _soundPith;
-
         private float _activationTime;
-        private BlockPos? _currentTargetTeleportPos;
-
-        public Teleport Teleport
-        {
-            get
-            {
-                Teleport? teleport = TeleportManager.Points[Pos];
-
-                if (teleport == null)
-                {
-                    CreateTeleport();
-                    return TeleportManager.Points[Pos]!;
-                }
-
-                return teleport;
-            }
-        }
-
-        public ILogger ModLogger => _modLogger ?? Api.Logger;
+        private Teleport? _teleportCached = null;
+        private Teleport? _targetTeleportCached = null;
+        private BlockPos? _lastTargetTeleport = null;
 
         public override void Initialize(ICoreAPI api)
         {
@@ -71,14 +52,7 @@ namespace TeleportationNetwork
 
             if (api is ICoreClientAPI capi)
             {
-                TeleportRiftRenderer = new NewTeleportRenderer(Pos, capi, Block.LastCodePart() switch
-                {
-                    "north" => 0,
-                    "west" => 90,
-                    "south" => 180,
-                    "east" => 270,
-                    _ => 0
-                }, Size);
+                _teleportRiftRenderer = new TeleportRiftRenderer(Pos, capi, Block.Shape.rotateY);
 
                 _sound = capi.World.LoadSound(new SoundParams
                 {
@@ -93,6 +67,14 @@ namespace TeleportationNetwork
                 UpdateAnimator();
             }
 
+            TeleportManager.Points.ValueChanged += (teleport) =>
+            {
+                if (teleport.Pos == Pos)
+                {
+                    MarkDirty(true);
+                }
+            };
+
             RegisterGameTickListener(OnGameTick, 50);
         }
 
@@ -100,53 +82,44 @@ namespace TeleportationNetwork
         {
             if (!Repaired) return;
 
-            if (_currentTargetTeleportPos != null)
-                _activationTime += dt;
-
-            TeleportRiftRenderer?.SetActivationProgress(_activationTime / Constants.TeleportActivationTime);
-
+            _teleportRiftRenderer?.SetActivationProgress(_activationTime / Constants.TeleportActivationTime);
             UpdateSound(dt);
 
-            if (!Active) return;
-
-            var target = TeleportManager.Points[_currentTargetTeleportPos];
-            if (target == null)
+            if (Teleport.Target != null && (_lastTargetTeleport == Teleport.Target || _activationTime == 0))
             {
-                _currentTargetTeleportPos = null;
+                _activationTime = Math.Min(_activationTime + dt, Constants.TeleportActivationTime);
+                (Block as BlockTeleport)?.SetActive(true, Pos);
+            }
+            else
+            {
+                _activationTime = Math.Max(_activationTime - dt * 2, 0);
+                (Block as BlockTeleport)?.SetActive(false, Pos);
                 return;
             }
+            _lastTargetTeleport = Teleport.Target;
 
-            if (Api is ICoreServerAPI sapi)
+            if (!Active || Teleport.Target == null) return;
+            if (!TeleportManager.CheckTeleportLink(Teleport)) return;
+
+            if (TargetTeleport == null) return;
+
+            var orientation = Teleport.Orientation;
+            var targetOrientation = TargetTeleport.Orientation;
+            if (Api is ICoreServerAPI sapi && orientation != null && targetOrientation != null)
             {
-                static Vec3d ToGateCenter(BlockPos pos, BlockFacing facing, float size)
-                {
-                    return pos.ToVec3d().Add(0.5) - facing.Normalf.ToVec3d().Mul(0.25 * (size / 5f));
-                }
-
-                var orientation = BlockFacing.FromCode(Block.LastCodePart());
-                var center = ToGateCenter(Pos, orientation, Size);
-                var entities = MathUtil.GetInCyllinderEntities(Api, Size / 2f, 0.5f, center, orientation);
+                var center = Teleport.GetGateCenter();
+                var entities = MathUtil.GetInCyllinderEntities(Api, Teleport.Size / 2f, 0.5f, center, orientation);
 
                 if (entities.Length > 0)
                 {
-                    ModLogger.Notification($"Entities {string.Join(", ", entities.Select(x => x.GetName()))} at {Api.Side}");
-                    if (Api.World.BlockAccessor.GetBlock(target.Pos) is not BlockTeleport targetBlock ||
-                        Api.World.BlockAccessor.GetBlockEntity(target.Pos) is not BlockEntityTeleport targetBE)
-                    {
-                        _currentTargetTeleportPos = null;
-                        return;
-                    }
-
-                    var targetOrientation = BlockFacing.FromCode(targetBlock.LastCodePart());
-                    var targetCenter = ToGateCenter(target.Pos, targetOrientation, targetBE.Size);
+                    var targetCenter = TargetTeleport.GetGateCenter();
                     foreach (var entity in entities)
                     {
                         if (entity.IsActivityRunning(Constants.TeleportCooldownActivityName))
                             continue;
 
-                        var point = targetCenter;
-                        point += entity.Pos.XYZ - center;
-                        point -= targetOrientation.Normalf.ToVec3d();
+                        var point = TargetTeleport.GetTargetPos();
+                        point += (entity.Pos.XYZ - center) * (TargetTeleport.Size / Teleport.Size); // Offset
 
                         var entityPos = entity.Pos.Copy();
                         entityPos.SetPos(point);
@@ -161,7 +134,7 @@ namespace TeleportationNetwork
                         }
 
                         TeleportUtil.StabilityRelatedTeleportTo(entity, entityPos, ModLogger, () => AfterTeleportEntity(entity));
-                        ModLogger.Notification($"{entity?.GetName()} teleported to {point} ({target.Name})");
+                        ModLogger.Notification($"{entity?.GetName()} teleported to {point} ({TargetTeleport.Name})");
                     }
                 }
             }
@@ -172,7 +145,7 @@ namespace TeleportationNetwork
             var soundLoc = new AssetLocation("sounds/effect/translocate-breakdimension.ogg");
             entity.World.PlaySoundAt(soundLoc, entity, null, true, 32, .5f);
             ((ICoreServerAPI)Api).Network.BroadcastBlockEntityPacket(
-                _currentTargetTeleportPos,
+                Teleport.Target,
                 Constants.EntityTeleportedPacketId,
                 BitConverter.GetBytes(entity.EntityId));
         }
@@ -211,19 +184,26 @@ namespace TeleportationNetwork
             }
         }
 
-        public void CreateTeleport()
+        private Teleport GetOrCreateTeleport()
+        {
+            var teleport = TeleportManager.Points[Pos];
+            teleport ??= CreateTeleport();
+
+            _teleportRiftRenderer?.Update(teleport);
+            _targetTeleportCached = null;
+
+            return teleport;
+        }
+
+        private Teleport CreateTeleport()
         {
             if (!TeleportManager.Points.Contains(Pos))
             {
-                if (Api.Side == EnumAppSide.Client)
-                {
-                    ModLogger.Error("Creating teleport on client side!");
-                }
-
-                string name = TeleportManager.NameGenerator.Next();
-                var teleport = new Teleport(Pos, name, Repaired);
+                var name = TeleportManager.NameGenerator.Next();
+                var teleport = new Teleport(Pos, name, Repaired, Block);
                 TeleportManager.Points.Set(teleport);
             }
+            return TeleportManager.Points[Pos]!;
         }
 
         public void OpenEditDialog()
@@ -250,6 +230,21 @@ namespace TeleportationNetwork
             }
         }
 
+        public override void ToTreeAttributes(ITreeAttribute tree)
+        {
+            base.ToTreeAttributes(tree);
+            tree.SetFloat("activationTime", _activationTime);
+            if (_lastTargetTeleport != null)
+                tree.SetBlockPos("lastTargetTeleport", _lastTargetTeleport);
+        }
+
+        public override void FromTreeAttributes(ITreeAttribute tree, IWorldAccessor worldAccessForResolve)
+        {
+            base.FromTreeAttributes(tree, worldAccessForResolve);
+            _activationTime = tree.GetFloat("activationTime");
+            _lastTargetTeleport = tree.GetBlockPos("lastTargetTeleport");
+        }
+
         public override void OnReceivedClientPacket(IPlayer fromPlayer, int packetid, byte[] data)
         {
             base.OnReceivedClientPacket(fromPlayer, packetid, data);
@@ -258,9 +253,13 @@ namespace TeleportationNetwork
             {
                 using var ms = new MemoryStream(data);
                 using var reader = new BinaryReader(ms);
-                _currentTargetTeleportPos = BlockPos.CreateFromBytes(reader);
-                _activationTime = 0;
-                (Api as ICoreServerAPI)?.Network.BroadcastBlockEntityPacket(Pos, Constants.OpenTeleportPacketId, data);
+                var pos = BlockPos.CreateFromBytes(reader);
+                TeleportManager.LinkTeleport(Teleport, pos);
+            }
+
+            if (packetid == Constants.CloseTeleportPacketId)
+            {
+                TeleportManager.UnlinkTeleport(Teleport);
             }
         }
 
@@ -288,14 +287,6 @@ namespace TeleportationNetwork
                     capi.World.Player.Entity.Pos.Yaw += addYaw * 4f;
                 }
             }
-
-            else if (packetid == Constants.OpenTeleportPacketId)
-            {
-                using var ms = new MemoryStream(data);
-                using var reader = new BinaryReader(ms);
-                _currentTargetTeleportPos = BlockPos.CreateFromBytes(reader);
-                _activationTime = 0;
-            }
         }
 
         public override void GetBlockInfo(IPlayer forPlayer, StringBuilder dsc)
@@ -304,15 +295,13 @@ namespace TeleportationNetwork
 
             if (Repaired)
             {
-                dsc.AppendLine(Teleport.Name);
-            }
-
-            if (forPlayer.WorldData.CurrentGameMode == EnumGameMode.Creative)
-            {
-                dsc.AppendLine("Neighbours:");
-                foreach (Teleport node in Teleport.Neighbours)
+                if (Active)
                 {
-                    dsc.AppendLine($"*** {node.Name}");
+                    dsc.AppendLine($"{Teleport.Name} &gt;&gt;&gt; {TargetTeleport?.Name}");
+                }
+                else
+                {
+                    dsc.AppendLine(Teleport.Name);
                 }
             }
         }
@@ -320,7 +309,7 @@ namespace TeleportationNetwork
         public override void OnBlockUnloaded()
         {
             base.OnBlockUnloaded();
-            TeleportRiftRenderer?.Dispose();
+            _teleportRiftRenderer?.Dispose();
             _sound?.Dispose();
         }
 
@@ -333,21 +322,8 @@ namespace TeleportationNetwork
                 TeleportManager.Points.Remove(Pos);
             }
 
-            TeleportRiftRenderer?.Dispose();
+            _teleportRiftRenderer?.Dispose();
             _sound?.Dispose();
-        }
-
-        public override void ToTreeAttributes(ITreeAttribute tree)
-        {
-            base.ToTreeAttributes(tree);
-            if (_currentTargetTeleportPos != null)
-                tree.SetBlockPos("activeTeleport", _currentTargetTeleportPos);
-        }
-
-        public override void FromTreeAttributes(ITreeAttribute tree, IWorldAccessor worldAccessForResolve)
-        {
-            base.FromTreeAttributes(tree, worldAccessForResolve);
-            _currentTargetTeleportPos = tree.GetBlockPos("activeTeleport", null);
         }
 
         private void UpdateAnimator()
@@ -392,7 +368,14 @@ namespace TeleportationNetwork
             }
         }
 
-        public void Update()
+        public override void MarkDirty(bool redrawOnClient = false, IPlayer skipPlayer = null)
+        {
+            base.MarkDirty(redrawOnClient, skipPlayer);
+            _targetTeleportCached = null;
+            _teleportCached = null;
+        }
+
+        public void UpdateBlock()
         {
             if (Api != null)
             {
@@ -403,6 +386,7 @@ namespace TeleportationNetwork
 
                 CreateTeleport();
                 Teleport.Enabled = Repaired;
+                Teleport.UpdateBlockInfo(Block);
                 TeleportManager.Points.MarkDirty(Pos);
 
                 MarkDirty(true);

@@ -9,6 +9,7 @@ using Vintagestory.API.Client;
 using Vintagestory.API.Common;
 using Vintagestory.API.Config;
 using Vintagestory.API.MathTools;
+using Vintagestory.API.Util;
 using Vintagestory.GameContent;
 
 namespace TeleportationNetwork
@@ -148,16 +149,15 @@ namespace TeleportationNetwork
                 var tp = _allPoints.ElementAt(i);
                 var data = tp.GetClientData(capi);
 
-                string name = tp.Name ?? "null";
-
                 var stabilityBehavior = capi.World.Player?.Entity?.GetBehavior<EntityBehaviorTemporalStabilityAffected>();
-                bool playerLowStability = stabilityBehavior?.OwnStability < Core.Config.StabilityConsumable;
-                bool nowStormActive = capi.ModLoader.GetModSystem<SystemTemporalStability>().StormData.nowStormActive;
-                name = (nowStormActive || playerLowStability) ? name.Shuffle(capi.World.Rand) : name;
+                var playerLowStability = stabilityBehavior?.OwnStability < Core.Config.StabilityConsumable;
+                var nowStormActive = capi.ModLoader.GetModSystem<SystemTemporalStability>().StormData.nowStormActive;
+                var name = (nowStormActive || playerLowStability) ? tp.Name.Shuffle(capi.World.Rand) : tp.Name;
 
                 var nameFont = CairoFont.WhiteSmallText();
-                bool activated = tp.ActivatedByPlayers.Contains(capi.World.Player!.PlayerUID);
-                bool enabled = tp.Enabled;
+                var activated = tp.ActivatedByPlayers.Contains(capi.World.Player!.PlayerUID);
+                var enabled = tp.Enabled;
+                var linked = tp.Target == Pos;
 
                 if (!enabled)
                 {
@@ -175,6 +175,12 @@ namespace TeleportationNetwork
                     nameFont.Color = ColorUtil.Hex2Doubles("#555555");
                 }
 
+                if (linked)
+                {
+                    nameFont.Color = ColorUtil.Hex2Doubles("#2CF5BA");
+                    nameFont.FontWeight = FontWeight.Bold;
+                }
+
                 if (data.Pinned)
                 {
                     nameFont.FontWeight = FontWeight.Bold;
@@ -183,9 +189,7 @@ namespace TeleportationNetwork
                 stacklist.Add(new GuiElementTeleportButton(capi,
                     name,
                     nameFont,
-                    data.Pinned ?
-                        CairoFont.WhiteSmallText().WithWeight(FontWeight.Bold) :
-                        CairoFont.WhiteSmallText(),
+                    nameFont,
                     () => OnTeleportButtonClick(tp.Pos),
                     buttons[i],
                     EnumButtonStyle.Normal)
@@ -256,10 +260,18 @@ namespace TeleportationNetwork
         {
             if (Pos != null)
             {
-                using var ms = new MemoryStream();
-                using var writer = new BinaryWriter(ms);
-                targetPoint.ToBytes(writer);
-                capi.Network.SendBlockEntityPacket(Pos, Constants.OpenTeleportPacketId, ms.ToArray());
+                var teleport = TeleportManager.Points[Pos];
+                if (teleport?.Target == targetPoint) // Already opened
+                {
+                    capi.Network.SendBlockEntityPacket(Pos, Constants.CloseTeleportPacketId);
+                }
+                else
+                {
+                    using var ms = new MemoryStream();
+                    using var writer = new BinaryWriter(ms);
+                    targetPoint.ToBytes(writer);
+                    capi.Network.SendBlockEntityPacket(Pos, Constants.OpenTeleportPacketId, ms.ToArray());
+                }
             }
             else
             {

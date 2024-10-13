@@ -9,7 +9,7 @@
   },
   "behaviors": [
     { "name": "HorizontalOrientable" },
-    { "name": "WrenchOrientable", "properties": { "baseCode": "teleport-{state}"  } },
+    //{ "name": "WrenchOrientable", "properties": { "baseCode": "teleport-{state}"  } },
     {
       "name": "Multiblock",
       "propertiesByType": {
@@ -27,17 +27,17 @@
       }
     }
   ],
-  "textures": {
-    "darkwood": { "base": "game:block/machine/statictranslocator/base_darkwood" },
-    "rusty": { "base": "game:block/machine/statictranslocator/rusty" },
-    "rustyglow": { "base": "game:block/machine/statictranslocator/rustyglow" },
-    "statictranslocator_glass": { "base": "game:block/machine/statictranslocator/statictranslocator_glass" },
-    "statictranslocator_structure": { "base": "game:block/machine/statictranslocator/statictranslocator_structure" },
-    "lead": { "base": "game:block/metal/ingot/lead" },
+  //"textures": {
+  //  "darkwood": { "base": "game:block/machine/statictranslocator/base_darkwood" },
+  //  "rusty": { "base": "game:block/machine/statictranslocator/rusty" },
+  //  "rustyglow": { "base": "game:block/machine/statictranslocator/rustyglow" },
+  //  "statictranslocator_glass": { "base": "game:block/machine/statictranslocator/statictranslocator_glass" },
+  //  "statictranslocator_structure": { "base": "game:block/machine/statictranslocator/statictranslocator_structure" },
+  //  "lead": { "base": "game:block/metal/ingot/lead" },
 
-    "empty": { "base": "empty" },
-    "seal": { "base": "block/teleport/seal" }
-  },
+  //  "empty": { "base": "empty" },
+  //  "seal": { "base": "block/teleport/seal" }
+  //},
   "variantgroups": [
     { "code": "type", "states": ["smallgate", "largegate"] },
     { "code": "state", "states": [ "broken", "normal" ] },
@@ -51,6 +51,12 @@
         "code": "teleport-{type}-{state}-{side}"
       }]
     }]
+  },
+  "attributes": {
+    "gateSizeByType": {
+      "*-smallgate-*" : 5,
+      "*-largegate-*" : 10,
+    }
   },
   "replaceable": 200,
   "resistance": 4,
@@ -70,6 +76,6 @@
     "scale": 0.37
   },
   "guiTransform": {
-		"scale": 0.31
-	}
+    "scale": 0.27
+  }
 }

@@ -5,37 +5,42 @@ using Vintagestory.GameContent;
 
 namespace TeleportationNetwork
 {
-    public class NewTeleportRenderer : IRenderer
+    public class TeleportRiftRenderer : IRenderer
     {
         public double RenderOrder => 0.05;
         public int RenderRange => 100;
+
+        private IShaderProgram Prog => _renderSystem.Prog;
 
         private readonly ICoreClientAPI _api;
         private readonly BlockPos _pos;
         private readonly MeshRef _meshref;
         private readonly Matrixf _matrixf;
+        private readonly float _rotation;
 
-        private IShaderProgram _prog;
+        private TeleportRenderSystem _renderSystem;
         private float _counter;
         private int _cnt;
-        private float _rotation;
-        private float _size;
         private float _activationProgress;
+        private float _size;
 
-        public NewTeleportRenderer(BlockPos pos, ICoreClientAPI api, float rotation, float size)
+        public TeleportRiftRenderer(BlockPos pos, ICoreClientAPI api, float rotation)
         {
             _api = api;
             _pos = pos;
             _rotation = rotation;
-            _size = size;
 
-            api.Event.RegisterRenderer(this, EnumRenderStage.AfterBlit, $"{Constants.ModId}-teleport-rift");
-            MeshData mesh = QuadMeshUtil.GetQuad();
-            _meshref = _api.Render.UploadMesh(mesh);
+            _meshref = _api.Render.UploadMesh(QuadMeshUtil.GetQuad());
             _matrixf = new Matrixf();
+            _size = 1;
 
-            _api.Event.ReloadShader += LoadShader;
-            LoadShader();
+            _api.Event.RegisterRenderer(this, EnumRenderStage.AfterBlit, $"{Constants.ModId}-teleport-rift");
+            _renderSystem = _api.ModLoader.GetModSystem<TeleportRenderSystem>();
+        }
+
+        public void Update(Teleport teleport)
+        {
+            _size = teleport.Size;
         }
 
         public void SetActivationProgress(float stage)
@@ -98,26 +103,26 @@ namespace TeleportationNetwork
 
             _api.Render.GLDepthMask(false);
 
-            _prog.Use();
-            _prog.Uniform("rgbaFogIn", _api.Render.FogColor);
-            _prog.Uniform("fogMinIn", _api.Render.FogMin);
-            _prog.Uniform("fogDensityIn", _api.Render.FogDensity);
-            _prog.Uniform("rgbaAmbientIn", _api.Render.AmbientColor);
-            _prog.Uniform("rgbaLightIn", new Vec4f(1, 1, 1, 1));
+            Prog.Use();
+            Prog.Uniform("rgbaFogIn", _api.Render.FogColor);
+            Prog.Uniform("fogMinIn", _api.Render.FogMin);
+            Prog.Uniform("fogDensityIn", _api.Render.FogDensity);
+            Prog.Uniform("rgbaAmbientIn", _api.Render.AmbientColor);
+            Prog.Uniform("rgbaLightIn", new Vec4f(1, 1, 1, 1));
 
 
-            _prog.BindTexture2D("primaryFb", _api.Render.FrameBuffers[(int)EnumFrameBuffer.Primary].ColorTextureIds[0], 0);
-            _prog.BindTexture2D("depthTex", _api.Render.FrameBuffers[(int)EnumFrameBuffer.Primary].DepthTextureId, 1);
-            _prog.UniformMatrix("projectionMatrix", _api.Render.CurrentProjectionMatrix);
+            Prog.BindTexture2D("primaryFb", _api.Render.FrameBuffers[(int)EnumFrameBuffer.Primary].ColorTextureIds[0], 0);
+            Prog.BindTexture2D("depthTex", _api.Render.FrameBuffers[(int)EnumFrameBuffer.Primary].DepthTextureId, 1);
+            Prog.UniformMatrix("projectionMatrix", _api.Render.CurrentProjectionMatrix);
 
 
             int width = _api.Render.FrameWidth;
             int height = _api.Render.FrameHeight;
-            _prog.Uniform("time", _counter);
-            _prog.Uniform("invFrameSize", new Vec2f(1f / width, 1f / height));
-            _prog.Uniform("glich", GameMath.Min(glichEffectStrength * 2, 1));
-            _prog.Uniform("glich", GameMath.Min(glichEffectStrength * 2, 1));
-            _prog.Uniform("stage", 0.1f + _activationProgress * 0.9f);
+            Prog.Uniform("time", _counter);
+            Prog.Uniform("invFrameSize", new Vec2f(1f / width, 1f / height));
+            Prog.Uniform("glich", GameMath.Min(glichEffectStrength * 2, 1));
+            Prog.Uniform("glich", GameMath.Min(glichEffectStrength * 2, 1));
+            Prog.Uniform("stage", 0.1f + _activationProgress * 0.9f);
             int riftIndex = 0;
 
             _cnt = (_cnt + 1) % 3;
@@ -167,8 +172,8 @@ namespace TeleportationNetwork
             float size = .54f * _size;
             _matrixf.Scale(size * wMod, size, size * wMod);
 
-            _prog.UniformMatrix("modelMatrix", _matrixf.Values);
-            _prog.UniformMatrix("viewMatrix", _api.Render.CameraMatrixOriginf);
+            Prog.UniformMatrix("modelMatrix", _matrixf.Values);
+            Prog.UniformMatrix("viewMatrix", _api.Render.CameraMatrixOriginf);
             //_prog.Uniform("worldPos", new Vec4f(dx, dy, dz, 0));
             //_prog.Uniform("riftIndex", riftIndex);
 
@@ -183,21 +188,9 @@ namespace TeleportationNetwork
 
             _counter = GameMath.Mod(_counter + deltaTime, GameMath.TWOPI * 100f);
 
-            _prog.Stop();
+            Prog.Stop();
 
             _api.Render.GLDepthMask(true);
-        }
-
-        [MemberNotNull(nameof(_prog))]
-        public bool LoadShader()
-        {
-            _prog = _api.Shader.NewShaderProgram();
-            _prog.VertexShader = _api.Shader.NewShader(EnumShaderType.VertexShader);
-            _prog.FragmentShader = _api.Shader.NewShader(EnumShaderType.FragmentShader);
-
-            _api.Shader.RegisterFileShaderProgram("teleport", _prog);
-
-            return _prog.Compile();
         }
 
         public void Dispose()

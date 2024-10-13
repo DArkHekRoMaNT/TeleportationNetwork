@@ -9,7 +9,7 @@
   "tpimp-empty": "Not found",
 
   "blockhelp-teleport-edit": "Edit",
-  "blockhelp-teleport-change-frame": "Change frame",
+  "blockhelp-teleport-open": "Open",
   "blockhelp-teleport-unknownitem": "Unknown repair item, check config",
 
   "block-brokenlantern-copper-*": "Broken copper lantern",

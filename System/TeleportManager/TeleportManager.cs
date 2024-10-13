@@ -1,4 +1,5 @@
 using ProtoBuf;
+using System;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
 using Vintagestory.API.MathTools;
@@ -27,10 +28,10 @@ namespace TeleportationNetwork
                      .RegisterMessageType<SyncTeleportMessage>()
                      .RegisterMessageType<RemoveTeleportMessage>()
                      .RegisterMessageType<SyncTeleportListMessage>()
-                     .SetMessageHandler<SyncTeleportMessage>(msg => Points.Set(msg.Teleport))
+                     .RegisterMessageType<TeleportPlayerMessage>()
+                     .SetMessageHandler<SyncTeleportMessage>(msg => Points.SetSafe(msg.Teleport, msg.LastUpdateTime))
                      .SetMessageHandler<RemoveTeleportMessage>(msg => Points.Remove(msg.Pos))
-                     .SetMessageHandler<SyncTeleportListMessage>(msg => Points.SetFrom(msg.Points))
-                     .RegisterMessageType<TeleportPlayerMessage>();
+                     .SetMessageHandler<SyncTeleportListMessage>(msg => Points.SetFrom(msg.Points));
             }
             else if (api is ICoreServerAPI sapi)
             {
@@ -47,7 +48,7 @@ namespace TeleportationNetwork
                 {
                     foreach (var player in _api.World.AllOnlinePlayers)
                     {
-                        var message = new SyncTeleportMessage(teleport.ForPlayer(player.PlayerUID));
+                        var message = new SyncTeleportMessage(teleport.ForPlayerOnly(player.PlayerUID), DateTime.Now.Ticks);
                         _serverChannel.SendPacket(message, (IServerPlayer)player);
                     }
                 };
@@ -55,6 +56,10 @@ namespace TeleportationNetwork
                 Points.ValueRemoved += pos =>
                 {
                     _serverChannel.BroadcastPacket(new RemoveTeleportMessage(pos));
+                    foreach (var point in Points.GetAll(x => x.Target == pos))
+                    {
+                        UnlinkTeleport(point);
+                    }
                 };
 
                 sapi.Event.PlayerJoin += player =>
@@ -82,7 +87,12 @@ namespace TeleportationNetwork
 
         private void OnReceiveTeleportPlayerMessage(IServerPlayer fromPlayer, TeleportPlayerMessage msg)
         {
-            Vec3d pos = msg.Pos.ToVec3d().AddCopy(0.5, 1.5, 0.5);
+            var pos = msg.Pos.ToVec3d().AddCopy(0.5, 1.5, 0.5);
+            var teleport = Points[msg.Pos];
+            if (teleport != null)
+            {
+                pos = teleport.GetTargetPos();
+            }
             fromPlayer.Entity?.StabilityRelatedTeleportTo(pos, Mod.Logger);
         }
 
@@ -92,9 +102,6 @@ namespace TeleportationNetwork
             {
                 foreach (Teleport teleport in Points.GetAll())
                 {
-                    // 1.12.0 -> 1.12.1 legacy name fix
-                    teleport.Name = teleport.Name;
-
                     int chunkSize = sapi.WorldManager.ChunkSize;
                     int chunkX = teleport.Pos.X / chunkSize;
                     int chunkZ = teleport.Pos.Z / chunkSize;
@@ -119,11 +126,79 @@ namespace TeleportationNetwork
 
         public void UpdateTeleport(Teleport teleport)
         {
-            _clientChannel?.SendPacket(new SyncTeleportMessage(teleport));
+            _clientChannel?.SendPacket(new SyncTeleportMessage(teleport, 0));
         }
 
-        private void OnReceiveClientSyncTeleportMessage(IServerPlayer fromPlayer,
-            SyncTeleportMessage msg)
+        public bool CheckTeleportLink(Teleport teleport)
+        {
+            if (teleport.Target == null)
+                return false;
+
+            var tp2 = Points[teleport.Target];
+            if (tp2 == null)
+            {
+                UnlinkTeleport(teleport);
+                return false;
+            }
+
+            if (tp2.Target == teleport.Pos)
+            {
+                return true;
+            }
+            else if (tp2.Target == null)
+            {
+                LinkTeleport(tp2, teleport);
+                return true;
+            }
+            else
+            {
+                teleport.Target = null;
+                Points.MarkDirty(teleport.Pos);
+                return false;
+            }
+        }
+
+        public void LinkTeleport(Teleport tp1, BlockPos pos2)
+        {
+            var tp2 = Points[pos2];
+            if (tp2 == null)
+                return;
+            LinkTeleport(tp1, tp2);
+        }
+
+        public void LinkTeleport(Teleport tp1, Teleport tp2)
+        {
+            UnlinkTeleport(tp1);
+            UnlinkTeleport(tp2);
+
+            tp1.Target = tp2.Pos;
+            tp2.Target = tp1.Pos;
+
+            Points.MarkDirty(tp1.Pos);
+            Points.MarkDirty(tp2.Pos);
+        }
+
+        public void UnlinkTeleport(Teleport teleport)
+        {
+            if (teleport.Target == null)
+                return;
+
+            var tp2 = Points[teleport.Target];
+            if (tp2 != null && tp2.Target == teleport.Pos)
+            {
+                teleport.Target = null;
+                tp2.Target = null;
+                Points.MarkDirty(teleport.Pos);
+                Points.MarkDirty(tp2.Pos);
+            }
+            else
+            {
+                teleport.Target = null;
+                Points.MarkDirty(teleport.Pos);
+            }
+        }
+
+        private void OnReceiveClientSyncTeleportMessage(IServerPlayer fromPlayer, SyncTeleportMessage msg)
         {
             var teleport = Points[msg.Teleport.Pos];
             if (teleport == null)
@@ -156,44 +231,19 @@ namespace TeleportationNetwork
             Points.MarkDirty(teleport.Pos);
         }
 
-        [ProtoContract(ImplicitFields = ImplicitFields.AllPublic)]
-        private class RemoveTeleportMessage
-        {
-            public BlockPos Pos { get; set; }
+        [ProtoContract(SkipConstructor = true, ImplicitFields = ImplicitFields.AllPublic)]
+        private record struct RemoveTeleportMessage(BlockPos Pos);
 
-            protected RemoveTeleportMessage() => Pos = null!;
 
-            public RemoveTeleportMessage(BlockPos pos) => Pos = pos;
-        }
+        [ProtoContract(SkipConstructor = true, ImplicitFields = ImplicitFields.AllPublic)]
+        private record struct SyncTeleportListMessage(TeleportList Points);
 
-        [ProtoContract(ImplicitFields = ImplicitFields.AllPublic)]
-        private class SyncTeleportListMessage
-        {
-            public TeleportList Points { get; set; }
 
-            protected SyncTeleportListMessage() => Points = null!;
+        [ProtoContract(SkipConstructor = true, ImplicitFields = ImplicitFields.AllPublic)]
+        private record struct SyncTeleportMessage(Teleport Teleport, long LastUpdateTime);
 
-            public SyncTeleportListMessage(TeleportList points) => Points = points;
-        }
 
-        [ProtoContract(ImplicitFields = ImplicitFields.AllPublic)]
-        private class SyncTeleportMessage
-        {
-            public Teleport Teleport { get; set; }
-
-            protected SyncTeleportMessage() => Teleport = null!;
-
-            public SyncTeleportMessage(Teleport teleport) => Teleport = teleport;
-        }
-
-        [ProtoContract(ImplicitFields = ImplicitFields.AllPublic)]
-        private class TeleportPlayerMessage
-        {
-            public BlockPos Pos { get; private set; }
-
-            private TeleportPlayerMessage() => Pos = null!;
-
-            public TeleportPlayerMessage(BlockPos pos) => Pos = pos;
-        }
+        [ProtoContract(SkipConstructor = true, ImplicitFields = ImplicitFields.AllPublic)]
+        private record struct TeleportPlayerMessage(BlockPos Pos);
     }
 }
