@@ -86,6 +86,33 @@ namespace TeleportationNetwork
                 return;
             (Block as BlockTeleport)?.SetActive(active, Pos);
             _lastActive = active;
+
+            if (AnimUtil != null)
+            {
+                if (active)
+                {
+                    AnimUtil.StartAnimation(new AnimationMetaData
+                    {
+                        Animation = "loop",
+                        Code = "loop",
+                        AnimationSpeed = 0.5f,
+                        EaseInSpeed = 0.5f,
+                        EaseOutSpeed = 2
+                    });
+
+                    AnimUtil.StartAnimation(new AnimationMetaData
+                    {
+                        Animation = "activation",
+                        Code = "activation",
+                        AnimationSpeed = 0.5f,
+                    });
+                }
+                else
+                {
+                    AnimUtil.StopAnimation("activation");
+                    AnimUtil.StopAnimation("loop");
+                }
+            }
         }
 
         private void OnGameRenderTick(float dt)
@@ -359,29 +386,7 @@ namespace TeleportationNetwork
                 if (Repaired)
                 {
                     float rotY = Block.Shape.rotateY;
-                    AnimUtil.InitializeAnimator($"{Constants.ModId}-teleport", null, null, new Vec3f(0, rotY, 0));
-
-                    if (AnimUtil.activeAnimationsByAnimCode.Count == 0 ||
-                        AnimUtil.animator!.ActiveAnimationCount == 0)
-                    {
-                        AnimUtil.StartAnimation(new AnimationMetaData
-                        {
-                            Animation = "largegears",
-                            Code = "largegears",
-                            AnimationSpeed = 25f,
-                            EaseInSpeed = float.MaxValue,
-                            EaseOutSpeed = float.MaxValue
-                        });
-
-                        AnimUtil.StartAnimation(new AnimationMetaData
-                        {
-                            Animation = "smallgears",
-                            Code = "smallgears",
-                            AnimationSpeed = 50f,
-                            EaseInSpeed = float.MaxValue,
-                            EaseOutSpeed = float.MaxValue
-                        });
-                    }
+                    AnimUtil.InitializeAnimator($"{Constants.ModId}-teleport-" + Block.Variant["type"], null, null, new Vec3f(0, rotY, 0));
                 }
             }
         }
