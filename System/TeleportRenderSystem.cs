@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
 
@@ -21,8 +22,18 @@ namespace TeleportationNetwork
             Prog = _api.Shader.NewShaderProgram();
             Prog.VertexShader = _api.Shader.NewShader(EnumShaderType.VertexShader);
             Prog.FragmentShader = _api.Shader.NewShader(EnumShaderType.FragmentShader);
-            _api.Shader.RegisterFileShaderProgram("teleport", Prog);
+            _api.Shader.RegisterFileShaderProgram($"{Mod.Info.ModID}/teleport", Prog);
+
+#if DEBUG
+            var pass = Prog.Compile();
+            if (!pass)
+            {
+                Debugger.Break();
+            }
+            return pass;
+#else
             return Prog.Compile();
+#endif
         }
     }
 }

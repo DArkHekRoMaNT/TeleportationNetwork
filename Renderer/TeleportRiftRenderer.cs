@@ -17,12 +17,12 @@ namespace TeleportationNetwork
         private readonly MeshRef _meshref;
         private readonly Matrixf _matrixf;
         private readonly float _rotation;
+        private readonly TeleportRenderSystem _renderSystem;
 
-        private TeleportRenderSystem _renderSystem;
         private float _counter;
-        private int _cnt;
         private float _activationProgress;
         private float _size;
+        private bool _broken;
 
         public TeleportRiftRenderer(BlockPos pos, ICoreClientAPI api, float rotation)
         {
@@ -42,6 +42,7 @@ namespace TeleportationNetwork
         public void Update(Teleport teleport)
         {
             _size = teleport.Size;
+            _broken = !teleport.Enabled;
         }
 
         public void SetActivationProgress(float stage)
@@ -71,28 +72,6 @@ namespace TeleportationNetwork
                 glichEffectStrength = (float)temporalBehavior.GlichEffectStrength;
             }
 
-            //if (modsys.nearestRifts.Length > 0)
-            //{
-            //    Rift rift = modsys.nearestRifts[0];
-
-            //    float dist = Math.Max(0, GameMath.Sqrt(plrPos.SquareDistanceTo(rift.Position)) - 1 - rift.Size / 2f);
-            //    float f = Math.Max(0, 1 - dist / 3f);
-            //    float jitter = capi.World.Rand.NextDouble() < 0.25 ? f * ((float)capi.World.Rand.NextDouble() - 0.5f) / 1f : 0;
-
-            //    GlobalConstants.GuiGearRotJitter = jitter;
-
-            //    capi.ModLoader.GetModSystem<SystemTemporalStability>().modGlitchStrength = Math.Min(1, f * 1.3f);
-
-            //    if (temporalBehavior != null)
-            //    {
-            //        temporalBehavior.stabilityOffset = -Math.Pow(Math.Max(0, 1 - dist / 3), 2) * 20;
-            //    }
-            //}
-            //else
-            //{
-            //    capi.ModLoader.GetModSystem<SystemTemporalStability>().modGlitchStrength = 0;
-            //}
-
             _counter += deltaTime;
             if (glichEffectStrength > 0.1)
             {
@@ -103,19 +82,18 @@ namespace TeleportationNetwork
             }
 
             _api.Render.GLDepthMask(false);
+            _api.Render.GlEnableCullFace();
 
             Prog.Use();
             Prog.Uniform("rgbaFogIn", _api.Render.FogColor);
             Prog.Uniform("fogMinIn", _api.Render.FogMin);
             Prog.Uniform("fogDensityIn", _api.Render.FogDensity);
             Prog.Uniform("rgbaAmbientIn", _api.Render.AmbientColor);
-            Prog.Uniform("rgbaLightIn", new Vec4f(1, 1, 1, 1));
-
+            Prog.Uniform("rgbaLightIn", _api.World.BlockAccessor.GetLightRGBs(_pos));
 
             Prog.BindTexture2D("primaryFb", _api.Render.FrameBuffers[(int)EnumFrameBuffer.Primary].ColorTextureIds[0], 0);
             Prog.BindTexture2D("depthTex", _api.Render.FrameBuffers[(int)EnumFrameBuffer.Primary].DepthTextureId, 1);
             Prog.UniformMatrix("projectionMatrix", _api.Render.CurrentProjectionMatrix);
-
 
             int width = _api.Render.FrameWidth;
             int height = _api.Render.FrameHeight;
@@ -123,73 +101,35 @@ namespace TeleportationNetwork
             Prog.Uniform("invFrameSize", new Vec2f(1f / width, 1f / height));
             Prog.Uniform("glich", GameMath.Min(glichEffectStrength * 2, 1));
             Prog.Uniform("glich", GameMath.Min(glichEffectStrength * 2, 1));
-            Prog.Uniform("stage", 0.1f + _activationProgress * 0.9f);
-            int riftIndex = 0;
+            Prog.Uniform("stage", 0.2f + _activationProgress * 0.8f);
+            Prog.Uniform("broken", _broken ? 1 : 0);
+            Prog.Uniform("direction", (int)(_rotation / 90));
 
-            _cnt = (_cnt + 1) % 3;
-
-            //foreach (var rift in rifts.Values)
-            //{
-            //if (_cnt == 0)
-            //{
-            //    rift.Visible = _api.World.BlockAccessor.GetChunkAtBlockPos((int)rift.Position.X, (int)rift.Position.Y, (int)rift.Position.Z) != null;
-            //}
-
-            riftIndex++;
             _matrixf.Identity();
-
-            //float dx = (float)(rift.Position.X - playerPos.X);
-            //float dy = (float)(rift.Position.Y - playerPos.Y);
-            //float dz = (float)(rift.Position.Z - playerPos.Z);
 
             float dx = (float)(_pos.X - camPos.X + 0.5f);
             float dy = (float)(_pos.Y - camPos.Y + 0.5f);
             float dz = (float)(_pos.Z - camPos.Z + 0.5f);
 
-            var playerPos = _api.World.Player.Entity.Pos;
             _matrixf.Translate(dx, dy, dz);
-            _matrixf.RotateYDeg(_rotation);
+            _matrixf.RotateYDeg(_rotation + 180);
             if (_size == 5)
-                _matrixf.Translate(0, 0, -0.25);
-            //_matrixf.Rotate(GameMath.PIHALF, 0, -playerPos.Yaw);
-            //_matrixf.Rotate(GameMath.PIHALF, 0, 0);
-            //_matrixf.Rotate(0, playerPos.Yaw, 0);
-
-            //_matrixf.Values[0] = 1f;
-            //_matrixf.Values[1] = 0f;
-            //_matrixf.Values[2] = 0f;
-            //
-            ////_matrixf.Values[4] = 0f;
-            ////_matrixf.Values[5] = 1f;
-            ////_matrixf.Values[6] = 0f;
-            //
-            //_matrixf.Values[8] = 0f;
-            //_matrixf.Values[9] = 0f;
-            //_matrixf.Values[10] = 1f;
-
-            //float size = rift.GetNowSize(_api);
-            //_matrixf.Scale(size, size, size);
+            {
+                _matrixf.Translate(0, 0, 0.25);
+            }
             _matrixf.Scale(_size, _size, _size);
 
             Prog.UniformMatrix("modelMatrix", _matrixf.Values);
             Prog.UniformMatrix("viewMatrix", _api.Render.CameraMatrixOriginf);
-            //_prog.Uniform("worldPos", new Vec4f(dx, dy, dz, 0));
-            //_prog.Uniform("riftIndex", riftIndex);
 
             _api.Render.RenderMesh(_meshref);
 
-            //if (dx * dx + dy * dy + dz * dz < 40 * 40)
-            //{
-            //    Vec3d ppos = rift.Position;
-            //    _api.World.SpawnParticles(0.1f, ColorUtil.ColorFromRgba(21 / 2, 70 / 2, 116 / 2, 128), ppos, ppos, new Vec3f(-0.125f, -0.125f, -0.125f), new Vec3f(0.125f, 0.125f, 0.125f), 5, 0, (0.125f / 2 + (float)capi.World.Rand.NextDouble() * 0.25f) / 2);
-            //}
-            //}
-
-            _counter = GameMath.Mod(_counter + deltaTime, GameMath.TWOPI * 100f);
-
             Prog.Stop();
 
+            _api.Render.GlDisableCullFace();
             _api.Render.GLDepthMask(true);
+
+            _counter += deltaTime;
         }
 
         public void Dispose()
@@ -201,12 +141,6 @@ namespace TeleportationNetwork
 
     public static class DarkMeshUtil
     {
-        private static int[] _quadVertices = [-1, -1, 0, 1, -1, 0, 1, 1, 0, -1, 1, 0];
-
-        private static int[] _quadTextureCoords = [0, 0, 1, 0, 1, 1, 0, 1];
-
-        private static int[] _quadVertexIndices = [0, 1, 2, 0, 2, 3];
-
         public static MeshData GetRectangle(float totalSize, int gridSize)
         {
             var quadSize = totalSize / gridSize;
@@ -259,28 +193,6 @@ namespace TeleportationNetwork
             meshData.SetIndicesCount(indices.Count);
 
             return meshData;
-
-
-
-            //var meshData = new MeshData();
-            //float[] array = new float[12];
-            //for (int i = 0; i < 12; i++)
-            //{
-            //    array[i] = _quadVertices[i];
-            //}
-
-            //meshData.SetXyz(array);
-            //float[] array2 = new float[8];
-            //for (int j = 0; j < array2.Length; j++)
-            //{
-            //    array2[j] = _quadTextureCoords[j];
-            //}
-
-            //meshData.SetUv(array2);
-            //meshData.SetVerticesCount(4);
-            //meshData.SetIndices(_quadVertexIndices);
-            //meshData.SetIndicesCount(6);
-            //return meshData;
         }
     }
 }

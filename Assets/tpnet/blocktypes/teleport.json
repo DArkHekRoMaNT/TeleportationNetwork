@@ -50,17 +50,6 @@
     "tallow": { "base": "game:block/tallow" },
     "charred": { "base": "game:block/wood/charred" }
   },
-  //"textures": {
-  //  "darkwood": { "base": "game:block/machine/statictranslocator/base_darkwood" },
-  //  "rusty": { "base": "game:block/machine/statictranslocator/rusty" },
-  //  "rustyglow": { "base": "game:block/machine/statictranslocator/rustyglow" },
-  //  "statictranslocator_glass": { "base": "game:block/machine/statictranslocator/statictranslocator_glass" },
-  //  "statictranslocator_structure": { "base": "game:block/machine/statictranslocator/statictranslocator_structure" },
-  //  "lead": { "base": "game:block/metal/ingot/lead" },
-
-  //  "empty": { "base": "empty" },
-  //  "seal": { "base": "block/teleport/seal" }
-  //},
   "variantgroups": [
     { "code": "type", "states": ["smallgate", "largegate"] },
     { "code": "state", "states": [ "broken", "normal" ] },
@@ -78,7 +67,7 @@
   "attributes": {
     "gateSizeByType": {
       "*-smallgate-*" : 5,
-      "*-largegate-*" : 10,
+      "*-largegate-*" : 10
     }
   },
   "replaceable": 200,
@@ -94,9 +83,7 @@
   "heldTpIdleAnimation": "holdbothhandslarge",
   "heldTpUseAnimation": "twohandplaceblock",
   "tpHandTransform": {
-    "translation": { "x": -1.2, "y": -1.1, "z": -0.8 },
-    "rotation": { "x": -2, "y": 25, "z": -78 },
-    "scale": 0.37
+    "scale": 0.1
   },
   "guiTransform": {
     "scale": 0.27

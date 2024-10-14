@@ -18,6 +18,9 @@ uniform float fogMinIn;
 uniform float fogDensityIn;
 uniform int dontWarpVertices;
 uniform int addRenderFlags;
+uniform float stage;
+uniform int broken;
+uniform int direction;
 
 out vec2 uv;
 out float dist;
@@ -31,25 +34,36 @@ out vec4 worldPos;
 #include fogandlight.vsh
 #include vertexwarp.vsh
 
-vec4 addWavinessEffect(vec4 worldPos, float waviness)
-{
-	if (waviness > 0.1) {
-		float str = max(0, waviness - 0.1);
-		str *= clamp(1.5 * length(worldPos) * waviness - 1, 0, 250);
-
-		float xf = (worldPos.x + gl_Position.x) / 10;
-		float zf = (worldPos.z + gl_Position.z) / 10;
-		worldPos.x += str * gnoise(vec3(xf, zf, windWaveCounter/6)) / 5;
-		worldPos.y += str * gnoise(vec3(xf, zf, windWaveCounter/10)) / 5;
-		worldPos.z += str * gnoise(vec3(xf, zf, windWaveCounter/3.5)) / 5;
-	}
-	return worldPos;
-}
-
 vec4 addEffect(vec4 worldPos)
 {
-	vec3 noisepos = vec3((worldPos.x + playerpos.x) / 3, (worldPos.z + playerpos.z) / 3, waterWaveCounter / 8);
-	worldPos.x += waterWaveIntensity * gnoise(noisepos) / 0.2;
+	const float dx[] = float[4](0, 1, 0, -1); 
+	const float dz[] = float[4](1, 0, -1, 0); 
+
+	float maxLen = sqrt(0.2);
+	float len = pow(length(vertexPosition), 1);
+	len = maxLen - len;
+	if (len <= 0)
+		return worldPos;
+
+	float frequency = 500000;
+	float speed = 3;
+    float wave = sin(frequency * len - speed * timeCounter) / 4;
+	//if (wave < 0) wave = 0;
+	
+	if (bool(broken)) 
+	{	
+		float mod = 0.5;
+		int dir = (direction + 2) % 4;
+		worldPos.x += dx[dir] * wave * len * mod;
+		worldPos.z += dz[dir] * wave * len * mod;
+		worldPos.y += wave * len * mod;
+	}
+	else
+	{
+		worldPos.x += dx[direction] * wave * len;
+		worldPos.z += dz[direction] * wave * len;
+	}
+
 	return worldPos;
 }
 
@@ -57,12 +71,7 @@ void main () {
 	uv = uvIn;
 
 	worldPos = modelMatrix * vec4(vertexPosition, 1.0);
-	//float strength = windWaveIntensity * (1 + windSpeed) / 30.0;
-	//worldPos = addWavinessEffect(worldPos, strength);
-
-
-	//worldPos = addEffect(worldPos);
-
+	worldPos = addEffect(worldPos);
 
 	if (dontWarpVertices == 0) {
 		worldPos = applyVertexWarping(flags | addRenderFlags, worldPos);

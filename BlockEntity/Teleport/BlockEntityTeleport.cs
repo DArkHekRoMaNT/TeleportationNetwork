@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
 using Vintagestory.API.Client;
@@ -46,10 +47,6 @@ namespace TeleportationNetwork
             TeleportManager = api.ModLoader.GetModSystem<TeleportManager>();
 
             SetBlockActive(false);
-            if (api.Side == EnumAppSide.Server)
-            {
-                CreateTeleport();
-            }
 
             if (api is ICoreClientAPI capi)
             {
@@ -68,16 +65,19 @@ namespace TeleportationNetwork
                 UpdateAnimator();
             }
 
-            TeleportManager.Points.ValueChanged += (teleport) =>
-            {
-                if (teleport.Pos == Pos)
-                {
-                    MarkDirty(true);
-                }
-            };
+            _teleportCached = GetOrCreateTeleport();
+            TeleportManager.Points.ValueChanged += PointsChanged;
 
             RegisterGameTickListener(OnGameTick, 50);
             RegisterGameTickListener(OnGameRenderTick, 10); // For prevent shader lags on open/close
+        }
+
+        private void PointsChanged(Teleport teleport)
+        {
+            if (teleport.Pos == Pos)
+            {
+                MarkDirty(true);
+            }
         }
 
         private void SetBlockActive(bool active)
@@ -148,6 +148,11 @@ namespace TeleportationNetwork
 
             var orientation = Teleport.Orientation;
             var targetOrientation = TargetTeleport.Orientation;
+            if (orientation == null && targetOrientation == null)
+            {
+                //Debugger.Break();
+            }
+
             if (Api is ICoreServerAPI sapi && orientation != null && targetOrientation != null)
             {
                 var center = Teleport.GetGateCenter();
@@ -354,6 +359,7 @@ namespace TeleportationNetwork
         public override void OnBlockUnloaded()
         {
             base.OnBlockUnloaded();
+            TeleportManager.Points.ValueChanged -= PointsChanged;
             _teleportRiftRenderer?.Dispose();
             _sound?.Dispose();
         }
@@ -366,15 +372,13 @@ namespace TeleportationNetwork
             {
                 TeleportManager.Points.Remove(Pos);
             }
-
+            TeleportManager.Points.ValueChanged -= PointsChanged;
             _teleportRiftRenderer?.Dispose();
             _sound?.Dispose();
         }
 
         private void UpdateAnimator()
         {
-            return;
-
             if (AnimUtil != null && Api.Side == EnumAppSide.Client)
             {
                 if (AnimUtil.animator != null)
@@ -395,7 +399,7 @@ namespace TeleportationNetwork
         {
             base.MarkDirty(redrawOnClient, skipPlayer);
             _targetTeleportCached = null;
-            _teleportCached = null;
+            _teleportCached = GetOrCreateTeleport();
         }
 
         public void UpdateBlock()
