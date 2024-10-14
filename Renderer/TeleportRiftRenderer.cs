@@ -1,4 +1,4 @@
-using System.Diagnostics.CodeAnalysis;
+using System.Collections.Generic;
 using Vintagestory.API.Client;
 using Vintagestory.API.MathTools;
 using Vintagestory.GameContent;
@@ -30,7 +30,8 @@ namespace TeleportationNetwork
             _pos = pos;
             _rotation = rotation;
 
-            _meshref = _api.Render.UploadMesh(QuadMeshUtil.GetQuad());
+            var mesh = DarkMeshUtil.GetRectangle(1, 100);
+            _meshref = _api.Render.UploadMesh(mesh);
             _matrixf = new Matrixf();
             _size = 1;
 
@@ -149,7 +150,7 @@ namespace TeleportationNetwork
             _matrixf.Translate(dx, dy, dz);
             _matrixf.RotateYDeg(_rotation);
             if (_size == 5)
-                _matrixf.Translate(0, 0, 0.25);
+                _matrixf.Translate(0, 0, -0.25);
             //_matrixf.Rotate(GameMath.PIHALF, 0, -playerPos.Yaw);
             //_matrixf.Rotate(GameMath.PIHALF, 0, 0);
             //_matrixf.Rotate(0, playerPos.Yaw, 0);
@@ -168,9 +169,7 @@ namespace TeleportationNetwork
 
             //float size = rift.GetNowSize(_api);
             //_matrixf.Scale(size, size, size);
-            float wMod = 0.85f + 1 * 0.15f;
-            float size = .54f * _size;
-            _matrixf.Scale(size * wMod, size, size * wMod);
+            _matrixf.Scale(_size, _size, _size);
 
             Prog.UniformMatrix("modelMatrix", _matrixf.Values);
             Prog.UniformMatrix("viewMatrix", _api.Render.CameraMatrixOriginf);
@@ -197,6 +196,91 @@ namespace TeleportationNetwork
         {
             _api.Event.UnregisterRenderer(this, EnumRenderStage.AfterBlit);
             _meshref?.Dispose();
+        }
+    }
+
+    public static class DarkMeshUtil
+    {
+        private static int[] _quadVertices = [-1, -1, 0, 1, -1, 0, 1, 1, 0, -1, 1, 0];
+
+        private static int[] _quadTextureCoords = [0, 0, 1, 0, 1, 1, 0, 1];
+
+        private static int[] _quadVertexIndices = [0, 1, 2, 0, 2, 3];
+
+        public static MeshData GetRectangle(float totalSize, int gridSize)
+        {
+            var quadSize = totalSize / gridSize;
+            var halfSize = totalSize / 2.0f;
+
+            var vertices = new List<float>();
+            var uvs = new List<float>();
+            var indices = new List<int>();
+
+            // Vertices and uvs
+            for (int y = 0; y <= gridSize; y++)
+            {
+                for (int x = 0; x <= gridSize; x++)
+                {
+                    vertices.Add(x * quadSize - halfSize);
+                    vertices.Add(y * quadSize - halfSize);
+                    vertices.Add(0);
+                    uvs.Add((float)x / gridSize);
+                    uvs.Add((float)y / gridSize);
+                }
+            }
+
+            // Indices
+            for (int y = 0; y < gridSize; y++)
+            {
+                for (int x = 0; x < gridSize; x++)
+                {
+                    int topLeft = y * (gridSize + 1) + x;
+                    int topRight = topLeft + 1;
+                    int bottomLeft = topLeft + (gridSize + 1);
+                    int bottomRight = bottomLeft + 1;
+
+                    // First triangle
+                    indices.Add(topLeft);
+                    indices.Add(bottomLeft);
+                    indices.Add(topRight);
+
+                    // Second triangle
+                    indices.Add(topRight);
+                    indices.Add(bottomLeft);
+                    indices.Add(bottomRight);
+                }
+            }
+
+            var meshData = new MeshData();
+            meshData.SetXyz(vertices.ToArray());
+            meshData.SetUv(uvs.ToArray());
+            meshData.SetVerticesCount(vertices.Count / 3);
+            meshData.SetIndices(indices.ToArray());
+            meshData.SetIndicesCount(indices.Count);
+
+            return meshData;
+
+
+
+            //var meshData = new MeshData();
+            //float[] array = new float[12];
+            //for (int i = 0; i < 12; i++)
+            //{
+            //    array[i] = _quadVertices[i];
+            //}
+
+            //meshData.SetXyz(array);
+            //float[] array2 = new float[8];
+            //for (int j = 0; j < array2.Length; j++)
+            //{
+            //    array2[j] = _quadTextureCoords[j];
+            //}
+
+            //meshData.SetUv(array2);
+            //meshData.SetVerticesCount(4);
+            //meshData.SetIndices(_quadVertexIndices);
+            //meshData.SetIndicesCount(6);
+            //return meshData;
         }
     }
 }

@@ -33,13 +33,16 @@ float fbm(vec2 p) {
 
 float circle(vec2 p) {
     float r = length(p);
-    float radius = 0.4 * stage;
+    // Open-close effect? * (1. + sin(time));   
+    float radius = 0.435 * stage * (1. + sin(time) * 0.01); // <-- Ring size
     float height = 1.0; 
     float width = 150.0;
     return height - pow(r - radius, 2.0) * width;
 }
 
-float hash(vec2 p) { return fract(1e4 * sin(17.0 * p.x + p.y * 0.1) * (0.1 + abs(sin(p.y * 13.0 + p.x)))); }
+float hash(vec2 p) {
+    return fract(1e4 * sin(17.0 * p.x + p.y * 0.1) * (0.1 + abs(sin(p.y * 13.0 + p.x))));
+}
 
 float cnoise(vec2 x) {
     vec2 i = floor(x);
@@ -61,7 +64,6 @@ float cnoise(vec2 x) {
     vec2 u = f * f * (3.0 - 2.0 * f);
     return mix(a, b, u.x) + (c - a) * u.y * (1.0 - u.x) + (d - b) * u.x * u.y;
 }
-
 
 float rand(vec2 n) { 
     return fract(sin(dot(n, vec2(12.9898, 4.1414))) * 43758.5453);
@@ -93,32 +95,35 @@ vec4 rusty(vec4 col) {
 
 void main()
 {
+
 	float x = gl_FragCoord.x * invFrameSize.x;
 	float y = gl_FragCoord.y * invFrameSize.y;
 	
 	float z1 = linearDepth(texture(depthTex, vec2(x,y)).r); //depth from gbuffer depth, a float32 texture
 	float z2 = linearDepth(gl_FragCoord.z);
 	
-	float aDiff = max(0, z2 - z1) * 1000;
+	float aDiff = max(0, z2 - z1) * 10000;
 	//if (aDiff > 2) discard;
 	if (aDiff > 0) discard; // No visible behind other blocks (at all)
 	
 	//float f = length(uv - 0.5) * (1.5 - sin(time/5) * 0.25) * 1.75;
     vec2 st = uv - 0.5;
-	float f = length(st) * 2.4;
+	float f = length(st) * 2.2; // <-- Inner clip size
 	
 	float noise = 
 		  cnoise2(vec2(gl_FragCoord.x / 300, gl_FragCoord.y / 300 - time / 3))  / 50.0
 		+ cnoise2(vec2(gl_FragCoord.x / 200, gl_FragCoord.y / 200 - time / 4))  / 75.0
 		+ cnoise2(vec2(gl_FragCoord.x / 2, gl_FragCoord.y / 2 - time)) / 200.0;
-	
+
+    // Background
 	//vec4 col = texture(primaryFb, vec2(x,y) + noise);
     vec4 col = vec4(vec3(0.15, 0.84, 0.64)/1.6, 1);
 
 	//float angle = mod(1, 2 * PI);
 	//float k = cnoise2(vec2(angle * 20, 1))/4 + cnoise2(vec2(angle * 5, 1))/4 + cnoise2(vec2(1, angle));
 
-	col.a = clamp(pow(1*stage - f, 0.01), 0, 1) * stage; // To circle
+    // Open-close effect 2? * (1. + sin(time)); or first pow arg
+	col.a = clamp(pow(1 * stage - f, 0.01), 0, 1) * stage; // To circle
 	//col.a = clamp(col.a - aDiff, 0, 1); // No visible behind other blocks (smooth)
 	// col.a -= clamp((dist * (1 + fogAmount/2.0) - 50) / 40, 0, 0.7 + fogAmount * 0.3); // Do nothing? 
 
@@ -155,7 +160,7 @@ void main()
     w = w * w * w;
     color *= w;
 
-    if (l > 0.41 * stage) {
+    if (l > 0.44 * stage) { // <-- l is outer clip
         col = vec4(color, (color.r + color.g + color.b)/3 - 0.4);
     }
     else {
