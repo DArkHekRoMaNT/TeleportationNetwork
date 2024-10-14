@@ -4,8 +4,8 @@
 		<ModId>tpnet</ModId>
 		<Version>1.14.3</Version>
 		<Authors>DArkHekRoMaNT</Authors>
-		<MinimalGameVersion>1.20.0-pre.5</MinimalGameVersion>
-		<GameVersion>1.20.0-pre.5</GameVersion>
+		<MinimalGameVersion>1.20.0-pre.6</MinimalGameVersion>
+		<GameVersion>1.20.0-pre.6</GameVersion>
 		<Description>Adds surface teleport network</Description>
 		<Website>https://github.com/DArkHekRoMaNT/TeleportationNetwork</Website>
 	</PropertyGroup>

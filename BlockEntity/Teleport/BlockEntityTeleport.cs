@@ -1,5 +1,4 @@
 using System;
-using System.Diagnostics;
 using System.IO;
 using System.Text;
 using Vintagestory.API.Client;
@@ -37,6 +36,7 @@ namespace TeleportationNetwork
         private Teleport? _teleportCached = null;
         private Teleport? _targetTeleportCached = null;
         private BlockPos? _lastTargetTeleport = null;
+        private bool _lastActive = false;
 
         public override void Initialize(ICoreAPI api)
         {
@@ -45,6 +45,7 @@ namespace TeleportationNetwork
             _modLogger = api.ModLoader.GetModSystem<Core>().Mod.Logger;
             TeleportManager = api.ModLoader.GetModSystem<TeleportManager>();
 
+            SetBlockActive(false);
             if (api.Side == EnumAppSide.Server)
             {
                 CreateTeleport();
@@ -76,27 +77,42 @@ namespace TeleportationNetwork
             };
 
             RegisterGameTickListener(OnGameTick, 50);
+            RegisterGameTickListener(OnGameRenderTick, 10); // For prevent shader lags on open/close
+        }
+
+        private void SetBlockActive(bool active)
+        {
+            if (active == _lastActive)
+                return;
+            (Block as BlockTeleport)?.SetActive(active, Pos);
+            _lastActive = active;
+        }
+
+        private void OnGameRenderTick(float dt)
+        {
+            if (!Repaired) return;
+
+            _teleportRiftRenderer?.SetActivationProgress(_activationTime / Constants.TeleportActivationTime);
+
+            if (Teleport.Target != null && (_lastTargetTeleport == Teleport.Target || _activationTime == 0))
+            {
+                _activationTime = Math.Min(_activationTime + dt, Constants.TeleportActivationTime);
+                SetBlockActive(true);
+            }
+            else
+            {
+                _activationTime = Math.Max(_activationTime - dt * 2, 0);
+                SetBlockActive(false);
+                return;
+            }
+            _lastTargetTeleport = Teleport.Target;
         }
 
         private void OnGameTick(float dt)
         {
             if (!Repaired) return;
 
-            _teleportRiftRenderer?.SetActivationProgress(_activationTime / Constants.TeleportActivationTime);
             UpdateSound(dt);
-
-            if (Teleport.Target != null && (_lastTargetTeleport == Teleport.Target || _activationTime == 0))
-            {
-                _activationTime = Math.Min(_activationTime + dt, Constants.TeleportActivationTime);
-                (Block as BlockTeleport)?.SetActive(true, Pos);
-            }
-            else
-            {
-                _activationTime = Math.Max(_activationTime - dt * 2, 0);
-                (Block as BlockTeleport)?.SetActive(false, Pos);
-                return;
-            }
-            _lastTargetTeleport = Teleport.Target;
 
             if (!Active || Teleport.Target == null) return;
             if (!TeleportManager.CheckTeleportLink(Teleport)) return;
@@ -133,8 +149,9 @@ namespace TeleportationNetwork
                             }
                         }
 
+                        var localPoint = point.AsBlockPos.ToLocalPosition(Api);
                         TeleportUtil.StabilityRelatedTeleportTo(entity, entityPos, ModLogger, () => AfterTeleportEntity(entity));
-                        ModLogger.Notification($"{entity?.GetName()} teleported to {point} ({TargetTeleport.Name})");
+                        ModLogger.Audit($"{entity?.GetName()} teleported to {localPoint} ({TargetTeleport.Name})");
                     }
                 }
             }
@@ -297,7 +314,8 @@ namespace TeleportationNetwork
             {
                 if (Active)
                 {
-                    dsc.AppendLine($"{Teleport.Name} &gt;&gt;&gt; {TargetTeleport?.Name}");
+                    var extra = TargetTeleport?.Enabled == true ? "" : " (Broken)";
+                    dsc.AppendLine($"{Teleport.Name} &gt;&gt;&gt; {TargetTeleport?.Name}{extra}");
                 }
                 else
                 {

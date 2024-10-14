@@ -13,7 +13,7 @@
     {
       "name": "Multiblock",
       "propertiesByType": {
-        "*": {
+        "*-smallgate-*": {
           "sizexByType": { "@(.*)-(north|south)": 3, "@(.*)-(east|west)": 1 },
           "sizey": 3,
           "sizezByType": { "@(.*)-(north|south)": 1, "@(.*)-(east|west)": 3 },
@@ -23,10 +23,33 @@
             "*-south": { "x": 1, "y": 1, "z": 0 },
             "*-west": { "x": 0, "y": 1, "z": 1 }
           }
+        },
+        "*-largegate-*": {
+          "sizexByType": { "@(.*)-(north|south)": 5, "@(.*)-(east|west)": 1 },
+          "sizey": 5,
+          "sizezByType": { "@(.*)-(north|south)": 1, "@(.*)-(east|west)": 5 },
+          "cpositionByType": {
+            "*-north": { "x": 2, "y": 2, "z": 0 },
+            "*-east": { "x": 0, "y": 2, "z": 2 },
+            "*-south": { "x": 2, "y": 2, "z": 0 },
+            "*-west": { "x": 0, "y": 2, "z": 2 }
+          }
         }
       }
     }
   ],
+  "textures":  {
+    "smoky": { "base": "game:block/glass/smoky" },
+    "device-plate": { "base": "game:block/machine/device-plate" },
+    "rustyglow": { "base": "game:block/machine/statictranslocator/rustyglow" },
+    "brass": { "base": "game:block/metal/tarnished/brass" },
+    "gold": { "base": "game:block/metal/tarnished/gold" },
+    "rusty-iron": { "base": "game:block/metal/tarnished/rusty-iron" },
+    "steel": { "base": "game:block/metal/tarnished/steel" },
+    "nailtexture": { "base": "game:block/nailtexture" },
+    "tallow": { "base": "game:block/tallow" },
+    "charred": { "base": "game:block/wood/charred" }
+  },
   //"textures": {
   //  "darkwood": { "base": "game:block/machine/statictranslocator/base_darkwood" },
   //  "rusty": { "base": "game:block/machine/statictranslocator/rusty" },

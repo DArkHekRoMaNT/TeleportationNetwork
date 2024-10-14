@@ -14,6 +14,8 @@ namespace TeleportationNetwork
         public bool IsBroken => Variant["state"] == "broken";
         public bool IsNormal => Variant["state"] == "normal";
 
+        public float Size => Attributes["gateSize"].AsFloat(1f);
+
         public TeleportParticleController? ParticleController { get; private set; }
 
         private readonly HashSet<long> _activated = [];
@@ -28,7 +30,7 @@ namespace TeleportationNetwork
             }
 
             var thick = Attributes["gateSize"].AsFloat(10) / 20f;
-            CollisionBoxes = [new Cuboidf(0, 0, 1 - thick * 2, 1, 1, 1 - thick)
+            CollisionBoxes = [new Cuboidf(0, 0, thick, 1, 1, thick * 2)
                 .RotatedCopy(0, Shape.rotateY, 0, new Vec3d(0.5f, 0.5f, 0.5f))];
         }
 
@@ -123,14 +125,14 @@ namespace TeleportationNetwork
 
         public override bool CanPlaceBlock(IWorldAccessor world, IPlayer byPlayer, BlockSelection blockSel, ref string failureCode)
         {
-            return base.CanPlaceBlock(world, byPlayer, blockSel.AddPosCopy(0, 1, 0), ref failureCode);
+            return base.CanPlaceBlock(world, byPlayer, blockSel.AddPosCopy(0, (int)Size / 5, 0), ref failureCode);
         }
 
         public override bool DoPlaceBlock(IWorldAccessor world, IPlayer byPlayer, BlockSelection blockSel, ItemStack byItemStack)
         {
-            bool flag = base.DoPlaceBlock(world, byPlayer, blockSel.AddPosCopy(0, 1, 0), byItemStack);
+            bool flag = base.DoPlaceBlock(world, byPlayer, blockSel.AddPosCopy(0, (int)Size / 5, 0), byItemStack);
 
-            if (world.BlockAccessor.GetBlockEntity(blockSel.Position.AddCopy(0, 1, 0)) is BlockEntityTeleport be)
+            if (world.BlockAccessor.GetBlockEntity(blockSel.Position.AddCopy(0, (int)Size / 5, 0)) is BlockEntityTeleport be)
             {
                 if (api.Side == EnumAppSide.Server)
                 {
@@ -209,17 +211,19 @@ namespace TeleportationNetwork
 
         public override Cuboidf[] GetCollisionBoxes(IBlockAccessor blockAccessor, BlockPos pos)
         {
-            return MBGetCollisionBoxes(blockAccessor, pos, Vec3i.Zero);
+            return IsActive(pos) ? CollisionBoxes : [];
         }
 
         public Cuboidf[] MBGetCollisionBoxes(IBlockAccessor blockAccessor, BlockPos pos, Vec3i offset)
         {
-            long index = ((long)pos.X + offset.X) << 42 | ((long)pos.Y + offset.Y) << 21 | ((long)pos.Z + offset.Z);
-            return _activated.Contains(index) ? CollisionBoxes : [];
+            return IsActive(pos + offset.ToBlockPos()) ? CollisionBoxes : [];
         }
 
         public override Cuboidf[] GetSelectionBoxes(IBlockAccessor blockAccessor, BlockPos pos)
         {
+            var thick = Attributes["gateSize"].AsFloat(10) / 20f;
+            CollisionBoxes = [new Cuboidf(0, 0, 0, 1, 1, thick)
+                .RotatedCopy(0, Shape.rotateY, 0, new Vec3d(0.5f, 0.5f, 0.5f))];
             return CollisionBoxes;
         }
 
@@ -228,9 +232,15 @@ namespace TeleportationNetwork
             return MBGetCollisionBoxes(blockAccessor, pos, offset);
         }
 
+        public bool IsActive(BlockPos pos)
+        {
+            var index = ((long)pos.X) << 42 | ((long)pos.Y) << 21 | ((long)pos.Z);
+            return _activated.Contains(index);
+        }
+
         public void SetActive(bool active, BlockPos pos)
         {
-            long index = ((long)pos.X) << 42 | ((long)pos.Y) << 21 | ((long)pos.Z);
+            var index = ((long)pos.X) << 42 | ((long)pos.Y) << 21 | ((long)pos.Z);
             if (active)
             {
                 _activated.Add(index);
