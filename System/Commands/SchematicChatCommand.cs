@@ -1,11 +1,13 @@
 using CommonLib.Extensions;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using System.Text;
 using Vintagestory.API.Common;
 using Vintagestory.API.Config;
 using Vintagestory.API.MathTools;
 using Vintagestory.API.Server;
+using Vintagestory.ServerMods.WorldEdit;
 
 namespace TeleportationNetwork
 {
@@ -75,9 +77,8 @@ namespace TeleportationNetwork
 
         private TextCommandResult ImportTeleportSchematic(TextCommandCallingArgs args)
         {
-            string name = (string)args[0];
-
-            string? error = null;
+            var name = (string)args[0];
+            var error = (string?)null;
             var schematic = LoadTeleportSchematic(name, ref error);
 
             if (error != null || schematic == null)
@@ -85,8 +86,18 @@ namespace TeleportationNetwork
                 return TextCommandResult.Error(error);
             }
 
+            //TODO: Update in CommonLib schematic.ImportToWorldEdit();
 
-            schematic.ImportToWorldEdit((IServerPlayer)args.Caller.Player);
+            var player = (IServerPlayer)args.Caller.Player;
+            var worldEdit = player.Entity.Api.ModLoader.GetModSystem<WorldEdit>();
+            if (WorldEdit.CanUseWorldEdit(player, true))
+            {
+                var clipboardBlockDataField = typeof(WorldEditWorkspace).GetField("clipboardBlockData", BindingFlags.Instance | BindingFlags.NonPublic);
+                var workSpace = worldEdit.GetWorkSpace(player.PlayerUID);
+                clipboardBlockDataField?.SetValue(workSpace, schematic);
+                Api.ChatCommands.ExecuteUnparsed("/we tool import", new TextCommandCallingArgs() { Caller = args.Caller });
+                Api.ChatCommands.ExecuteUnparsed("/we imc", new TextCommandCallingArgs() { Caller = args.Caller });
+            }
             return TextCommandResult.Success();
         }
 
