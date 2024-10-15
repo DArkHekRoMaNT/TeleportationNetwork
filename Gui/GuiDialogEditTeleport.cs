@@ -1,6 +1,7 @@
 using System;
 using System.Globalization;
 using System.Linq;
+using CommonLib.Utils;
 using Vintagestory.API.Client;
 using Vintagestory.API.Config;
 using Vintagestory.API.MathTools;
@@ -63,9 +64,9 @@ namespace TeleportationNetwork
         {
             SingleComposer?.Dispose();
 
-            if (!_colors.Contains(TeleportClientData.DefaultColor))
+            if (!_colors.Contains(TeleportClientData.DefaultColor.RGB))
             {
-                _colors = _colors.Append(TeleportClientData.DefaultColor);
+                _colors = _colors.Append(TeleportClientData.DefaultColor.RGB);
             }
 
             int iconIndex = _icons.IndexOf(_data.Icon);
@@ -74,10 +75,10 @@ namespace TeleportationNetwork
                 iconIndex = 0;
             }
 
-            int colorIndex = _colors.IndexOf(_data.Color);
+            int colorIndex = _colors.IndexOf(_data.Color.RGB);
             if (colorIndex < 0)
             {
-                _colors = _colors.Append(_data.Color);
+                _colors = _colors.Append(_data.Color.RGB);
                 colorIndex = _colors.Length - 1;
             }
 
@@ -208,7 +209,7 @@ namespace TeleportationNetwork
 
         private void OnColorSelected(int index)
         {
-            _data.Color = _colors[index];
+            _data.Color = DarkColor.FromRGB(_colors[index]);
         }
 
         private bool OnCancel()

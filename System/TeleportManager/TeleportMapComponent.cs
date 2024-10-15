@@ -1,5 +1,6 @@
 using System;
 using System.Text;
+using CommonLib.Utils;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
 using Vintagestory.API.MathTools;
@@ -29,15 +30,13 @@ namespace TeleportationNetwork
 
             if (_teleport.Enabled)
             {
-                ColorUtil.ToRGBAVec4f(_data.Color, ref _color);
+                _color = ColorUtil.ToRGBAVec4f(_data.Color.ARGB);
             }
             else
             {
-                int color = ColorUtil.Hex2Int(Core.Config.BrokenTeleportColor);
-                ColorUtil.ToRGBAVec4f(color, ref _color);
+                var color = DarkColor.FromHex(Core.Config.BrokenTeleportColor);
+                ColorUtil.ToRGBAVec4f(color.ARGB);
             }
-
-            _color.A = 1;
         }
 
         public override void Render(GuiElementMap map, float dt)

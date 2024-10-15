@@ -1,6 +1,6 @@
 using ProtoBuf;
 using System.IO;
-using Vintagestory.API.MathTools;
+using CommonLib.Utils;
 
 namespace TeleportationNetwork
 {
@@ -8,7 +8,7 @@ namespace TeleportationNetwork
     public class TeleportClientData
     {
         public static string DefaultIcon => Core.Config.DefaultTeleportIcon;
-        public static int DefaultColor => ColorUtil.Hex2Int(Core.Config.DefaultTeleportColor);
+        public static DarkColor DefaultColor => DarkColor.FromHex(Core.Config.DefaultTeleportColor);
 
         public bool Pinned { get; set; } = false;
 
@@ -22,20 +22,19 @@ namespace TeleportationNetwork
             set => _icon = value != DefaultIcon ? value : null;
         }
         private string? _icon;
-
-        public int Color
+        public DarkColor Color
         {
             get => _color ?? DefaultColor;
             set => _color = value != DefaultColor ? value : null;
         }
-        private int? _color;
+        private DarkColor? _color;
 
         public void ToBytes(BinaryWriter writer)
         {
             writer.Write(Pinned);
             writer.Write(Note);
             writer.Write(Icon);
-            writer.Write(Color);
+            writer.Write(Color.ARGB);
             writer.Write(SortOrder);
         }
 
@@ -46,7 +45,7 @@ namespace TeleportationNetwork
                 Pinned = reader.ReadBoolean();
                 Note = reader.ReadString();
                 Icon = reader.ReadString();
-                Color = reader.ReadInt32();
+                Color = DarkColor.FromARGB(reader.ReadInt32());
                 SortOrder = reader.ReadInt32();
             }
             catch (EndOfStreamException)
