@@ -43,7 +43,10 @@ namespace TeleportationNetwork
         public void SendTeleportList(IServerPlayer player)
         {
             var points = _manager.Points.Select(x => x.ForPlayerOnly(player.PlayerUID)).ToArray();
-            _channel.SendPacket(new SyncTeleportListMessage(points), player);
+            if (points.Length > 0)
+            {
+                _channel.SendPacket(new SyncTeleportListMessage(points), player);
+            }
         }
 
         private void OnUpdateTeleportFromClient(IServerPlayer fromPlayer, SyncTeleportMessage msg)
