@@ -32,11 +32,8 @@ namespace TeleportationNetwork
             get => _state;
             set
             {
-                if (_state != value)
-                {
-                    StateChanged?.Invoke(_state, value);
-                    _state = value;
-                }
+                StateChanged?.Invoke(_state, value);
+                _state = value;
             }
         }
 
@@ -127,35 +124,7 @@ namespace TeleportationNetwork
             _modLogger = api.ModLoader.GetModSystem<Core>().Mod.Logger;
             _manager = api.ModLoader.GetModSystem<TeleportManager>();
 
-            Status.StateChanged += (prev, next) =>
-            {
-                if (next == TeleportActivator.FSMState.Deactivated || next == TeleportActivator.FSMState.Deactivating)
-                {
-                    AnimUtil?.StopAnimation("activation");
-                    AnimUtil?.StopAnimation("loop");
-                    (Block as BlockTeleport)?.SetActive(false, Pos);
-                }
-                else if (next == TeleportActivator.FSMState.Activating || next == TeleportActivator.FSMState.Activated)
-                {
-                    AnimUtil?.StartAnimation(new AnimationMetaData
-                    {
-                        Animation = "loop",
-                        Code = "loop",
-                        AnimationSpeed = 0.5f,
-                        EaseInSpeed = 0.5f,
-                        EaseOutSpeed = 2
-                    });
-
-                    AnimUtil?.StartAnimation(new AnimationMetaData
-                    {
-                        Animation = "activation",
-                        Code = "activation",
-                        AnimationSpeed = 0.5f,
-                    });
-
-                    (Block as BlockTeleport)?.SetActive(true, Pos);
-                }
-            };
+            Status.StateChanged += (_, next) => UpdateState(next);
 
             if (api is ICoreClientAPI capi)
             {
@@ -163,7 +132,7 @@ namespace TeleportationNetwork
 
                 _sound = capi.World.LoadSound(new SoundParams
                 {
-                    Location = new AssetLocation("sounds/effect/translocate-idle.ogg"),
+                    Location = new AssetLocation("sounds/effect/translocate-idle.ogg"), //TODO: Change sound
                     ShouldLoop = true,
                     Position = Pos.ToVec3f().AddCopy(.5f, 1, .5f),
                     RelativePosition = false,
@@ -172,13 +141,56 @@ namespace TeleportationNetwork
                 });
 
                 UpdateAnimator();
+                UpdateState(Status.State);
             }
 
             var teleport = GetOrCreateTeleport();
             _teleportRiftRenderer?.Update(teleport);
 
+            if (teleport.Target != null) // Fix reactivating on other side (onloaded chunks)
+            {
+                _lastTargetPos = teleport.Target;
+                Status.State = TeleportActivator.FSMState.Activated;
+            }
+            if (Status.State == TeleportActivator.FSMState.Activated)
+            {
+                // Fast forward
+                AnimUtil?.AnimationTickServer(1000);
+                UpdateSound(1000);
+            }
+
             RegisterGameTickListener(OnGameTick, 50);
             RegisterGameTickListener(OnGameRenderTick, 10); // For prevent shader lags on open/close
+        }
+
+        private void UpdateState(TeleportActivator.FSMState state)
+        {
+            if (state == TeleportActivator.FSMState.Deactivated || state == TeleportActivator.FSMState.Deactivating)
+            {
+                AnimUtil?.StopAnimation("activation");
+                AnimUtil?.StopAnimation("loop");
+                (Block as BlockTeleport)?.SetActive(false, Pos);
+            }
+            else if (state == TeleportActivator.FSMState.Activating || state == TeleportActivator.FSMState.Activated)
+            {
+                AnimUtil?.StartAnimation(new AnimationMetaData
+                {
+                    Animation = "loop",
+                    Code = "loop",
+                    AnimationSpeed = 0.5f,
+                    EaseInSpeed = 0.5f,
+                    EaseOutSpeed = 2
+                });
+
+                AnimUtil?.StartAnimation(new AnimationMetaData
+                {
+                    Animation = "activation",
+                    Code = "activation",
+                    AnimationSpeed = 0.5f,
+                });
+
+                (Block as BlockTeleport)?.SetActive(true, Pos);
+            }
         }
 
         private void OnGameRenderTick(float dt)
@@ -423,11 +435,8 @@ namespace TeleportationNetwork
                     GetBehavior<BEBehaviorAnimatable>().animUtil = new(Api, this);
                 }
 
-                if (GetOrCreateTeleport().Enabled)
-                {
-                    float rotY = Block.Shape.rotateY;
-                    AnimUtil.InitializeAnimator($"{Constants.ModId}-teleport-" + Block.Variant["type"], null, null, new Vec3f(0, rotY, 0));
-                }
+                float rotY = Block.Shape.rotateY;
+                AnimUtil.InitializeAnimator($"{Constants.ModId}-teleport-" + Block.Variant["type"], null, null, new Vec3f(0, rotY, 0));
             }
         }
 
