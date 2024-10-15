@@ -25,10 +25,9 @@ namespace TeleportationNetwork
             var len = Rand.NextDouble() * radius;
             var depth = (Rand.NextDouble() - 0.5) * thick;
 
-            var x = radius * GameMath.Sin(angle) * len;
+            var x = GameMath.Sin(angle) * len;
             var y = depth;
-            var z = radius * GameMath.Cos(angle) * len;
-
+            var z = GameMath.Cos(angle) * len;
             if (orientation.IsVertical)
             {
                 return new Vec3d(x, y, z);
@@ -39,7 +38,7 @@ namespace TeleportationNetwork
             }
             else
             {
-                return new Vec3d(y, z, x);
+                return new Vec3d(y, x, z);
             }
         }
 

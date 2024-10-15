@@ -217,7 +217,7 @@ namespace TeleportationNetwork
             if (Status.State != TeleportActivator.FSMState.Activated) return;
 
             var center = teleport.GetGateCenter();
-            var orientation = teleport.Orientation ?? BlockFacing.UP;
+            var orientation = teleport.Orientation;
 
             var radius = teleport.Size / 2f;
             var thick = 0.5f;
@@ -234,7 +234,7 @@ namespace TeleportationNetwork
                         return;
                     }
                     var targetCenter = targetTeleport.GetGateCenter();
-                    var targetOrientation = targetTeleport.Orientation ?? BlockFacing.UP;
+                    var targetOrientation = targetTeleport.Orientation;
                     foreach (var entity in entities)
                     {
                         if (entity.IsActivityRunning(Constants.TeleportCooldownActivityName))

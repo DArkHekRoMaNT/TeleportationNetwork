@@ -20,12 +20,12 @@ namespace TeleportationNetwork
 
         [ProtoMember(3)] public bool Enabled { get; set; }
         [ProtoMember(4)] public BlockPos? Target { get; set; }
-        [ProtoMember(5)] public float Size { get; set; }
-        [ProtoMember(6)] public int OrientationIndex { get; set; }
+        [ProtoMember(5)] public float Size { get; private set; }
+        [ProtoMember(6)] public int OrientationIndex { get; private set; }
         [ProtoMember(7)] public List<string> ActivatedByPlayers { get; private set; }
         [ProtoMember(8)] public Dictionary<string, TeleportClientData> ClientData { get; private set; }
 
-        public BlockFacing? Orientation => OrientationIndex == -1 ? null : BlockFacing.ALLFACES[OrientationIndex];
+        public BlockFacing Orientation => BlockFacing.ALLFACES[OrientationIndex];
 
         private string _name = string.Empty;
 
@@ -36,7 +36,7 @@ namespace TeleportationNetwork
             Pos = new BlockPos(0);
             Target = null;
             Size = 0;
-            OrientationIndex = -1;
+            OrientationIndex = 0;
             ActivatedByPlayers = [];
             ClientData = [];
         }
@@ -82,7 +82,7 @@ namespace TeleportationNetwork
 
         public void UpdateBlockInfo(Block block)
         {
-            OrientationIndex = BlockFacing.FromCode(block.LastCodePart())?.Index ?? -1;
+            OrientationIndex = BlockFacing.FromCode(block.LastCodePart())?.Index ?? 0;
             Size = block.Attributes["gateSize"].AsFloat(0f);
         }
     }

@@ -67,10 +67,27 @@ namespace TeleportationNetwork
 
         public void SpawnGateParticles(float radius, float thick, Vec3d center, BlockFacing orientation)
         {
-            _gateParticles.MinPos.Set(center);
-            _gateParticles.AddPos.Set(MathUtil.GetRandomPosInCyllinder(radius, thick, orientation));
-            _gateParticles.Color = GetRandomColor();
-            _api.World.SpawnParticles(_gateParticles);
+            return;
+            for (int i = 0; i < 50; i++)
+            {
+                var gateParticles = new SimpleParticleProperties
+                {
+                    MinQuantity = 1f,
+                    AddQuantity = 0f,
+                    MinPos = new Vec3d(),
+                    AddPos = new Vec3d(),
+                    MinVelocity = new Vec3f(),
+                    AddVelocity = new Vec3f(),
+                    LifeLength = 0.5f,
+                    GravityEffect = 0,
+                    MinSize = 0.2f,
+                    MaxSize = 0.2f,
+                    ParticleModel = EnumParticleModel.Quad
+                };
+                gateParticles.MinPos.Set(center + MathUtil.GetRandomPosInCyllinder(radius, thick, orientation));
+                gateParticles.Color = GetRandomColor();
+                _api.World.SpawnParticles(gateParticles);
+            }
         }
 
         public int GetRandomColor()
