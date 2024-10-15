@@ -1,6 +1,5 @@
 using System;
 using System.Diagnostics;
-using System.Threading;
 using Vintagestory.API.Common;
 using Vintagestory.API.Common.Entities;
 using Vintagestory.API.MathTools;
@@ -86,24 +85,24 @@ namespace TeleportationNetwork
 
         public static Vec3d GetTargetPos(this Teleport target)
         {
-            if (target.OrientationIndex == -1 || target.Size == 0)
+            if (target.Orientation == null || target.Size == 0)
             {
                 Debug.WriteLine($"{target.OrientationIndex} {target.Size}");
                 return GetDefaultGateCenter(target);
             }
 
             var targetPos = GetGateCenter(target);
-            targetPos -= BlockFacing.ALLNORMALI[target.OrientationIndex].AsBlockPos.ToVec3d().Mul(1f); // Forward offset
+            targetPos -= target.Orientation.Normalf.ToVec3d().Mul(1f); // Forward offset
             return targetPos;
         }
 
         public static Vec3d GetGateCenter(this Teleport teleport)
         {
-            if (teleport.OrientationIndex == -1 || teleport.Size == 0)
+            if (teleport.Orientation == null || teleport.Size == 0)
             {
                 return GetDefaultGateCenter(teleport);
             }
-            return GetGateCenter(teleport.Pos, BlockFacing.ALLFACES[teleport.OrientationIndex], teleport.Size);
+            return GetGateCenter(teleport.Pos, teleport.Orientation, teleport.Size);
         }
 
         public static Vec3d GetDefaultGateCenter(this Teleport teleport)

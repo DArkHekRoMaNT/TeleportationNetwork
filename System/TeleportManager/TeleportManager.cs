@@ -1,5 +1,4 @@
-using ProtoBuf;
-using System;
+using TeleportationNetwork.Packets;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
 using Vintagestory.API.MathTools;
@@ -10,12 +9,13 @@ namespace TeleportationNetwork
 {
     public class TeleportManager : ModSystem
     {
-        private IServerNetworkChannel? _serverChannel;
-        private IClientNetworkChannel? _clientChannel;
         private ICoreAPI _api = null!;
 
-        public TeleportList Points { get; } = new();
+        public TeleportListNew Points { get; } = [];
         public TeleportNameGenerator NameGenerator { get; } = new();
+
+        private TeleportSyncManagerClient? _clientSyncManager;
+        private TeleportSyncManagerServer? _serverSyncManager;
 
         public override void StartPre(ICoreAPI api)
         {
@@ -23,56 +23,25 @@ namespace TeleportationNetwork
 
             if (api is ICoreClientAPI capi)
             {
-                _clientChannel = capi.Network
-                     .RegisterChannel($"{Mod.Info.ModID}-teleport-manager")
-                     .RegisterMessageType<SyncTeleportMessage>()
-                     .RegisterMessageType<RemoveTeleportMessage>()
-                     .RegisterMessageType<SyncTeleportListMessage>()
-                     .RegisterMessageType<TeleportPlayerMessage>()
-                     .SetMessageHandler<SyncTeleportMessage>(msg => Points.SetSafe(msg.Teleport, msg.LastUpdateTime))
-                     .SetMessageHandler<RemoveTeleportMessage>(msg => Points.Remove(msg.Pos))
-                     .SetMessageHandler<SyncTeleportListMessage>(msg => Points.SetFrom(msg.Points));
+                _clientSyncManager = new TeleportSyncManagerClient(capi, this);
+                capi.Network.RegisterChannel(Constants.TeleportManagerChannelName)
+                    .RegisterMessageType<TeleportPlayerMessage>();
             }
             else if (api is ICoreServerAPI sapi)
             {
-                _serverChannel = sapi.Network
-                    .RegisterChannel($"{Mod.Info.ModID}-teleport-manager")
-                    .RegisterMessageType<SyncTeleportMessage>()
-                    .RegisterMessageType<RemoveTeleportMessage>()
-                    .RegisterMessageType<SyncTeleportListMessage>()
+                _serverSyncManager = new TeleportSyncManagerServer(sapi, this);
+                sapi.Network.RegisterChannel(Constants.TeleportManagerChannelName)
                     .RegisterMessageType<TeleportPlayerMessage>()
-                    .SetMessageHandler<SyncTeleportMessage>(OnReceiveClientSyncTeleportMessage)
-                    .SetMessageHandler<TeleportPlayerMessage>(OnReceiveTeleportPlayerMessage);
+                    .SetMessageHandler<TeleportPlayerMessage>(OnTeleportPlayer);
 
-                Points.ValueChanged += teleport =>
-                {
-                    foreach (var player in _api.World.AllOnlinePlayers)
-                    {
-                        var message = new SyncTeleportMessage(teleport.ForPlayerOnly(player.PlayerUID), DateTime.Now.Ticks);
-                        _serverChannel.SendPacket(message, (IServerPlayer)player);
-                    }
-                };
-
-                Points.ValueRemoved += pos =>
-                {
-                    _serverChannel.BroadcastPacket(new RemoveTeleportMessage(pos));
-                    foreach (var point in Points.GetAll(x => x.Target == pos))
-                    {
-                        UnlinkTeleport(point);
-                    }
-                };
-
-                sapi.Event.PlayerJoin += player =>
-                {
-                    _serverChannel.SendPacket(new SyncTeleportListMessage(Points.ForPlayer(player)), player);
-                };
+                sapi.Event.PlayerJoin += _serverSyncManager.SendTeleportList;
             }
         }
 
         public override void StartClientSide(ICoreClientAPI api)
         {
-            var mapManager = api.ModLoader.GetModSystem<WorldMapManager>();
-            mapManager.RegisterMapLayer<TeleportMapLayer>(Mod.Info.ModID, 1.0);
+            var map = api.ModLoader.GetModSystem<WorldMapManager>();
+            map.RegisterMapLayer<TeleportMapLayer>(Mod.Info.ModID, 1.0);
         }
 
         public override void AssetsLoaded(ICoreAPI api)
@@ -82,14 +51,18 @@ namespace TeleportationNetwork
 
         public void TeleportPlayerTo(BlockPos pos)
         {
-            _clientChannel?.SendPacket(new TeleportPlayerMessage(pos));
+            if (_api is ICoreClientAPI capi)
+            {
+                capi.Network
+                    .GetChannel(Constants.TeleportManagerChannelName)
+                    .SendPacket(new TeleportPlayerMessage(pos));
+            }
         }
 
-        private void OnReceiveTeleportPlayerMessage(IServerPlayer fromPlayer, TeleportPlayerMessage msg)
+        private void OnTeleportPlayer(IServerPlayer fromPlayer, TeleportPlayerMessage packet)
         {
-            var pos = msg.Pos.ToVec3d().AddCopy(0.5, 1.5, 0.5);
-            var teleport = Points[msg.Pos];
-            if (teleport != null)
+            var pos = packet.Pos.ToVec3d().AddCopy(0.5, 1.5, 0.5);
+            if (Points.TryGetValue(packet.Pos, out var teleport))
             {
                 pos = teleport.GetTargetPos();
             }
@@ -100,7 +73,7 @@ namespace TeleportationNetwork
         {
             if (_api is ICoreServerAPI sapi)
             {
-                foreach (Teleport teleport in Points.GetAll())
+                foreach (var teleport in Points)
                 {
                     int chunkSize = sapi.WorldManager.ChunkSize;
                     int chunkX = teleport.Pos.X / chunkSize;
@@ -108,15 +81,14 @@ namespace TeleportationNetwork
 
                     sapi.WorldManager.LoadChunkColumnPriority(chunkX, chunkZ, new ChunkLoadOptions
                     {
-                        OnLoaded = delegate
+                        OnLoaded = () =>
                         {
-                            // Check teleport exists
-                            BlockEntity be = sapi.World.BlockAccessor.GetBlockEntity(teleport.Pos);
-                            if (be is not BlockEntityTeleport)
+                            var block = sapi.World.BlockAccessor.GetBlock(teleport.Pos);
+                            var be = sapi.World.BlockAccessor.GetBlockEntity(teleport.Pos);
+                            if (block is not BlockTeleport || be is not BlockEntityTeleport)
                             {
                                 Points.Remove(teleport.Pos);
-                                Mod.Logger.Notification("Removed unknown teleport {0} at {1}",
-                                    teleport.Name, teleport.Pos);
+                                Mod.Logger.Notification($"Removed unknown teleport {teleport.Name} at {teleport.Pos}");
                             }
                         }
                     });
@@ -126,124 +98,7 @@ namespace TeleportationNetwork
 
         public void UpdateTeleport(Teleport teleport)
         {
-            _clientChannel?.SendPacket(new SyncTeleportMessage(teleport, 0));
+            _clientSyncManager?.UpdateTeleport(teleport);
         }
-
-        public bool CheckTeleportLink(Teleport teleport)
-        {
-            if (teleport.Target == null)
-                return false;
-
-            var tp2 = Points[teleport.Target];
-            if (tp2 == null)
-            {
-                UnlinkTeleport(teleport);
-                return false;
-            }
-
-            if (tp2.Target == teleport.Pos)
-            {
-                return true;
-            }
-            else if (tp2.Target == null)
-            {
-                LinkTeleport(tp2, teleport);
-                return true;
-            }
-            else
-            {
-                teleport.Target = null;
-                Points.MarkDirty(teleport.Pos);
-                return false;
-            }
-        }
-
-        public void LinkTeleport(Teleport tp1, BlockPos pos2)
-        {
-            var tp2 = Points[pos2];
-            if (tp2 == null)
-                return;
-            LinkTeleport(tp1, tp2);
-        }
-
-        public void LinkTeleport(Teleport tp1, Teleport tp2)
-        {
-            UnlinkTeleport(tp1);
-            UnlinkTeleport(tp2);
-
-            tp1.Target = tp2.Pos;
-            tp2.Target = tp1.Pos;
-
-            Points.MarkDirty(tp1.Pos);
-            Points.MarkDirty(tp2.Pos);
-        }
-
-        public void UnlinkTeleport(Teleport teleport)
-        {
-            if (teleport.Target == null)
-                return;
-
-            var tp2 = Points[teleport.Target];
-            if (tp2 != null && tp2.Target == teleport.Pos)
-            {
-                teleport.Target = null;
-                tp2.Target = null;
-                Points.MarkDirty(teleport.Pos);
-                Points.MarkDirty(tp2.Pos);
-            }
-            else
-            {
-                teleport.Target = null;
-                Points.MarkDirty(teleport.Pos);
-            }
-        }
-
-        private void OnReceiveClientSyncTeleportMessage(IServerPlayer fromPlayer, SyncTeleportMessage msg)
-        {
-            var teleport = Points[msg.Teleport.Pos];
-            if (teleport == null)
-            {
-                return;
-            }
-
-            teleport.SetClientData(fromPlayer.PlayerUID, msg.Teleport.GetClientData(fromPlayer.PlayerUID));
-
-            if (teleport.Name != msg.Teleport.Name)
-            {
-                int chunkSize = _api.World.BlockAccessor.ChunkSize;
-                int chunkX = teleport.Pos.X / chunkSize;
-                int chunkZ = teleport.Pos.Z / chunkSize;
-
-                ((ICoreServerAPI)_api).WorldManager.LoadChunkColumnPriority(chunkX, chunkZ, new ChunkLoadOptions
-                {
-                    OnLoaded = delegate
-                    {
-                        if (fromPlayer.WorldData.CurrentGameMode == EnumGameMode.Creative ||
-                            _api.World.Claims.TryAccess(fromPlayer, teleport.Pos, EnumBlockAccessFlags.Use))
-                        {
-                            teleport.Name = msg.Teleport.Name;
-                            Points.MarkDirty(teleport.Pos);
-                        }
-                    }
-                });
-            }
-
-            Points.MarkDirty(teleport.Pos);
-        }
-
-        [ProtoContract(SkipConstructor = true, ImplicitFields = ImplicitFields.AllPublic)]
-        private record struct RemoveTeleportMessage(BlockPos Pos);
-
-
-        [ProtoContract(SkipConstructor = true, ImplicitFields = ImplicitFields.AllPublic)]
-        private record struct SyncTeleportListMessage(TeleportList Points);
-
-
-        [ProtoContract(SkipConstructor = true, ImplicitFields = ImplicitFields.AllPublic)]
-        private record struct SyncTeleportMessage(Teleport Teleport, long LastUpdateTime);
-
-
-        [ProtoContract(SkipConstructor = true, ImplicitFields = ImplicitFields.AllPublic)]
-        private record struct TeleportPlayerMessage(BlockPos Pos);
     }
 }

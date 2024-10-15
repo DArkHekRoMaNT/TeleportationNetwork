@@ -18,7 +18,7 @@ namespace TeleportationNetwork
 
         public TeleportParticleController? ParticleController { get; private set; }
 
-        private readonly HashSet<long> _activated = [];
+        private readonly HashSet<BlockPos> _activated = [];
 
         public override void OnLoaded(ICoreAPI api)
         {
@@ -36,7 +36,7 @@ namespace TeleportationNetwork
 
         public override bool AllowSnowCoverage(IWorldAccessor world, BlockPos blockPos)
         {
-            return true;
+            return true; //TODO: Snow
         }
 
         public override double GetBlastResistance(IWorldAccessor world, BlockPos pos, Vec3f blastDirectionVector, EnumBlastType blastType)
@@ -60,19 +60,25 @@ namespace TeleportationNetwork
             {
                 if (byPlayer.Entity.Controls.Sneak)
                 {
-                    be.OpenEditDialog();
+                    if (api is ICoreClientAPI capi)
+                    {
+                        new GuiDialogEditTeleport(capi, blockSel.Position).TryOpen();
+                    }
                     return true;
                 }
 
-                // select target
+                // Select target
                 if (IsNormal)
                 {
-                    be.OpenTeleportDialog();
+                    if (api is ICoreClientAPI capi)
+                    {
+                        new GuiDialogTeleportList(capi, blockSel.Position).TryOpen();
+                    }
                     return true;
                 }
 
-                // repair
-                ItemSlot activeSlot = byPlayer.InventoryManager.ActiveHotbarSlot;
+                // Repair
+                var activeSlot = byPlayer.InventoryManager.ActiveHotbarSlot;
                 if (!activeSlot.Empty)
                 {
                     if (IsBroken && activeSlot.Itemstack.Collectible.Code == GetRepairItem())
@@ -106,12 +112,6 @@ namespace TeleportationNetwork
             if (Core.Config.Unbreakable && byPlayer.WorldData.CurrentGameMode != EnumGameMode.Creative)
             {
                 return;
-            }
-
-            if (api.Side == EnumAppSide.Client)
-            {
-                var core = api.ModLoader.GetModSystem<Core>();
-                core.HudCircleRenderer.CircleVisible = false;
             }
 
             if (api.Side == EnumAppSide.Server)
@@ -234,20 +234,18 @@ namespace TeleportationNetwork
 
         public bool IsActive(BlockPos pos)
         {
-            var index = ((long)pos.X) << 42 | ((long)pos.Y) << 21 | ((long)pos.Z);
-            return _activated.Contains(index);
+            return _activated.Contains(pos);
         }
 
         public void SetActive(bool active, BlockPos pos)
         {
-            var index = ((long)pos.X) << 42 | ((long)pos.Y) << 21 | ((long)pos.Z);
             if (active)
             {
-                _activated.Add(index);
+                _activated.Add(pos);
             }
             else
             {
-                _activated.Remove(index);
+                _activated.Remove(pos);
             }
         }
 

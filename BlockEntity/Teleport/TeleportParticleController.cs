@@ -9,15 +9,15 @@ namespace TeleportationNetwork
     public class TeleportParticleController
     {
         private readonly ICoreClientAPI _api;
-        private readonly SimpleParticleProperties _circleParticles;
-        private readonly SimpleParticleProperties _teleportParticles;
+        private readonly SimpleParticleProperties _gateParticles;
+        private readonly SimpleParticleProperties _entityTeleportedParticles;
         private readonly Item _temporalGear;
 
         public TeleportParticleController(ICoreClientAPI api)
         {
             _api = api;
 
-            _circleParticles = new SimpleParticleProperties
+            _gateParticles = new SimpleParticleProperties
             {
                 MinQuantity = 1f,
                 AddQuantity = 0f,
@@ -35,7 +35,7 @@ namespace TeleportationNetwork
                 VertexFlags = 20 & VertexFlags.GlowLevelBitMask
             };
 
-            _teleportParticles = new SimpleParticleProperties
+            _entityTeleportedParticles = new SimpleParticleProperties
             {
                 MinQuantity = 15,
                 AddQuantity = 15,
@@ -59,10 +59,18 @@ namespace TeleportationNetwork
         public void SpawnTeleportParticles(Entity entity)
         {
             float width = entity.CollisionBox.Width;
-            _teleportParticles.AddPos.Set(width, entity.CollisionBox.Height, width);
-            _teleportParticles.MinPos.Set(entity.SidedPos).Add(-width / 2, 0, -width / 2);
-            _teleportParticles.Color = GetRandomColor();
-            _api.World.SpawnParticles(_teleportParticles);
+            _entityTeleportedParticles.AddPos.Set(width, entity.CollisionBox.Height, width);
+            _entityTeleportedParticles.MinPos.Set(entity.SidedPos).Add(-width / 2, 0, -width / 2);
+            _entityTeleportedParticles.Color = GetRandomColor();
+            _api.World.SpawnParticles(_entityTeleportedParticles);
+        }
+
+        public void SpawnGateParticles(float radius, float thick, Vec3d center, BlockFacing orientation)
+        {
+            _gateParticles.MinPos.Set(center);
+            _gateParticles.AddPos.Set(MathUtil.GetRandomPosInCyllinder(radius, thick, orientation));
+            _gateParticles.Color = GetRandomColor();
+            _api.World.SpawnParticles(_gateParticles);
         }
 
         public int GetRandomColor()

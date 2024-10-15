@@ -19,7 +19,7 @@ namespace TeleportationNetwork
 
         private TextCommandResult OpenTeleportDialog(TextCommandCallingArgs args)
         {
-            GuiDialogTeleportList dialog = new(Api, null);
+            var dialog = new GuiDialogTeleportList(Api, null);
             dialog.TryOpen();
             return TextCommandResult.Success();
         }

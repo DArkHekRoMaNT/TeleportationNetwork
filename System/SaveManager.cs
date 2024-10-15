@@ -1,6 +1,5 @@
 using ProtoBuf;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using Vintagestory.API.Common;
 using Vintagestory.API.Server;
@@ -29,7 +28,7 @@ namespace TeleportationNetwork
 
         private void OnSaveGame()
         {
-            var data = SerializerUtil.Serialize(_teleportManager.Points.GetAll().ToList());
+            var data = SerializerUtil.Serialize(_teleportManager.Points.ToArray());
             _sapi.WorldManager.SaveGame.StoreData("TPNetData", data);
         }
 
@@ -42,13 +41,13 @@ namespace TeleportationNetwork
                 byte[] data = _sapi.WorldManager.SaveGame.GetData("TPNetData");
                 if (data != null)
                 {
-                    var list = DeserializeData(data);
-                    _teleportManager.Points.SetFrom(list);
-                    foreach (var teleport in list)
+                    var array = DeserializeData(data);
+                    _teleportManager.Points.SetFrom(array);
+                    foreach (var teleport in array)
                     {
                         Mod.Logger.Debug($"Loaded teleport data for {teleport.Name} at {teleport.Pos}");
                     }
-                    Mod.Logger.Event($"Data loaded for {list.Count} teleports");
+                    Mod.Logger.Event($"Data loaded for {array.Length} teleports");
                     Mod.Logger.Event("Check teleport exists (async)");
                     _sapi.ModLoader.GetModSystem<TeleportManager>().CheckAllTeleportExists();
                 }
@@ -63,11 +62,11 @@ namespace TeleportationNetwork
             }
         }
 
-        private List<Teleport> DeserializeData(byte[] data)
+        private Teleport[] DeserializeData(byte[] data)
         {
             try
             {
-                return SerializerUtil.Deserialize<List<Teleport>>(data);
+                return SerializerUtil.Deserialize<Teleport[]>(data);
             }
             catch (ProtoException)
             {

@@ -1,7 +1,9 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using CommonLib.Utils;
+using Eto.Forms;
 using Vintagestory.API.Client;
 using Vintagestory.API.Config;
 using Vintagestory.API.MathTools;
@@ -42,14 +44,17 @@ namespace TeleportationNetwork
 
         public override bool TryOpen()
         {
-            var otherDialog = capi.OpenedGuis.FirstOrDefault(gui =>
-                gui is GuiDialogEditTeleport ||
-                gui is GuiDialogEditWayPoint ||
-                gui is GuiDialogAddWayPoint);
-            (otherDialog as GuiDialog)?.TryClose();
+            foreach (var dialog in capi.OpenedGuis)
+            {
+                if (dialog is GuiDialogEditTeleport ||
+                    dialog is GuiDialogEditWayPoint ||
+                    dialog is GuiDialogAddWayPoint)
+                {
+                    (dialog as GuiDialog)?.TryClose();
+                }
+            }
 
-            _teleport = _manager.Points[_pos]!;
-            if (_teleport == null)
+            if (!_manager.Points.TryGetValue(_pos, out _teleport!))
             {
                 return false;
             }

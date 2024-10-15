@@ -1,5 +1,6 @@
 namespace TeleportationNetwork
 {
+    //TODO: Rename?
     public static class Constants
     {
         public static string ModId => "tpnet";
@@ -14,5 +15,7 @@ namespace TeleportationNetwork
         public static int MaxPillarHeight => int.MaxValue;
         public static int TeleportTriesPerChunk => 10;
         public static string TeleportCooldownActivityName => $"{ModId}_teleportCooldown";
+        public static string TeleportManagerChannelName => $"{ModId}-teleport-manager";
+        public static string TeleportSyncChannelName => $"{ModId}-teleport-sync";
     }
 }

@@ -5,7 +5,7 @@ using Vintagestory.GameContent;
 
 namespace TeleportationNetwork
 {
-    public class TeleportRiftRenderer : IRenderer
+    public sealed class TeleportRiftRenderer : IRenderer
     {
         public double RenderOrder => 0.05;
         public int RenderRange => 100;

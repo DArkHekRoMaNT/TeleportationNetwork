@@ -25,7 +25,7 @@ namespace TeleportationNetwork
             {
                 _accepted = false;
                 var manager = Api.ModLoader.GetModSystem<TeleportManager>();
-                foreach (Teleport teleport in manager.Points.GetAll())
+                foreach (var teleport in manager.Points)
                 {
                     int chunkX = teleport.Pos.X / Api.World.BlockAccessor.ChunkSize;
                     int chunkZ = teleport.Pos.Z / Api.World.BlockAccessor.ChunkSize;

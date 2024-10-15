@@ -26,25 +26,21 @@ namespace TeleportationNetwork
 
         public override bool TryOpen()
         {
+            if (capi.OpenedGuis.Any(dlg => (dlg as GuiDialogTeleportList)?.Pos == Pos))
+            {
+                return false;
+            }
+
             if (Pos != null)
             {
-                var identicalDlg = capi.OpenedGuis
-                    .FirstOrDefault(dlg => (dlg as GuiDialogTeleportList)?.Pos == Pos);
-
-                if (identicalDlg != null)
+                if (!TeleportManager.Points.TryGetValue(Pos, out var teleport))
                 {
-                    return false;
-                }
-
-                var teleport = TeleportManager.Points[Pos];
-                if (teleport == null)
-                {
-                    TeleportManager.Mod.Logger.Warning("Using not-exists teleport at {0}, gui closed", Pos);
+                    TeleportManager.Mod.Logger.Warning($"Using not-exists teleport at {Pos}, gui closed");
                     TryClose();
                 }
             }
 
-            GetStability();
+            CheckStability();
             UpdatePoints();
 
             ComposeDialog();
@@ -207,28 +203,15 @@ namespace TeleportationNetwork
 
         private void UpdatePoints()
         {
+            var showAll = capi.World.Player.WorldData.CurrentGameMode == EnumGameMode.Creative;
             _allPoints.Clear();
-
-            IEnumerable<Teleport> Sort(IEnumerable<Teleport> points)
-            {
-                return points
-                    .OrderBy(tp => tp.Name)
-                    .OrderBy(tp => -tp.GetClientData(capi).SortOrder);
-            }
-
-            if (capi.World.Player.WorldData.CurrentGameMode == EnumGameMode.Creative)
-            {
-                _allPoints.AddRange(Sort(TeleportManager.Points.GetAll()));
-            }
-            else
-            {
-                _allPoints.AddRange(Sort(TeleportManager.Points.GetAll((tp) =>
-                    tp.Enabled &&
-                    tp.ActivatedByPlayers.Contains(capi.World.Player.PlayerUID))));
-            }
+            _allPoints.AddRange(TeleportManager.Points
+                .Where(tp => showAll || (tp.Enabled && tp.ActivatedByPlayers.Contains(capi.World.Player.PlayerUID)))
+                .OrderBy(tp => tp.Name)
+                .OrderBy(tp => -tp.GetClientData(capi).SortOrder));
         }
 
-        private void GetStability()
+        private void CheckStability()
         {
             var systemTemporalStability = capi.ModLoader.GetModSystem<SystemTemporalStability>();
             double currStability = capi.World.Player.Entity.WatchedAttributes.GetDouble("temporalStability");
@@ -260,17 +243,19 @@ namespace TeleportationNetwork
         {
             if (Pos != null)
             {
-                var teleport = TeleportManager.Points[Pos];
-                if (teleport?.Target == targetPoint) // Already opened
+                if (TeleportManager.Points.TryGetValue(Pos, out var teleport))
                 {
-                    capi.Network.SendBlockEntityPacket(Pos, Constants.CloseTeleportPacketId);
-                }
-                else
-                {
-                    using var ms = new MemoryStream();
-                    using var writer = new BinaryWriter(ms);
-                    targetPoint.ToBytes(writer);
-                    capi.Network.SendBlockEntityPacket(Pos, Constants.OpenTeleportPacketId, ms.ToArray());
+                    if (teleport.Target != targetPoint) // Not opened
+                    {
+                        using var ms = new MemoryStream();
+                        using var writer = new BinaryWriter(ms);
+                        targetPoint.ToBytes(writer);
+                        capi.Network.SendBlockEntityPacket(Pos, Constants.OpenTeleportPacketId, ms.ToArray());
+                    }
+                    else
+                    {
+                        capi.Network.SendBlockEntityPacket(Pos, Constants.CloseTeleportPacketId);
+                    }
                 }
             }
             else
@@ -306,8 +291,7 @@ namespace TeleportationNetwork
                     var sb = new StringBuilder();
                     sb.AppendLine($"{x}, {y}, {z}");
 
-                    var teleport = TeleportManager.Points[button.TeleportPos];
-                    if (teleport != null)
+                    if (TeleportManager.Points.TryGetValue(button.TeleportPos, out var teleport))
                     {
                         var data = teleport.GetClientData(capi);
                         if (data != null && !string.IsNullOrWhiteSpace(data.Note))

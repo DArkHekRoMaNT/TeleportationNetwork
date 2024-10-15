@@ -1,7 +1,5 @@
 using ProtoBuf;
-using System;
 using System.Collections.Generic;
-using System.Xml.Linq;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
 using Vintagestory.API.MathTools;
@@ -27,8 +25,6 @@ namespace TeleportationNetwork
         [ProtoMember(7)] public List<string> ActivatedByPlayers { get; private set; }
         [ProtoMember(8)] public Dictionary<string, TeleportClientData> ClientData { get; private set; }
 
-        public long LastUpdateTime { get; set; }
-
         public BlockFacing? Orientation => OrientationIndex == -1 ? null : BlockFacing.ALLFACES[OrientationIndex];
 
         private string _name = string.Empty;
@@ -43,7 +39,6 @@ namespace TeleportationNetwork
             OrientationIndex = -1;
             ActivatedByPlayers = [];
             ClientData = [];
-            LastUpdateTime = 0;
         }
 
         public Teleport(BlockPos pos, string name, bool enabled, Block block) : this()
@@ -58,8 +53,7 @@ namespace TeleportationNetwork
 
         public TeleportClientData GetClientData(string playerUID)
         {
-            ClientData.TryGetValue(playerUID, out TeleportClientData? data);
-            return data?.Clone() ?? new TeleportClientData();
+            return ClientData.TryGetValue(playerUID, out var data) ? data.Clone() : new TeleportClientData();
         }
 
         public void SetClientData(ICoreClientAPI capi, TeleportClientData data) => SetClientData(capi.World.Player.PlayerUID, data);

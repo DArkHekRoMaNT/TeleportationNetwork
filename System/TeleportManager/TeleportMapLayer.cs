@@ -9,9 +9,6 @@ namespace TeleportationNetwork
 {
     public class TeleportMapLayer : MapLayer
     {
-        private readonly List<MapComponent> _components = [];
-        private readonly WaypointMapLayer _waypointMapLayer;
-
         public Dictionary<string, LoadedTexture> TexturesByIcon => _waypointMapLayer.texturesByIcon;
         public List<int> WaypointColors => _waypointMapLayer.WaypointColors;
         public MeshRef QuadModel => _waypointMapLayer.quadModel;
@@ -23,6 +20,9 @@ namespace TeleportationNetwork
         public override EnumMapAppSide DataSide => EnumMapAppSide.Client;
 
         public override string LayerGroupCode => "tpnetwaypoints";
+
+        private readonly List<MapComponent> _components = [];
+        private readonly WaypointMapLayer _waypointMapLayer;
 
         public TeleportMapLayer(ICoreClientAPI api, IWorldMapManager mapSink) : base(api, mapSink)
         {
@@ -66,7 +66,7 @@ namespace TeleportationNetwork
             _components.Clear();
 
             var manager = api.ModLoader.GetModSystem<TeleportManager>();
-            foreach (var teleport in manager.Points.GetAll())
+            foreach (var teleport in manager.Points)
             {
                 _components.Add(new TeleportMapComponent((ICoreClientAPI)api, teleport, this));
             }
