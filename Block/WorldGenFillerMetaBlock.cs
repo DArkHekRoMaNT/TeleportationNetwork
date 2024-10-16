@@ -3,7 +3,7 @@ using Vintagestory.API.MathTools;
 
 namespace TeleportationNetwork
 {
-    public class WorldGenReplaceMetaBlock : Block
+    public class WorldGenFillerMetaBlock : Block
     {
         public override bool TryPlaceBlockForWorldGen(IBlockAccessor blockAccessor, BlockPos pos, BlockFacing onBlockFace, IRandom worldgenRandom, BlockPatchAttributes attributes = null)
         {

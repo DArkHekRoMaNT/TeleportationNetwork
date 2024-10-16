@@ -9,7 +9,7 @@ using Vintagestory.API.Util;
 using Vintagestory.GameContent;
 using Vintagestory.ServerMods;
 
-namespace TeleportationNetwork
+namespace TeleportationNetwork.Generation
 {
     // TODO: May be not thread-safe
     public class TeleportStructureBlockRandomizer

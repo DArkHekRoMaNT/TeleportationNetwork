@@ -1,6 +1,6 @@
 using Newtonsoft.Json;
 
-namespace TeleportationNetwork
+namespace TeleportationNetwork.Generation
 {
     public class TeleportStructureProperties
     {

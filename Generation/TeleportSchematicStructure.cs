@@ -5,7 +5,7 @@ using Vintagestory.API.MathTools;
 using Vintagestory.API.Server;
 using Vintagestory.ServerMods;
 
-namespace TeleportationNetwork
+namespace TeleportationNetwork.Generation
 {
     public class TeleportSchematicStructure : BlockSchematicStructure
     {
@@ -31,8 +31,8 @@ namespace TeleportationNetwork
                 int storedBlockid = BlockIds[i];
 
                 int dx = (int)(index & 0x1ff);
-                int dy = (int)((index >> 20) & 0x1ff);
-                int dz = (int)((index >> 10) & 0x1ff);
+                int dy = (int)(index >> 20 & 0x1ff);
+                int dz = (int)(index >> 10 & 0x1ff);
 
                 AssetLocation blockCode = BlockCodes[storedBlockid];
                 Block? newBlock = blockRandomizer.GetRandomizedBlock(blockCode, blockAccessor);
@@ -70,8 +70,8 @@ namespace TeleportationNetwork
                 {
                     uint index = Indices[i];
                     int x = pos.X + (int)(index & 0x1ff);
-                    int y = pos.Y + (int)((index >> 20) & 0x1ff);
-                    int z = pos.Z + (int)((index >> 10) & 0x1ff);
+                    int y = pos.Y + (int)(index >> 20 & 0x1ff);
+                    int z = pos.Z + (int)(index >> 10 & 0x1ff);
                     blockRandomizer.AfterPlaceBlockRandomization(tmpPos.Set(x, y, z), blockAccessor);
                 }
             }

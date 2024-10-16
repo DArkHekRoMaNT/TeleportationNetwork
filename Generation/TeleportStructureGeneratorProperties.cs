@@ -1,7 +1,7 @@
 using Newtonsoft.Json;
 using System.Collections.Generic;
 
-namespace TeleportationNetwork
+namespace TeleportationNetwork.Generation
 {
     public class TeleportStructureGeneratorProperties
     {

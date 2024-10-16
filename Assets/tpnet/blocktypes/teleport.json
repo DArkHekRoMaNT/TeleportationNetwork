@@ -4,8 +4,8 @@
   "entityclass": "BETeleport",
   "blockmaterial": "Stone",
   "shapeByType": {
-    "*-broken-*": { "base": "block/newteleport/{type}", "rotateYByType": { "*-north": 0, "*-west": 90, "*-south": 180, "*-east": 270 } },
-    "*-normal-*": { "base": "block/newteleport/{type}", "rotateYByType": { "*-north": 0, "*-west": 90, "*-south": 180, "*-east": 270 } }
+    "*-broken-*": { "base": "block/teleport/{type}", "rotateYByType": { "*-north": 0, "*-west": 90, "*-south": 180, "*-east": 270 } },
+    "*-normal-*": { "base": "block/teleport/{type}", "rotateYByType": { "*-north": 0, "*-west": 90, "*-south": 180, "*-east": 270 } }
   },
   "behaviors": [
     { "name": "HorizontalOrientable" },

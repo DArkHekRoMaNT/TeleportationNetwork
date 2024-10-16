@@ -5,7 +5,7 @@ using Vintagestory.API.MathTools;
 using Vintagestory.API.Server;
 using Vintagestory.ServerMods;
 
-namespace TeleportationNetwork
+namespace TeleportationNetwork.Generation
 {
     public class TeleportStructureData
     {

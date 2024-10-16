@@ -20,7 +20,7 @@ namespace TeleportationNetwork
             api.RegisterBlockClass("BlockTeleport", typeof(BlockTeleport));
             api.RegisterBlockEntityClass("BETeleport", typeof(BlockEntityTeleport));
 
-            api.RegisterBlockClass("WorldGenReplaceMetaBlock", typeof(WorldGenReplaceMetaBlock));
+            api.RegisterBlockClass("WorldGenReplaceMetaBlock", typeof(WorldGenFillerMetaBlock));
             api.RegisterBlockEntityClass("Dome", typeof(BlockEntityDome));
 
             api.ChatCommands
