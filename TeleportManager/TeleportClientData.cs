@@ -1,5 +1,5 @@
-using ProtoBuf;
 using CommonLib.Utils;
+using ProtoBuf;
 
 namespace TeleportationNetwork
 {

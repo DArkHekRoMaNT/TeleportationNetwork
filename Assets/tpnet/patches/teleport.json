@@ -1,0 +1,44 @@
+[
+  {
+    "file": "game:worldgen/structures.json",
+    "op": "copy",
+    "fromPath": "/rocktypeRemapGroups/standard",
+    "path": "/rocktypeRemapGroups/tpnet"
+  },
+  {
+    "file": "game:worldgen/structures.json",
+    "op": "add",
+    "path": "/rocktypeRemapGroups/tpnet/stonebrickslab-granite-down-free",
+    "value": "stonebrickslab-{rock}-down-free"
+  },
+  {
+    "file": "game:worldgen/structures.json",
+    "op": "add",
+    "path": "/rocktypeRemapGroups/tpnet/polishedrockslab-granite-down-free",
+    "value": "polishedrockslab-{rock}-down-free"
+  },
+  {
+    "file": "game:worldgen/structures.json",
+    "op": "add",
+    "path": "/rocktypeRemapGroups/tpnet/polishedrockslab-granite-up-free",
+    "value": "polishedrockslab-{rock}-up-free"
+  },
+  {
+    "file": "game:worldgen/structures.json",
+    "op": "add",
+    "path": "/structures/-",
+    "value": {
+      "code": "teleport",
+      "group": "teleport",
+      "minGroupDistance": 10,
+      "name": "Teleport",
+      "chance": 1000,
+      "schematics": [ "tpnet/newteleport/trader" ],
+      "replacewithblocklayers": [ "soil-medium-normal", "soil-medium-none" ],
+      "postPass": true,
+      "suppressTrees": true,
+      "placement": "surface",
+      "rockTypeRemapGroup": "tpnet"
+    }
+  }
+]

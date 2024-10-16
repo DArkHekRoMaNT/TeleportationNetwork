@@ -32,7 +32,7 @@ namespace TeleportationNetwork
         public bool DarknessMode { get; set; } = false;
 
         [Description("Create only standard teleports with granite and aged wood")]
-        public bool BiomlessTeleports { get; set; } = false;
+        public bool BiomlessTeleports { get; set; } = false; //TODO: Obsolete?
 
         [Strings("on", "off", "trader-only")]
         [Description("Create claim for teleport structure (does not affect generated structures)")]

@@ -5,15 +5,14 @@ using Vintagestory.API.MathTools;
 using Vintagestory.API.Server;
 using Vintagestory.ServerMods;
 
-namespace TeleportationNetwork.Generation
+namespace TeleportationNetwork.Generation.v1
 {
     public class TeleportSchematicStructure : BlockSchematicStructure
     {
-        public int PlaceWithReplaceBlockIds(IBlockAccessor blockAccessor, IWorldAccessor world, BlockPos pos,
-            TeleportStructureBlockRandomizer blockRandomizer)
+        public int PlaceWithReplaceBlockIds(IBlockAccessor blockAccessor, IWorldAccessor world, BlockPos pos, TeleportStructureBlockRandomizer blockRandomizer)
         {
             var curPos = new BlockPos(pos.dimension);
-            int placed = 0;
+            var placed = 0;
 
             PlaceBlockDelegate handler = ReplaceMode switch
             {

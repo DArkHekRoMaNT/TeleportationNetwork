@@ -9,7 +9,7 @@ using Vintagestory.API.Util;
 using Vintagestory.GameContent;
 using Vintagestory.ServerMods;
 
-namespace TeleportationNetwork.Generation
+namespace TeleportationNetwork.Generation.v1
 {
     // TODO: May be not thread-safe
     public class TeleportStructureBlockRandomizer
@@ -58,47 +58,6 @@ namespace TeleportationNetwork.Generation
             {
                 Block[] blocks = api.World.SearchBlocks(new AssetLocation(lightBlock));
                 LightBlocks.AddRange(blocks.Select(b => b.Code));
-            }
-
-            foreach (KeyValuePair<string, string> pair in props.ReplaceBlocks)
-            {
-                var foundCodes = Array.Empty<string>();
-
-                var code = new AssetLocation(pair.Key);
-                string pattern = pair.Value;
-
-                Block[] blocks = api.World.SearchBlocks(code);
-                foreach (Block block in blocks)
-                {
-                    string blockPattern = pattern;
-
-                    if (pattern.Contains('*'))
-                    {
-                        string value = WildcardUtil.GetWildcardValue(code, block.Code);
-                        blockPattern = pattern.Replace("*", value);
-                    }
-
-                    if (blockPattern.Contains("{any}"))
-                    {
-                        Block[] anyBlocks = api.World.SearchBlocks(new AssetLocation(blockPattern.Replace("{any}", "*")));
-                        foundCodes = anyBlocks.Select(b => b.Code.ToString()).ToArray();
-                    }
-                    else
-                    {
-                        foundCodes = [blockPattern];
-                    }
-
-                    var cleanedCodes = new List<string>();
-                    foreach (string fcode in foundCodes)
-                    {
-                        if (!props.ExcludeCodes.Contains(fcode))
-                        {
-                            cleanedCodes.Add(fcode);
-                        }
-                    }
-
-                    ReplaceByBlocks.Add(block.Code, cleanedCodes.ToArray());
-                }
             }
         }
 

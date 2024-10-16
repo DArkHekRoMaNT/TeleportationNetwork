@@ -1,0 +1,28 @@
+{
+	mainElements: [
+		{ path: "schematics/story/raentrance-mid-h2-1", dx:0, dy:0, dz:0 },
+		{ path: "schematics/story/raentrance-mid-h3-1", dx:0, dy:0, dz:0 },
+		{ path: "schematics/story/raentrance-mid-h3-2", dx:-1, dy:0, dz:0 },
+		{ path: "schematics/story/raentrance-mid-h5-1", dx:0, dy:0, dz:0, maxCount:1 },
+		{ path: "schematics/story/raentrance-mid-h5-2", dx:0, dy:0, dz:0, maxCount:1 },
+		{ path: "schematics/story/raentrance-mid-h10-1", dx:-2, dy:0, dz:0, maxCount:1 },
+	],
+	endElements: {
+		"n": { path: "worldgen/schematics/story/raentrance-top-n.json", dx:-6, dy:0, dz:-5 },
+		"e": { path: "worldgen/schematics/story/raentrance-top-e.json", dx:-6, dy:0, dz:-2 },
+		"s": { path: "worldgen/schematics/story/raentrance-top-s.json", dx:-4, dy:0, dz:-5 },
+		"w": { path: "worldgen/schematics/story/raentrance-top-w.json", dx:-6, dy:0, dz:-5 }
+	},
+	offsetX: -2,
+	offsetY: -1,
+	offsetZ: -1,
+	endOffsetY: -4,
+	mainsizeX: 6,
+	mainsizeZ: 7,
+	replacewithblocklayers: ["soil-low-normal", "soil-low-none"],
+	buildProtected: true,
+	buildProtectionName: "custommessage-sacred",
+	buildProtectionDesc: "Trader Perimenter",
+	code: "resonancearchiveentrance",
+	group: "storystructure"
+}

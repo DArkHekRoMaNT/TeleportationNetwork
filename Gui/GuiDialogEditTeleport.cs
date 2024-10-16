@@ -1,9 +1,7 @@
+using CommonLib.Utils;
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
-using CommonLib.Utils;
-using Eto.Forms;
 using Vintagestory.API.Client;
 using Vintagestory.API.Config;
 using Vintagestory.API.MathTools;

@@ -5,7 +5,7 @@ using Vintagestory.API.MathTools;
 using Vintagestory.API.Server;
 using Vintagestory.ServerMods;
 
-namespace TeleportationNetwork.Generation
+namespace TeleportationNetwork.Generation.v1
 {
     public class TeleportStructureGeneratorSystem : ModSystem
     {
@@ -32,6 +32,8 @@ namespace TeleportationNetwork.Generation
 
         public override void StartServerSide(ICoreServerAPI api)
         {
+            return;
+
             _api = api;
             _teleportManager = api.ModLoader.GetModSystem<TeleportManager>();
 
