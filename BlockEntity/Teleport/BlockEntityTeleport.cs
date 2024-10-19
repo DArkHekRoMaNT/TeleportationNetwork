@@ -3,6 +3,7 @@ using System.IO;
 using System.Text;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
+using Vintagestory.API.Common.Entities;
 using Vintagestory.API.Datastructures;
 using Vintagestory.API.MathTools;
 using Vintagestory.API.Server;
@@ -134,7 +135,7 @@ namespace TeleportationNetwork
             var thick = 0.5f;
             ParticleController?.SpawnGateParticles(radius, thick, center, orientation);
 
-            if (Api is ICoreServerAPI sapi)
+            if (Api is ICoreServerAPI)
             {
                 var entities = MathUtil.GetInCyllinderEntities(Api, radius, thick, center, orientation);
                 if (entities.Length > 0)
@@ -144,41 +145,79 @@ namespace TeleportationNetwork
                         _manager.Points.Unlink(Pos);
                         return;
                     }
-                    var targetCenter = targetTeleport.GetGateCenter();
-                    var targetOrientation = targetTeleport.Orientation;
                     foreach (var entity in entities)
                     {
-                        if (entity.IsActivityRunning(Constants.TeleportCooldownActivityName))
-                            continue;
-
-                        var point = targetTeleport.GetTargetPos();
-                        point += (entity.Pos.XYZ - center) * (targetTeleport.Size / teleport.Size); // Offset
-
-                        var entityPos = entity.Pos.Copy();
-                        entityPos.SetPos(point);
-                        if (orientation.IsHorizontal && targetOrientation.IsHorizontal)
-                        {
-                            var diff = orientation.Index - targetOrientation.Index;
-                            entityPos.Yaw += diff * GameMath.PIHALF;
-                            if (entity is EntityPlayer playerEntity && playerEntity.Player is IServerPlayer serverPlayer)
-                            {
-                                sapi.Network.SendBlockEntityPacket(serverPlayer, Pos, Constants.PlayerTeleportedPacketId, [(byte)diff]);
-                            }
-                        }
-
-                        TeleportUtil.StabilityRelatedTeleportTo(entity, entityPos, Logger, () =>
-                        {
-                            var soundLoc = new AssetLocation("sounds/effect/translocate-breakdimension.ogg");
-                            entity.World.PlaySoundAt(soundLoc, entity, null, true, 32, .5f);
-                            ((ICoreServerAPI)Api).Network.BroadcastBlockEntityPacket(
-                                targetTeleport.Pos,
-                                Constants.EntityTeleportedPacketId,
-                                BitConverter.GetBytes(entity.EntityId));
-                        });
-                        Logger.Audit($"{entity?.GetName()} teleported from {entityPos} ({teleport.Name}) to {point.AsBlockPos} ({targetTeleport.Name})");
+                        if (entity.Teleporting) continue;
+                        TeleportEntity(entity, teleport, targetTeleport);
                     }
                 }
             }
+        }
+
+        /// <returns>True for skip base</returns>
+        public bool OnEntityCollide(Entity entity)
+        {
+            if (Status.State != TeleportActivator.FSMState.Activated) return false;
+
+            var teleport = GetOrCreateTeleport();
+            if (teleport.Target == null) return false;
+
+            if (!_manager.Points.TryGetValue(teleport.Target, out var targetTeleport) || targetTeleport.Target != Pos)
+            {
+                _manager.Points.Unlink(Pos);
+                return false;
+            }
+
+            TeleportEntity(entity, teleport, targetTeleport);
+            return true;
+        }
+
+        private void TeleportEntity(Entity entity, Teleport teleport, Teleport targetTeleport)
+        {
+            if (Api is not ICoreServerAPI sapi)
+                return;
+
+            if (entity.IsActivityRunning(Constants.TeleportCooldownActivityName))
+                return;
+
+            var center = teleport.GetGateCenter();
+            var orientation = teleport.Orientation;
+            var targetCenter = targetTeleport.GetGateCenter();
+            var targetOrientation = targetTeleport.Orientation;
+
+            var entityPos = entity.Pos.Copy();
+            var forwardOffset = targetTeleport.Orientation.Normalf.ToVec3d().Mul(-1); // Forward offset
+            entityPos.SetPos(targetCenter + forwardOffset);
+            if (orientation.IsHorizontal && targetOrientation.IsHorizontal)
+            {
+                var diff = orientation.Index - targetOrientation.Index;
+                var yawDiff = diff * GameMath.PIHALF;
+                var centerOffset = ((entity.Pos.XYZ - center) * (targetTeleport.Size / teleport.Size)).RotatedCopy(yawDiff); // Center offset
+                entityPos.Add(centerOffset.X, centerOffset.Y, centerOffset.Z);
+                entityPos.Yaw += yawDiff;
+                entityPos.Motion = entityPos.Motion.RotatedCopy((float)(Math.PI + yawDiff));
+                if (entity is EntityPlayer playerEntity && playerEntity.Player is IServerPlayer serverPlayer)
+                {
+                    sapi.Network.SendBlockEntityPacket(serverPlayer, Pos, Constants.PlayerTeleportedPacketId, [(byte)diff]);
+                }
+                else
+                {
+                    entity.ServerPos.Yaw = entityPos.Yaw;
+                }
+            }
+
+            var motion = entityPos.Motion.Clone();
+            TeleportUtil.StabilityRelatedTeleportTo(entity, entityPos, Logger, () =>
+            {
+                entity.ServerPos.Motion = motion;
+                var soundLoc = new AssetLocation("sounds/effect/translocate-breakdimension.ogg");
+                entity.World.PlaySoundAt(soundLoc, entity, null, true, 32, .5f);
+                ((ICoreServerAPI)Api).Network.BroadcastBlockEntityPacket(
+                    targetTeleport.Pos,
+                    Constants.EntityTeleportedPacketId,
+                    BitConverter.GetBytes(entity.EntityId));
+            });
+            Logger.Audit($"{entity?.GetName()} teleported from {teleport.Pos} ({teleport.Name}) to {targetTeleport.Pos} ({targetTeleport.Name})");
         }
 
         private void UpdateSound(float dt)

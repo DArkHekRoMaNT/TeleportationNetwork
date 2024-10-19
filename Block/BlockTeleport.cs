@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
+using Vintagestory.API.Common.Entities;
 using Vintagestory.API.MathTools;
 using Vintagestory.API.Util;
 using Vintagestory.GameContent;
@@ -99,6 +100,26 @@ namespace TeleportationNetwork
             }
 
             return base.OnBlockInteractStart(world, byPlayer, blockSel);
+        }
+
+        public override void OnEntityCollide(IWorldAccessor world, Entity entity, BlockPos pos, BlockFacing facing, Vec3d collideSpeed, bool isImpact)
+        {
+            if (world.BlockAccessor.GetBlockEntity(pos) is BlockEntityTeleport be)
+            {
+                be.OnEntityCollide(entity);
+            }
+
+            base.OnEntityCollide(world, entity, pos, facing, collideSpeed, isImpact);
+        }
+
+        public override void OnEntityInside(IWorldAccessor world, Entity entity, BlockPos pos)
+        {
+            if (world.BlockAccessor.GetBlockEntity(pos) is BlockEntityTeleport be)
+            {
+                be.OnEntityCollide(entity);
+            }
+
+            base.OnEntityInside(world, entity, pos);
         }
 
         public override void OnBlockBroken(IWorldAccessor world, BlockPos pos, IPlayer byPlayer, float dropQuantityMultiplier = 1)

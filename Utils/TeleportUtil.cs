@@ -88,31 +88,17 @@ namespace TeleportationNetwork
             if (target.Orientation == null || target.Size == 0)
             {
                 Debug.WriteLine($"{target.OrientationIndex} {target.Size}");
-                return GetDefaultGateCenter(target);
+                return GetGateCenter(target);
             }
 
             var targetPos = GetGateCenter(target);
-            targetPos -= target.Orientation.Normalf.ToVec3d().Mul(1f); // Forward offset
+            targetPos -= target.Orientation.Normalf.ToVec3d().Mul(0.5); // Forward offset
             return targetPos;
         }
 
         public static Vec3d GetGateCenter(this Teleport teleport)
         {
-            if (teleport.Orientation == null || teleport.Size == 0)
-            {
-                return GetDefaultGateCenter(teleport);
-            }
-            return GetGateCenter(teleport.Pos, teleport.Orientation, teleport.Size);
-        }
-
-        public static Vec3d GetDefaultGateCenter(this Teleport teleport)
-        {
             return teleport.Pos.ToVec3d().Add(0.5);
-        }
-
-        public static Vec3d GetGateCenter(BlockPos pos, BlockFacing facing, float size)
-        {
-            return pos.ToVec3d().Add(0.5) - facing.Normalf.ToVec3d().Mul(0.25 * (size / 5f));
         }
     }
 }
