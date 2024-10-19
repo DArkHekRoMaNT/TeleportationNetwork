@@ -1,10 +1,10 @@
 {
   "code": "meta",
   "classByType": {
-    "@*-(water|lava|air)": "WorldGenReplaceMetaBlock"
+    "@*-(water|lava|air)": "tpnet:WorldGenFillerMetaBlock"
   },
   "entityClassByType": {
-    "*-dome": "Dome"
+    "*-dome": "tpnet:Dome"
   },
   "attributes": {
     "handbook": {

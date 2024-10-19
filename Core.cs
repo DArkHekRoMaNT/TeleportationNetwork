@@ -17,11 +17,11 @@ namespace TeleportationNetwork
 
         public override void Start(ICoreAPI api)
         {
-            api.RegisterBlockClass("BlockTeleport", typeof(BlockTeleport));
-            api.RegisterBlockEntityClass("BETeleport", typeof(BlockEntityTeleport));
+            api.RegisterBlockClass($"{Constants.ModId}:BlockTeleport", typeof(BlockTeleport));
+            api.RegisterBlockEntityClass($"{Constants.ModId}:BETeleport", typeof(BlockEntityTeleport));
 
-            api.RegisterBlockClass("WorldGenReplaceMetaBlock", typeof(WorldGenFillerMetaBlock));
-            api.RegisterBlockEntityClass("Dome", typeof(BlockEntityDome));
+            api.RegisterBlockClass($"{Constants.ModId}:WorldGenFillerMetaBlock", typeof(WorldGenFillerMetaBlock));
+            api.RegisterBlockEntityClass($"{Constants.ModId}:Dome", typeof(BlockEntityDome));
 
             api.ChatCommands
                 .GetOrCreate("tpnet")
