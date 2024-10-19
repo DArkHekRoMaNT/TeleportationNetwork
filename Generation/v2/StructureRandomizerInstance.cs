@@ -1,9 +1,9 @@
 using CommonLib.Extensions;
 using HarmonyLib;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Text;
 using Vintagestory.API.Common;
 using Vintagestory.API.MathTools;
 using Vintagestory.API.Server;
@@ -15,25 +15,81 @@ namespace TeleportationNetwork.Generation.v2
 {
     public class StructureRandomizerInstance
     {
-        private readonly LCGRandom _random;
+        private readonly BlockPos _startPos;
+        private readonly BlockSchematicStructure _schematic;
         private readonly StructureRandomizer _system;
 
+        private readonly LCGRandom _random;
         private readonly string _currentWood;
         private readonly string _currentClay;
 
-        public StructureRandomizerInstance(ICoreServerAPI api, BlockPos pos, StructureRandomizer system)
+        private bool _skip = false;
+
+        public StructureRandomizerInstance(ICoreServerAPI api, BlockPos startPos, BlockSchematicStructure schematic, StructureRandomizer system)
         {
+            _startPos = startPos;
+            _schematic = schematic;
             _system = system;
 
-            _random = new LCGRandom();
-            _random.SetWorldSeed(api.World.Seed);
-            _random.InitPositionSeed(pos.X, pos.Z);
-
+            _random = new LCGRandom(api.World.Seed);
+            _random.InitPositionSeed(startPos.X, startPos.Z);
             _currentWood = _random.GetItem(system.Woods);
             _currentClay = _random.GetItem(system.Clays);
         }
 
-        public int Next(int blockId, IWorldAccessor world)
+        public Dictionary<int, Dictionary<int, int>> GetNewReplaceBlocks(Dictionary<int, Dictionary<int, int>> oldReplaceBlocks, IBlockAccessor blockAccessor, IWorldAccessor world, int? rockBlockId)
+        {
+            if (oldReplaceBlocks == null)
+                return oldReplaceBlocks!;
+
+            if (!_schematic.BlockCodes.Any(x => x.Value.Domain == Constants.ModId)) // Skip generator
+            {
+                _skip = true;
+                return oldReplaceBlocks;
+            }
+
+            var newReplaceBlocks = new Dictionary<int, Dictionary<int, int>>();
+            lock (oldReplaceBlocks)
+            {
+                foreach (var inner in oldReplaceBlocks)
+                {
+                    var innerCopy = new Dictionary<int, int>();
+                    foreach (var value in inner.Value)
+                    {
+                        innerCopy.Add(value.Key, value.Value);
+                    }
+                    newReplaceBlocks.Add(inner.Key, innerCopy);
+                }
+            }
+
+            if (!rockBlockId.HasValue)
+            {
+                var blockPos = new BlockPos(_schematic.SizeX / 2 + _startPos.X, _startPos.Y, _schematic.SizeZ / 2 + _startPos.Z, _startPos.dimension);
+                var mapChunkAtBlockPos = blockAccessor.GetMapChunkAtBlockPos(blockPos);
+                rockBlockId ??= mapChunkAtBlockPos.TopRockIdMap[blockPos.Z % 32 * 32 + blockPos.X % 32];
+            }
+
+            foreach (var (_, code) in _schematic.BlockCodes)
+            {
+                var blockId = world.GetBlock(code).Id;
+                var newBlockId = Next(blockId, world);
+                if (newBlockId != blockId)
+                {
+                    if (newReplaceBlocks.TryGetValue(blockId, out var value))
+                    {
+                        value[rockBlockId.Value] = newBlockId;
+                    }
+                    else
+                    {
+                        newReplaceBlocks.Add(blockId, new() { [rockBlockId.Value] = newBlockId });
+                    }
+                }
+            }
+
+            return newReplaceBlocks;
+        }
+
+        private int Next(int blockId, IWorldAccessor world)
         {
             var code = world.GetBlock(blockId).Code;
 
@@ -61,20 +117,22 @@ namespace TeleportationNetwork.Generation.v2
             return blockId;
         }
 
-        public void AfterPlace(IBlockAccessor blockAccessor, BlockPos startPos, BlockSchematicStructure structure)
+        public void AfterPlace(IBlockAccessor blockAccessor)
         {
+            if (_skip == true) return;
+
             var lantern = _random.GetItem(_system.LanternMaterials);
-            var tempPos = new BlockPos(startPos.dimension);
-            for (int x = 0; x < structure.SizeX; x++)
+            var tempPos = new BlockPos(_startPos.dimension);
+            for (int x = 0; x < _schematic.SizeX; x++)
             {
-                for (int y = 0; y < structure.SizeY; y++)
+                for (int y = 0; y < _schematic.SizeY; y++)
                 {
-                    for (int z = 0; z < structure.SizeZ; z++)
+                    for (int z = 0; z < _schematic.SizeZ; z++)
                     {
-                        var block = structure.blocksByPos[x, y, z];
+                        var block = _schematic.blocksByPos[x, y, z];
                         if (block is BlockLantern)
                         {
-                            tempPos.Set(startPos.X + x, startPos.Y + y, startPos.Z + z);
+                            tempPos.Set(_startPos.X + x, _startPos.Y + y, _startPos.Z + z);
                             var be = blockAccessor.GetBlockEntity(tempPos);
                             if (be is BELantern lbe)
                             {
@@ -85,14 +143,13 @@ namespace TeleportationNetwork.Generation.v2
                 }
             }
         }
-
     }
 
     public class StructureRandomizer
     {
         private readonly StructureRandomizerProperties _props;
 
-        public ConcurrentDictionary<AssetLocation, string[]> ResolvedReplaceBlocks { get; } = [];
+        public Dictionary<AssetLocation, string[]> ResolvedReplaceBlocks { get; } = [];
         public string[] Woods { get; }
         public string[] Clays { get; }
         public List<AssetLocation> LightBlocks { get; } = [];
@@ -104,7 +161,7 @@ namespace TeleportationNetwork.Generation.v2
 
             var woodProps = api.Assets.Get("game:worldproperties/block/wood.json").ToObject<WoodWorldProperty>();
             Woods = woodProps.Variants.Select(v => v.Code.ToShortString()).AddItem("aged").ToArray();
-            Clays = ["fire", "black", "brown", "cream", "gray", "orange", "red", "tan", "clinker"];
+            Clays = ["black", "brown", "cream", "fire", "gray", "orange", "red", "tan"];
 
             foreach (var lightBlock in _props.LightBlocks)
             {
@@ -146,15 +203,15 @@ namespace TeleportationNetwork.Generation.v2
                         suitableCodes.Remove((AssetLocation)excludeCode);
                     }
 
-                    ResolvedReplaceBlocks.TryAdd(block.Code, suitableCodes.ToArray());
+                    ResolvedReplaceBlocks.Add(block.Code, suitableCodes.ToArray());
                 }
             }
         }
 
-        public static StructureRandomizerInstance GetRandomizer(IWorldAccessor world, BlockPos pos)
+        public static StructureRandomizerInstance GetRandomizer(IWorldAccessor world, BlockPos pos, BlockSchematicStructure schematic)
         {
             var randomizer = world.Api.ModLoader.GetModSystem<WorldGenSystem>().Randomizer;
-            return new StructureRandomizerInstance((ICoreServerAPI)world.Api, pos, randomizer);
+            return new StructureRandomizerInstance((ICoreServerAPI)world.Api, pos, schematic, randomizer);
         }
     }
 }

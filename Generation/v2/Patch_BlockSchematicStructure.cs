@@ -1,13 +1,13 @@
 using HarmonyLib;
 using System.Collections.Generic;
-using System.Linq;
+using System.Diagnostics;
 using System.Reflection;
-using Vintagestory.API.Common;
-using Vintagestory.API.MathTools;
+using System.Reflection.Emit;
 using Vintagestory.ServerMods;
 
 namespace TeleportationNetwork.Generation.v2
 {
+    [HarmonyDebug]
     [HarmonyPatch(typeof(BlockSchematicStructure))]
     public static class Patch_BlockSchematicStructure
     {
@@ -18,69 +18,59 @@ namespace TeleportationNetwork.Generation.v2
             yield return AccessTools.Method(typeof(BlockSchematicStructure), nameof(BlockSchematicStructure.PlaceReplacingBlocks));
         }
 
-        public record State(Dictionary<int, Dictionary<int, int>> ReplaceBlocksCopy, StructureRandomizerInstance Randomizer);
-
-        public static void Prefix(ref BlockSchematicStructure __instance, IWorldAccessor worldForCollectibleResolve, IBlockAccessor blockAccessor, BlockPos startPos,
-            ref Dictionary<int, Dictionary<int, int>> replaceBlocks, ref State __state)
+        public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, MethodBase original, ILGenerator generator)
         {
-            if (replaceBlocks == null)
-                return;
+            var isUnderground = original.Name == nameof(BlockSchematicStructure.PlaceReplacingBlocks);
+            var replaceBlocksIndex = isUnderground ? 5 : 8;
 
-            if (!__instance.BlockCodes.Any(x => x.Value.Domain == Constants.ModId)) // Skip generator
-                return;
+            var randomizerIndex = generator.DeclareLocal(typeof(StructureRandomizer)).LocalIndex;
+            yield return CodeInstruction.LoadArgument(2); // IWorldAccessor
+            yield return CodeInstruction.LoadArgument(3); // startPos
+            yield return CodeInstruction.LoadArgument(0); // schematic
+            yield return CodeInstruction.Call(typeof(StructureRandomizer), nameof(StructureRandomizer.GetRandomizer));
+            yield return CodeInstruction.StoreLocal(randomizerIndex);
 
-            var replaceBlocksCopy = new Dictionary<int, Dictionary<int, int>>();
-            lock (__instance)
+            var newReplaceBlocksIndex = generator.DeclareLocal(typeof(Dictionary<int, Dictionary<int, int>>)).LocalIndex;
+            yield return CodeInstruction.LoadLocal(randomizerIndex);
+            yield return CodeInstruction.LoadArgument(replaceBlocksIndex);
+            yield return CodeInstruction.LoadArgument(1); // IBlockAccessor
+            yield return CodeInstruction.LoadArgument(2); // IWorldAccessor
+            if (isUnderground)
             {
-                foreach (var dict in replaceBlocks)
+                // rockBlockId
+                yield return CodeInstruction.LoadArgument(6);
+            }
+            else
+            {
+                // Just null o.O
+                var tempIndex = generator.DeclareLocal(typeof(int?));
+                yield return new CodeInstruction(OpCodes.Ldloca, tempIndex);
+                yield return new CodeInstruction(OpCodes.Initobj, typeof(int?));
+                yield return new CodeInstruction(OpCodes.Ldloc, tempIndex);
+            }
+            yield return CodeInstruction.Call(typeof(StructureRandomizerInstance), nameof(StructureRandomizerInstance.GetNewReplaceBlocks));
+            yield return CodeInstruction.StoreLocal(newReplaceBlocksIndex);
+
+            var codes = new List<CodeInstruction>(instructions);
+            for (int i = 0; i < codes.Count - 2; i++)
+            {
+                if (codes[i].IsLdarg(replaceBlocksIndex))
                 {
-                    var innerCopy = new Dictionary<int, int>();
-                    foreach (var value in dict.Value)
-                    {
-                        innerCopy.Add(value.Key, value.Value);
-                    }
-                    replaceBlocksCopy.Add(dict.Key, innerCopy);
+                    var newVar = CodeInstruction.LoadLocal(newReplaceBlocksIndex);
+                    newVar.labels = codes[i].labels;
+                    newVar.blocks = codes[i].blocks;
+                    yield return newVar;
+                    continue;
                 }
+                yield return codes[i];
             }
 
-            var centerPos = new BlockPos(__instance.SizeX / 2 + startPos.X, startPos.Y, __instance.SizeZ / 2 + startPos.Z, startPos.dimension);
-            var mapChunkAtBlockPos = blockAccessor.GetMapChunkAtBlockPos(centerPos);
-            var rockId = mapChunkAtBlockPos.TopRockIdMap[centerPos.Z % 32 * 32 + centerPos.X % 32];
-            var randomizer = StructureRandomizer.GetRandomizer(worldForCollectibleResolve, startPos);
+            yield return CodeInstruction.LoadLocal(randomizerIndex);
+            yield return CodeInstruction.LoadArgument(1); // IBlockAccessor
+            yield return CodeInstruction.Call(typeof(StructureRandomizerInstance), nameof(StructureRandomizerInstance.AfterPlace));
 
-            foreach (var blockId in __instance.BlockIds)
-            {
-                var newBlockId = randomizer.Next(blockId, worldForCollectibleResolve);
-                if (newBlockId != blockId)
-                {
-                    if (replaceBlocks.TryGetValue(blockId, out var value))
-                    {
-                        value[rockId] = newBlockId;
-                    }
-                    else
-                    {
-                        replaceBlocks.Add(blockId, new() { [rockId] = newBlockId });
-                    }
-                }
-            }
-
-            __state = new State(replaceBlocksCopy, randomizer);
-        }
-
-        public static void Postfix(ref BlockSchematicStructure __instance, out Dictionary<int, Dictionary<int, int>> replaceBlocks, IBlockAccessor blockAccessor, BlockPos startPos, State __state)
-        {
-            if (__state == null)
-            {
-                replaceBlocks = null!;
-                return;
-            }
-
-            __state.Randomizer.AfterPlace(blockAccessor, startPos, __instance);
-
-            lock (__instance)
-            {
-                replaceBlocks = __state.ReplaceBlocksCopy;
-            }
+            yield return codes[^2]; // count
+            yield return codes[^1]; // return
         }
     }
 }
