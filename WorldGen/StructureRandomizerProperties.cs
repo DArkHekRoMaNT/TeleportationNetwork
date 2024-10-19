@@ -1,7 +1,7 @@
 using Newtonsoft.Json;
 using System.Collections.Generic;
 
-namespace TeleportationNetwork.Generation.v2
+namespace TeleportationNetwork.WorldGen
 {
     [JsonObject]
     public class StructureRandomizerProperties

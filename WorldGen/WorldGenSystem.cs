@@ -2,7 +2,7 @@ using Vintagestory.API.Common;
 using Vintagestory.API.MathTools;
 using Vintagestory.API.Server;
 
-namespace TeleportationNetwork.Generation.v2
+namespace TeleportationNetwork.WorldGen
 {
     public class WorldGenSystem : ModSystem
     {

@@ -1,7 +1,7 @@
 using HarmonyLib;
 using Vintagestory.API.Common;
 
-namespace TeleportationNetwork.Generation.v2 //TOOD: Move to CommonLib?
+namespace TeleportationNetwork.WorldGen //TOOD: Move to CommonLib?
 {
     [HarmonyPatch(typeof(Block))]
     [HarmonyPatch(nameof(Block.GetPlacedBlockInfo))]

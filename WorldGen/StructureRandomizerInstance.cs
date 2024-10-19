@@ -7,7 +7,7 @@ using Vintagestory.API.Server;
 using Vintagestory.GameContent;
 using Vintagestory.ServerMods;
 
-namespace TeleportationNetwork.Generation.v2
+namespace TeleportationNetwork.WorldGen
 {
     public class StructureRandomizerInstance
     {

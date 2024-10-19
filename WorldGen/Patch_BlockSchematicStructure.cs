@@ -4,7 +4,7 @@ using System.Reflection;
 using System.Reflection.Emit;
 using Vintagestory.ServerMods;
 
-namespace TeleportationNetwork.Generation.v2
+namespace TeleportationNetwork.WorldGen
 {
     [HarmonyDebug]
     [HarmonyPatch(typeof(BlockSchematicStructure))]
