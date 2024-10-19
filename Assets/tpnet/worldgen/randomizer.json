@@ -37,7 +37,6 @@
     "clayshinglelabs-gray-*":  "clayshinglelabs-{clay}-*",
     "clayshinglestairs-gray-*":  "clayshinglestairs-{clay}-*",
 
-
     /* Other */
     "painting-elk-*": "painting-{any}-*",
     "painting-forestdawn-*": "painting-{any}-*",
@@ -55,8 +54,6 @@
     "buncheocandles-9": "buncheocandles-{any}"
   },
   "excludeCodes": [
-    "painting-lastday",
-    "painting-sodhouse",
     "storagevessel-raw"
   ],
   "lightBlocks": [ "paperlantern-*", "lantern-*" ],
