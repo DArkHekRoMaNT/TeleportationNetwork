@@ -20,13 +20,14 @@ namespace TeleportationNetwork
         private bool _mouseOver;
         private GuiDialogEditTeleport? _editTeleportDialog;
 
-        public Vec3d MapPos => _teleport.Pos.ToVec3d().AddCopy(.5, 0, .5);
+        private readonly Vec3d _mapPos;
 
         public TeleportMapComponent(ICoreClientAPI capi, Teleport teleport, TeleportMapLayer teleportLayer) : base(capi)
         {
             _teleport = teleport;
             _teleportLayer = teleportLayer;
             _data = _teleport.GetClientData(capi);
+            _mapPos = _teleport.Pos.ToVec3d().AddCopy(.5, 0, .5);
 
             if (_teleport.Enabled)
             {
@@ -41,7 +42,7 @@ namespace TeleportationNetwork
 
         public override void Render(GuiElementMap map, float dt)
         {
-            map.TranslateWorldPosToViewPos(MapPos, ref _viewPos);
+            map.TranslateWorldPosToViewPos(_mapPos, ref _viewPos);
             if (_data.Pinned)
             {
                 map.Api.Render.PushScissor(null);
@@ -96,7 +97,7 @@ namespace TeleportationNetwork
         public override void OnMouseMove(MouseEvent args, GuiElementMap mapElem, StringBuilder hoverText)
         {
             var viewPos = new Vec2f();
-            mapElem.TranslateWorldPosToViewPos(MapPos, ref viewPos);
+            mapElem.TranslateWorldPosToViewPos(_mapPos, ref viewPos);
 
             double x = viewPos.X + mapElem.Bounds.renderX;
             double y = viewPos.Y + mapElem.Bounds.renderY;

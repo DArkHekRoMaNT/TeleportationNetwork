@@ -60,20 +60,14 @@ namespace TeleportationNetwork
             {
                 if (byPlayer.Entity.Controls.Sneak)
                 {
-                    if (api is ICoreClientAPI capi)
-                    {
-                        new GuiDialogEditTeleport(capi, blockSel.Position).TryOpen();
-                    }
+                    be.OpenEditDialog();
                     return true;
                 }
 
                 // Select target
                 if (IsNormal)
                 {
-                    if (api is ICoreClientAPI capi)
-                    {
-                        new GuiDialogTeleportList(capi, blockSel.Position).TryOpen();
-                    }
+                    be.OpenTeleportDialog();
                     return true;
                 }
 

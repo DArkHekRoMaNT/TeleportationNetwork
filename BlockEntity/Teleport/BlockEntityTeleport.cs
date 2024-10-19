@@ -25,6 +25,8 @@ namespace TeleportationNetwork
         private float _soundVolume;
         private float _soundPith;
         private BlockPos? _lastTargetPos;
+        private GuiDialogTeleportList? _teleportDialog;
+        private GuiDialogEditTeleport? _editDialog;
 
         public override void Initialize(ICoreAPI api)
         {
@@ -319,6 +321,8 @@ namespace TeleportationNetwork
             base.OnBlockUnloaded();
             _teleportRiftRenderer?.Dispose();
             _sound?.Dispose();
+            _teleportDialog?.TryClose();
+            _editDialog?.TryClose();
         }
 
         public override void OnBlockRemoved()
@@ -332,6 +336,8 @@ namespace TeleportationNetwork
 
             _teleportRiftRenderer?.Dispose();
             _sound?.Dispose();
+            _teleportDialog?.TryClose();
+            _editDialog?.TryClose();
         }
 
         private void UpdateAnimator()
@@ -359,6 +365,24 @@ namespace TeleportationNetwork
 
             UpdateAnimator();
             MarkDirty(true);
+        }
+
+        public void OpenTeleportDialog()
+        {
+            if (Api is ICoreClientAPI capi)
+            {
+                _teleportDialog ??= new GuiDialogTeleportList(capi, Pos);
+                _teleportDialog.TryOpen();
+            }
+        }
+
+        public void OpenEditDialog()
+        {
+            if (Api is ICoreClientAPI capi)
+            {
+                _editDialog ??= new GuiDialogEditTeleport(capi, Pos);
+                _editDialog.TryOpen();
+            }
         }
     }
 }
