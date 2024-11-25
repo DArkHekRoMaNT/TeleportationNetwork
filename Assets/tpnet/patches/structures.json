@@ -30,9 +30,9 @@
     "value": {
       "code": "teleport",
       "group": "teleport",
-      "minGroupDistance": 1000,
+      "minGroupDistance": 100,
       "name": "Teleport",
-      "chance": 1000,
+      "chance": 5,
       "schematics": [ "tpnet/teleport/*" ],
       "replacewithblocklayers": [ "soil-medium-normal", "soil-medium-none" ],
       "postPass": true,

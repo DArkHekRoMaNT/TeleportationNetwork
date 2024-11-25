@@ -1,33 +1,33 @@
-using System.Collections.Generic;
+using CommonLib.Utils;
 using Vintagestory.API.Client;
 using Vintagestory.API.MathTools;
 using Vintagestory.GameContent;
 
 namespace TeleportationNetwork
 {
-    public sealed class TeleportRiftRenderer : IRenderer
+    public sealed class TeleportRiftRenderer : IRenderer, ITeleportController
     {
         public double RenderOrder => 0.05;
         public int RenderRange => 100;
 
         private IShaderProgram Prog => _renderSystem.Prog;
 
-        private readonly ICoreClientAPI _api;
         private readonly BlockPos _pos;
-        private readonly MeshRef _meshref;
-        private readonly Matrixf _matrixf;
+        private readonly ICoreClientAPI _api;
         private readonly float _rotation;
         private readonly TeleportRenderSystem _renderSystem;
+        private readonly MeshRef _meshref;
+        private readonly Matrixf _matrixf;
 
         private float _counter;
         private float _activationProgress;
         private float _size;
         private bool _broken;
 
-        public TeleportRiftRenderer(BlockPos pos, ICoreClientAPI api, float rotation)
+        public TeleportRiftRenderer(ICoreClientAPI api, BlockPos pos, float rotation)
         {
-            _api = api;
             _pos = pos;
+            _api = api;
             _rotation = rotation;
 
             var mesh = DarkMeshUtil.GetRectangle(1, 100);
@@ -39,15 +39,15 @@ namespace TeleportationNetwork
             _renderSystem = _api.ModLoader.GetModSystem<TeleportRenderSystem>();
         }
 
-        public void Update(Teleport teleport)
+        public void UpdateTeleport(Teleport teleport)
         {
             _size = teleport.Size;
             _broken = !teleport.Enabled;
         }
 
-        public void SetActivationProgress(float stage)
+        public void Update(float dt, TeleportActivator status)
         {
-            _activationProgress = GameMath.Clamp(stage, 0, 1);
+            _activationProgress = GameMath.Clamp(status.Progress, 0, 1);
         }
 
         public void OnRenderFrame(float deltaTime, EnumRenderStage stage)
@@ -136,63 +136,6 @@ namespace TeleportationNetwork
         {
             _api.Event.UnregisterRenderer(this, EnumRenderStage.AfterBlit);
             _meshref?.Dispose();
-        }
-    }
-
-    public static class DarkMeshUtil
-    {
-        public static MeshData GetRectangle(float totalSize, int gridSize)
-        {
-            var quadSize = totalSize / gridSize;
-            var halfSize = totalSize / 2.0f;
-
-            var vertices = new List<float>();
-            var uvs = new List<float>();
-            var indices = new List<int>();
-
-            // Vertices and uvs
-            for (int y = 0; y <= gridSize; y++)
-            {
-                for (int x = 0; x <= gridSize; x++)
-                {
-                    vertices.Add(x * quadSize - halfSize);
-                    vertices.Add(y * quadSize - halfSize);
-                    vertices.Add(0);
-                    uvs.Add((float)x / gridSize);
-                    uvs.Add((float)y / gridSize);
-                }
-            }
-
-            // Indices
-            for (int y = 0; y < gridSize; y++)
-            {
-                for (int x = 0; x < gridSize; x++)
-                {
-                    int topLeft = y * (gridSize + 1) + x;
-                    int topRight = topLeft + 1;
-                    int bottomLeft = topLeft + (gridSize + 1);
-                    int bottomRight = bottomLeft + 1;
-
-                    // First triangle
-                    indices.Add(topLeft);
-                    indices.Add(bottomLeft);
-                    indices.Add(topRight);
-
-                    // Second triangle
-                    indices.Add(topRight);
-                    indices.Add(bottomLeft);
-                    indices.Add(bottomRight);
-                }
-            }
-
-            var meshData = new MeshData();
-            meshData.SetXyz(vertices.ToArray());
-            meshData.SetUv(uvs.ToArray());
-            meshData.SetVerticesCount(vertices.Count / 3);
-            meshData.SetIndices(indices.ToArray());
-            meshData.SetIndicesCount(indices.Count);
-
-            return meshData;
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Vintagestory.API.Datastructures;
 
 namespace TeleportationNetwork
@@ -49,7 +49,7 @@ namespace TeleportationNetwork
                     break;
 
                 case FSMState.Deactivating:
-                    _timer -= dt;
+                    _timer -= dt * 2;
                     if (_timer <= 0)
                     {
                         State = FSMState.Deactivated;

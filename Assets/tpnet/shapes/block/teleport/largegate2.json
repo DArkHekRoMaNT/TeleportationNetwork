@@ -1,6 +1,6 @@
 {
 	"editor": {
-		"collapsedPaths": "Root/ShaftUD12,Root/origin/hand3/originHand3,Root/origin/hand2/originHand2,Root/origin/hand4/originHand4,Root/origin/hand/originHand,Root/ORIGINHub/ORIGINRims/Rim1/Cube10,Root/ORIGINHub/ORIGINspokes/Spoke9/Cube285/Cube286/Cube302/Cube303,Root/Origin/Rims,Root/gear12,Root/Origin/Spokes/Spoke2,Root/Origin/Spokes/Spoke3,Root/Origin/RimsDynamic2/RimDynamic9,Root/origin/gear12orig/ShaftUD13/Platter13,Root/Origin/Spokes/Spoke1,Root/hand2,Root/Origin/Spokes/Spoke6,Root/Origin/RimsDynamic2/RimDynamic7,Root/tempBase,Root/hand3,Root/Origin/Spokes/Spoke7,Root/Origin/RimsDynamic2/RimDynamic17,Root/Origin/Spokes/Spoke4,Root/Origin/Spokes/Spoke5,Root/Origin/RimsDynamic2,Root/ORIGINHub/ORIGINspokes/Spoke1/Cube14/Cube15/Cube24,Root/Origin/RimsDynamic2/RimDynamic3,Root/hand4,Root/ORIGINHub/ORIGINspokes/Spoke9/Cube285/Cube286/Cube294,Root/Origin/Spokes/Spoke8,Root/Origin/RimsDynamic2/RimDynamic1,Root/ORIGINHub/ORIGINspokes/Spoke1/Cube14/Cube15/Cube27,Root/ORIGINHub/ORIGINRims/Rim0/Cube1,Root/ORIGINHub/ORIGINspokes/Spoke9/Cube285/Cube286/Cube299,Root/Origin/Rims/Rim19,Root/origin/hand2,Root/origin,Root/origin/hand4,Root/Origin/Rims/Rim13,Root/origin/hand3,Root/ORIGINHub/ORIGINspokes/Spoke9/Cube285/Cube286/Cube302/Cube303/Cube305,Root/base/line5,Root/Origin/Rims/Rim17,Root/base/line2,Root/orig,Root/base/line1,Root/base/line4,Root/base/line3,Root/Origin/ORIGINRims/Rim9,Root/ORIGINHub/ORIGINspokes2/Spoke8,Root/ORIGINHub/ORIGINspokes2/Spoke7,Root/ORIGINHub/ORIGINspokes2/Spoke6,Root/ORIGINHub/ORIGINspokes2/Spoke5,Root/Origin/ORIGINspokes/Spoke1,Root/orig/originHand,Root/tempBase/line2,Root/hands/originHand/forearm-bone/wrist-bone/Palm1,Root/tempBase/line3,Root/ORIGINHub/ORIGINspokes/Spoke1/Cube14,Root/tempBase/line4,Root/tempBase/line5,Root/ORIGINHub/ORIGINRims2,Root/ORIGINHub/ORIGINRims3,Root/origin/hand,Root/Grid,Root/ORIGINHub/ORIGINspokes/Spoke9/Cube285/Cube286/Cube291,Root/orig3,Root/hands/originHand2,Root/hands/originHand3,Root/orig4,Root/hands/originHand4,Root/origin/gear12orig/ShaftUD13/Tooth2,Root/Origin/ORIGINRims/Rim13,Root/gear12orig2,Root/origin/gear12orig2,Root/ORIGINHub/ORIGINspokes/Spoke9/Cube285/Cube286/Cube287,Root/Origin/Rims/RimStatic17,Root/ORIGINHub/ORIGINspokes/Spoke2,Root/ORIGINHub/ORIGINspokes/Spoke5,Root/ORIGINHub/ORIGINspokes/Spoke6,Root/hands/originHand,Root/origin/gear12orig/ShaftUD13/Spoke12a2,Root/ORIGINHub/ORIGINspokes/Spoke3,Root/ORIGINHub/ORIGINspokes/Spoke4,Root/Grid/Cube51,Root/gear36orig/ShaftUD36,Root/ORIGINHub/ORIGINRims/Rim9/Rim11x,Root/base,Root/Grid/Cube41,Root/ORIGINHub/ORIGINRims/Rim13,Root/ORIGINHub/ORIGINspokes/Spoke9/Cube285/Cube286/Cube302,Root/origin/gear36orig/ShaftUD36/Rim1,Root/Grid/Cube46,Root/ORIGINHub/ORIGINspokes/Spoke9,Root/ORIGINHub/ORIGINspokes/Spoke7,Root/ORIGINHub/ORIGINspokes/Spoke8,Root/origin/gear12orig,Root/originControl,Root/Grid/Cube31,Root/origin/back,Root/Grid/Cube36,Root/Origin/Rims/Rim3,Root/Origin/Rims/Rim7,Root/origin/gear12orig/ShaftUD13,Root/Origin/Rims/Rim5,Root/Origin/RimsDynamic,Root/Origin/Rims/Rim9,Root/ORIGINHub/ORIGINRims/Rim9/Cube72,Root/Origin/Rims/RimStatic9,Root/Origin/Rims/RimStatic7,Root/ORIGINHub/ORIGINspokes,Root/Origin/Rims/RimStatic5,Root/gear12orig,Root/ORIGINHub/ORIGINRims/Rim1/Rim3x,Root/Origin/Rims/RimStatic3,Root/Origin/Rims/RimStatic1,Root/ORIGINHub/ORIGINRims/Rim1/Rim5,Root/ORIGINHub/ORIGINRims/Rim1/Rim3x/Cube12,Root/gear36orig,Root/origin/gear12orig2/ShaftUD14,Root/ORIGINHub/ORIGINspokes/Spoke1/Cube14/Cube15/Cube6,Root/origin/base,Root/ORIGINHub/ORIGINspokes/Spoke1/Cube14/Cube15/Cube7",
+		"collapsedPaths": "Root/ShaftUD12,Root/origin/hand3/originHand3,Root/origin/hand2/originHand2,Root/origin/hand4/originHand4,Root/origin/hand/originHand,Root/ORIGINHub/ORIGINRims/Rim1/Cube10,Root/ORIGINHub/ORIGINspokes/Spoke9/Cube285/Cube286/Cube302/Cube303,Root/Origin/Rims,Root/gear12,Root/Origin/Spokes/Spoke2,Root/Origin/Spokes/Spoke3,Root/origin/gear12orig/ShaftUD13/Platter13,Root/Origin/Spokes/Spoke1,Root/hand2,Root/Origin/Spokes/Spoke6,Root/tempBase,Root/hand3,Root/Origin/Spokes/Spoke7,Root/Origin/Spokes/Spoke4,Root/Origin/Spokes/Spoke5,Root/ORIGINHub/ORIGINspokes/Spoke1/Cube14/Cube15/Cube24,Root/hand4,Root/ORIGINHub/ORIGINspokes/Spoke9/Cube285/Cube286/Cube294,Root/Origin/Spokes/Spoke8,Root/ORIGINHub/ORIGINspokes/Spoke1/Cube14/Cube15/Cube27,Root/ORIGINHub/ORIGINRims/Rim0/Cube1,Root/ORIGINHub/ORIGINspokes/Spoke9/Cube285/Cube286/Cube299,Root/Origin/Rims/Rim19,Root/origin/hand2,Root/origin,Root/origin/hand4,Root/Origin/Rims/Rim13,Root/origin/hand3,Root/ORIGINHub/ORIGINspokes/Spoke9/Cube285/Cube286/Cube302/Cube303/Cube305,Root/base/line5,Root/Origin/Rims/Rim17,Root/base/line2,Root/orig,Root/base/line1,Root/base/line4,Root/base/line3,Root/Origin/ORIGINRims/Rim9,Root/ORIGINHub/ORIGINspokes2/Spoke8,Root/ORIGINHub/ORIGINspokes2/Spoke7,Root/ORIGINHub/ORIGINspokes2/Spoke6,Root/ORIGINHub/ORIGINspokes2/Spoke5,Root/Origin/ORIGINspokes/Spoke1,Root/orig/originHand,Root/tempBase/line2,Root/hands/originHand/forearm-bone/wrist-bone/Palm1,Root/tempBase/line3,Root/ORIGINHub/ORIGINspokes/Spoke1/Cube14,Root/tempBase/line4,Root/tempBase/line5,Root/ORIGINHub/ORIGINRims2,Root/ORIGINHub/ORIGINRims3,Root/origin/hand,Root/Grid,Root/ORIGINHub/ORIGINspokes/Spoke9/Cube285/Cube286/Cube291,Root/orig3,Root/hands/originHand2,Root/hands/originHand3,Root/orig4,Root/hands/originHand4,Root/origin/gear12orig/ShaftUD13/Tooth2,Root/Origin/ORIGINRims/Rim13,Root/gear12orig2,Root/origin/gear12orig2,Root/ORIGINHub/ORIGINspokes/Spoke9/Cube285/Cube286/Cube287,Root/ORIGINHub/ORIGINspokes/Spoke2,Root/ORIGINHub/ORIGINspokes/Spoke5,Root/ORIGINHub/ORIGINspokes/Spoke6,Root/hands/originHand,Root/origin/gear12orig/ShaftUD13/Spoke12a2,Root/ORIGINHub/ORIGINspokes/Spoke3,Root/ORIGINHub/ORIGINspokes/Spoke4,Root/Grid/Cube51,Root/gear36orig/ShaftUD36,Root/ORIGINHub/ORIGINRims/Rim9/Rim11x,Root/base,Root/Grid/Cube41,Root/ORIGINHub/ORIGINRims/Rim13,Root/ORIGINHub/ORIGINspokes/Spoke9/Cube285/Cube286/Cube302,Root/origin/gear36orig/ShaftUD36/Rim1,Root/Grid/Cube46,Root/ORIGINHub/ORIGINspokes/Spoke9,Root/ORIGINHub/ORIGINspokes/Spoke7,Root/ORIGINHub/ORIGINspokes/Spoke8,Root/origin/gear12orig,Root/originControl,Root/Grid/Cube31,Root/origin/back,Root/Grid/Cube36,Root/Origin/Rims/Rim3,Root/Origin/Rims/Rim2,Root/Origin/Rims/Rim1,Root/Origin/Rims/Rim7,Root/origin/gear12orig/ShaftUD13,Root/Origin/Rims/Rim5,Root/Origin/Rims/Rim9,Root/ORIGINHub/ORIGINRims/Rim9/Cube72,Root/ORIGINHub/ORIGINspokes,Root/gear12orig,Root/ORIGINHub/ORIGINRims/Rim1/Rim3x,Root/ORIGINHub/ORIGINRims/Rim1/Rim5,Root/ORIGINHub/ORIGINRims/Rim1/Rim3x/Cube12,Root/gear36orig,Root/origin/gear12orig2/ShaftUD14,Root/ORIGINHub/ORIGINspokes/Spoke1/Cube14/Cube15/Cube6,Root/origin/base,Root/ORIGINHub/ORIGINspokes/Spoke1/Cube14/Cube15/Cube7",
 		"allAngles": true,
 		"entityTextureMode": false
 	},
@@ -40,7 +40,7 @@
 					},
 					"children": [
 						{
-							"name": "RimStatic1",
+							"name": "Rim1",
 							"from": [ 0.0, 0.0, 0.0 ],
 							"to": [ 0.0, 0.0, 0.0 ],
 							"faces": {
@@ -99,7 +99,37 @@
 									}
 								},
 								{
-									"name": "RimStatic2",
+									"name": "RimRomb1",
+									"from": [ 0.0, 69.3, -5.0 ],
+									"to": [ 5.6, 74.9, 4.8 ],
+									"rotationOrigin": [ 0.0, 69.3, -5.0 ],
+									"rotationZ": -135.0,
+									"faces": {
+										"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 180, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
+										"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
+										"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 270, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
+										"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
+										"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] },
+										"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] }
+									}
+								},
+								{
+									"name": "RimRomb2",
+									"from": [ -9.8, 69.3, -5.0 ],
+									"to": [ -4.2, 74.9, 4.8 ],
+									"rotationOrigin": [ -9.8, 69.3, -5.0 ],
+									"rotationZ": -122.5,
+									"faces": {
+										"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 180, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
+										"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
+										"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 270, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
+										"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
+										"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] },
+										"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] }
+									}
+								},
+								{
+									"name": "Rim2",
 									"from": [ 0.0, 0.0, 0.01 ],
 									"to": [ 0.0, 0.0, 0.01 ],
 									"rotationOrigin": [ 0.0, 0.0, 0.0 ],
@@ -158,11 +188,41 @@
 												"south": { "texture": "#machinic3", "uv": [ 0.5, 2.5, 11.0, 9.5 ] },
 												"down": { "texture": "#metal", "uv": [ 0.0, 1.5, 10.5, 9.5 ] }
 											}
+										},
+										{
+											"name": "RimRomb3",
+											"from": [ 0.0, 69.3, -5.0 ],
+											"to": [ 5.6, 74.9, 4.8 ],
+											"rotationOrigin": [ 0.0, 69.3, -5.0 ],
+											"rotationZ": -135.0,
+											"faces": {
+												"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 180, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
+												"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
+												"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 270, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
+												"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
+												"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] },
+												"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] }
+											}
+										},
+										{
+											"name": "RimRomb4",
+											"from": [ -9.8, 69.3, -5.0 ],
+											"to": [ -4.2, 74.9, 4.8 ],
+											"rotationOrigin": [ -9.8, 69.3, -5.0 ],
+											"rotationZ": -122.5,
+											"faces": {
+												"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 180, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
+												"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
+												"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 270, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
+												"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
+												"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] },
+												"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] }
+											}
 										}
 									]
 								},
 								{
-									"name": "RimStatic3",
+									"name": "Rim3",
 									"from": [ 0.0, 0.0, 0.0 ],
 									"to": [ 0.0, 0.0, 0.0 ],
 									"rotationOrigin": [ 0.0, 0.0, 0.0 ],
@@ -223,7 +283,37 @@
 											}
 										},
 										{
-											"name": "RimStatic4",
+											"name": "RimRomb5",
+											"from": [ 0.0, 69.3, -5.0 ],
+											"to": [ 5.6, 74.9, 4.8 ],
+											"rotationOrigin": [ 0.0, 69.3, -5.0 ],
+											"rotationZ": -135.0,
+											"faces": {
+												"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 180, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
+												"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
+												"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 270, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
+												"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
+												"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] },
+												"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] }
+											}
+										},
+										{
+											"name": "RimRomb6",
+											"from": [ -9.8, 69.3, -5.0 ],
+											"to": [ -4.2, 74.9, 4.8 ],
+											"rotationOrigin": [ -9.8, 69.3, -5.0 ],
+											"rotationZ": -122.5,
+											"faces": {
+												"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 180, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
+												"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
+												"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 270, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
+												"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
+												"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] },
+												"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] }
+											}
+										},
+										{
+											"name": "Rim4",
 											"from": [ 0.0, 0.0, 0.01 ],
 											"to": [ 0.0, 0.0, 0.01 ],
 											"rotationOrigin": [ 0.0, 0.0, 0.0 ],
@@ -282,13 +372,43 @@
 														"south": { "texture": "#machinic3", "uv": [ 0.5, 2.5, 11.0, 9.5 ] },
 														"down": { "texture": "#metal", "uv": [ 0.0, 1.5, 10.5, 9.5 ] }
 													}
+												},
+												{
+													"name": "RimRomb7",
+													"from": [ 0.0, 69.3, -5.0 ],
+													"to": [ 5.6, 74.9, 4.8 ],
+													"rotationOrigin": [ 0.0, 69.3, -5.0 ],
+													"rotationZ": -135.0,
+													"faces": {
+														"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 180, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
+														"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
+														"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 270, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
+														"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
+														"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] },
+														"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] }
+													}
+												},
+												{
+													"name": "RimRomb8",
+													"from": [ -9.8, 69.3, -5.0 ],
+													"to": [ -4.2, 74.9, 4.8 ],
+													"rotationOrigin": [ -9.8, 69.3, -5.0 ],
+													"rotationZ": -122.5,
+													"faces": {
+														"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 180, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
+														"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
+														"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 270, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
+														"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
+														"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] },
+														"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] }
+													}
 												}
 											]
 										}
 									]
 								},
 								{
-									"name": "RimStatic5",
+									"name": "Rim5",
 									"from": [ 0.0, 0.0, 0.0 ],
 									"to": [ 0.0, 0.0, 0.0 ],
 									"rotationOrigin": [ 0.0, 0.0, 0.0 ],
@@ -349,7 +469,37 @@
 											}
 										},
 										{
-											"name": "RimStatic6",
+											"name": "RimRomb9",
+											"from": [ 0.0, 69.3, -5.0 ],
+											"to": [ 5.6, 74.9, 4.8 ],
+											"rotationOrigin": [ 0.0, 69.3, -5.0 ],
+											"rotationZ": -135.0,
+											"faces": {
+												"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 180, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
+												"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
+												"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 270, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
+												"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
+												"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] },
+												"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] }
+											}
+										},
+										{
+											"name": "RimRomb10",
+											"from": [ -9.8, 69.3, -5.0 ],
+											"to": [ -4.2, 74.9, 4.8 ],
+											"rotationOrigin": [ -9.8, 69.3, -5.0 ],
+											"rotationZ": -122.5,
+											"faces": {
+												"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 180, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
+												"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
+												"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 270, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
+												"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
+												"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] },
+												"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] }
+											}
+										},
+										{
+											"name": "Rim6",
 											"from": [ 0.0, 0.0, 0.01 ],
 											"to": [ 0.0, 0.0, 0.01 ],
 											"rotationOrigin": [ 0.0, 0.0, 0.0 ],
@@ -408,13 +558,43 @@
 														"south": { "texture": "#machinic3", "uv": [ 0.5, 2.5, 11.0, 9.5 ] },
 														"down": { "texture": "#metal", "uv": [ 0.0, 1.5, 10.5, 9.5 ] }
 													}
+												},
+												{
+													"name": "RimRomb11",
+													"from": [ 0.0, 69.3, -5.0 ],
+													"to": [ 5.6, 74.9, 4.8 ],
+													"rotationOrigin": [ 0.0, 69.3, -5.0 ],
+													"rotationZ": -135.0,
+													"faces": {
+														"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 180, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
+														"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
+														"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 270, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
+														"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
+														"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] },
+														"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] }
+													}
+												},
+												{
+													"name": "RimRomb12",
+													"from": [ -9.8, 69.3, -5.0 ],
+													"to": [ -4.2, 74.9, 4.8 ],
+													"rotationOrigin": [ -9.8, 69.3, -5.0 ],
+													"rotationZ": -122.5,
+													"faces": {
+														"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 180, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
+														"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
+														"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 270, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
+														"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
+														"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] },
+														"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] }
+													}
 												}
 											]
 										}
 									]
 								},
 								{
-									"name": "RimStatic7",
+									"name": "Rim7",
 									"from": [ 0.0, 0.0, 0.0 ],
 									"to": [ 0.0, 0.0, 0.0 ],
 									"rotationOrigin": [ 0.0, 0.0, 0.0 ],
@@ -475,7 +655,37 @@
 											}
 										},
 										{
-											"name": "RimStatic8",
+											"name": "RimRomb13",
+											"from": [ 0.0, 69.3, -5.0 ],
+											"to": [ 5.6, 74.9, 4.8 ],
+											"rotationOrigin": [ 0.0, 69.3, -5.0 ],
+											"rotationZ": -135.0,
+											"faces": {
+												"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 180, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
+												"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
+												"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 270, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
+												"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
+												"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] },
+												"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] }
+											}
+										},
+										{
+											"name": "RimRomb14",
+											"from": [ -9.8, 69.3, -5.0 ],
+											"to": [ -4.2, 74.9, 4.8 ],
+											"rotationOrigin": [ -9.8, 69.3, -5.0 ],
+											"rotationZ": -122.5,
+											"faces": {
+												"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 180, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
+												"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
+												"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 270, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
+												"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
+												"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] },
+												"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] }
+											}
+										},
+										{
+											"name": "Rim8",
 											"from": [ 0.0, 0.0, 0.01 ],
 											"to": [ 0.0, 0.0, 0.01 ],
 											"rotationOrigin": [ 0.0, 0.0, 0.0 ],
@@ -534,6 +744,36 @@
 														"south": { "texture": "#machinic3", "uv": [ 0.5, 2.5, 11.0, 9.5 ] },
 														"down": { "texture": "#metal", "uv": [ 0.0, 1.5, 10.5, 9.5 ] }
 													}
+												},
+												{
+													"name": "RimRomb15",
+													"from": [ 0.0, 69.3, -5.0 ],
+													"to": [ 5.6, 74.9, 4.8 ],
+													"rotationOrigin": [ 0.0, 69.3, -5.0 ],
+													"rotationZ": -135.0,
+													"faces": {
+														"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 180, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
+														"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
+														"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 270, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
+														"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
+														"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] },
+														"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] }
+													}
+												},
+												{
+													"name": "RimRomb16",
+													"from": [ -9.8, 69.3, -5.0 ],
+													"to": [ -4.2, 74.9, 4.8 ],
+													"rotationOrigin": [ -9.8, 69.3, -5.0 ],
+													"rotationZ": -122.5,
+													"faces": {
+														"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 180, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
+														"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
+														"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 270, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
+														"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
+														"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] },
+														"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] }
+													}
 												}
 											]
 										}
@@ -542,7 +782,7 @@
 							]
 						},
 						{
-							"name": "RimStatic9",
+							"name": "Rim9",
 							"from": [ 0.0, 0.0, 0.0 ],
 							"to": [ 0.0, 0.0, 0.0 ],
 							"rotationOrigin": [ 0.0, 0.0, 0.0 ],
@@ -603,7 +843,37 @@
 									}
 								},
 								{
-									"name": "RimStatic10",
+									"name": "RimRomb17",
+									"from": [ 0.0, 69.3, -5.0 ],
+									"to": [ 5.6, 74.9, 4.8 ],
+									"rotationOrigin": [ 0.0, 69.3, -5.0 ],
+									"rotationZ": -135.0,
+									"faces": {
+										"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 180, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
+										"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
+										"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 270, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
+										"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
+										"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] },
+										"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] }
+									}
+								},
+								{
+									"name": "RimRomb18",
+									"from": [ -9.8, 69.3, -5.0 ],
+									"to": [ -4.2, 74.9, 4.8 ],
+									"rotationOrigin": [ -9.8, 69.3, -5.0 ],
+									"rotationZ": -122.5,
+									"faces": {
+										"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 180, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
+										"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
+										"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 270, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
+										"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
+										"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] },
+										"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] }
+									}
+								},
+								{
+									"name": "Rim10",
 									"from": [ 0.0, 0.0, 0.01 ],
 									"to": [ 0.0, 0.0, 0.01 ],
 									"rotationOrigin": [ 0.0, 0.0, 0.0 ],
@@ -662,11 +932,41 @@
 												"south": { "texture": "#machinic3", "uv": [ 0.5, 2.5, 11.0, 9.5 ] },
 												"down": { "texture": "#metal", "uv": [ 0.0, 1.5, 10.5, 9.5 ] }
 											}
+										},
+										{
+											"name": "RimRomb19",
+											"from": [ 0.0, 69.3, -5.0 ],
+											"to": [ 5.6, 74.9, 4.8 ],
+											"rotationOrigin": [ 0.0, 69.3, -5.0 ],
+											"rotationZ": -135.0,
+											"faces": {
+												"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 180, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
+												"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
+												"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 270, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
+												"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
+												"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] },
+												"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] }
+											}
+										},
+										{
+											"name": "RimRomb20",
+											"from": [ -9.8, 69.3, -5.0 ],
+											"to": [ -4.2, 74.9, 4.8 ],
+											"rotationOrigin": [ -9.8, 69.3, -5.0 ],
+											"rotationZ": -122.5,
+											"faces": {
+												"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 180, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
+												"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
+												"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 270, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
+												"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
+												"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] },
+												"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] }
+											}
 										}
 									]
 								},
 								{
-									"name": "RimStatic11",
+									"name": "Rim11",
 									"from": [ 0.0, 0.0, 0.0 ],
 									"to": [ 0.0, 0.0, 0.0 ],
 									"rotationOrigin": [ 0.0, 0.0, 0.0 ],
@@ -727,7 +1027,37 @@
 											}
 										},
 										{
-											"name": "RimStatic12",
+											"name": "RimRomb21",
+											"from": [ 0.0, 69.3, -5.0 ],
+											"to": [ 5.6, 74.9, 4.8 ],
+											"rotationOrigin": [ 0.0, 69.3, -5.0 ],
+											"rotationZ": -135.0,
+											"faces": {
+												"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 180, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
+												"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
+												"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 270, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
+												"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
+												"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] },
+												"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] }
+											}
+										},
+										{
+											"name": "RimRomb22",
+											"from": [ -9.8, 69.3, -5.0 ],
+											"to": [ -4.2, 74.9, 4.8 ],
+											"rotationOrigin": [ -9.8, 69.3, -5.0 ],
+											"rotationZ": -122.5,
+											"faces": {
+												"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 180, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
+												"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
+												"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 270, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
+												"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
+												"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] },
+												"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] }
+											}
+										},
+										{
+											"name": "Rim12",
 											"from": [ 0.0, 0.0, 0.01 ],
 											"to": [ 0.0, 0.0, 0.01 ],
 											"rotationOrigin": [ 0.0, 0.0, 0.0 ],
@@ -786,13 +1116,43 @@
 														"south": { "texture": "#machinic3", "uv": [ 0.5, 2.5, 11.0, 9.5 ] },
 														"down": { "texture": "#metal", "uv": [ 0.0, 1.5, 10.5, 9.5 ] }
 													}
+												},
+												{
+													"name": "RimRomb23",
+													"from": [ 0.0, 69.3, -5.0 ],
+													"to": [ 5.6, 74.9, 4.8 ],
+													"rotationOrigin": [ 0.0, 69.3, -5.0 ],
+													"rotationZ": -135.0,
+													"faces": {
+														"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 180, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
+														"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
+														"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 270, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
+														"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
+														"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] },
+														"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] }
+													}
+												},
+												{
+													"name": "RimRomb24",
+													"from": [ -9.8, 69.3, -5.0 ],
+													"to": [ -4.2, 74.9, 4.8 ],
+													"rotationOrigin": [ -9.8, 69.3, -5.0 ],
+													"rotationZ": -122.5,
+													"faces": {
+														"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 180, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
+														"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
+														"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 270, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
+														"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
+														"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] },
+														"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] }
+													}
 												}
 											]
 										}
 									]
 								},
 								{
-									"name": "RimStatic13",
+									"name": "Rim13",
 									"from": [ 0.0, 0.0, 0.0 ],
 									"to": [ 0.0, 0.0, 0.0 ],
 									"rotationOrigin": [ 0.0, 0.0, 0.0 ],
@@ -853,7 +1213,37 @@
 											}
 										},
 										{
-											"name": "RimStatic14",
+											"name": "RimRomb25",
+											"from": [ 0.0, 69.3, -5.0 ],
+											"to": [ 5.6, 74.9, 4.8 ],
+											"rotationOrigin": [ 0.0, 69.3, -5.0 ],
+											"rotationZ": -135.0,
+											"faces": {
+												"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 180, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
+												"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
+												"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 270, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
+												"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
+												"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] },
+												"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] }
+											}
+										},
+										{
+											"name": "RimRomb26",
+											"from": [ -9.8, 69.3, -5.0 ],
+											"to": [ -4.2, 74.9, 4.8 ],
+											"rotationOrigin": [ -9.8, 69.3, -5.0 ],
+											"rotationZ": -122.5,
+											"faces": {
+												"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 180, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
+												"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
+												"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 270, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
+												"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
+												"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] },
+												"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] }
+											}
+										},
+										{
+											"name": "Rim14",
 											"from": [ 0.0, 0.0, 0.01 ],
 											"to": [ 0.0, 0.0, 0.01 ],
 											"rotationOrigin": [ 0.0, 0.0, 0.0 ],
@@ -912,13 +1302,43 @@
 														"south": { "texture": "#machinic3", "uv": [ 0.5, 2.5, 11.0, 9.5 ] },
 														"down": { "texture": "#metal", "uv": [ 0.0, 1.5, 10.5, 9.5 ] }
 													}
+												},
+												{
+													"name": "RimRomb27",
+													"from": [ 0.0, 69.3, -5.0 ],
+													"to": [ 5.6, 74.9, 4.8 ],
+													"rotationOrigin": [ 0.0, 69.3, -5.0 ],
+													"rotationZ": -135.0,
+													"faces": {
+														"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 180, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
+														"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
+														"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 270, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
+														"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
+														"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] },
+														"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] }
+													}
+												},
+												{
+													"name": "RimRomb28",
+													"from": [ -9.8, 69.3, -5.0 ],
+													"to": [ -4.2, 74.9, 4.8 ],
+													"rotationOrigin": [ -9.8, 69.3, -5.0 ],
+													"rotationZ": -122.5,
+													"faces": {
+														"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 180, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
+														"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
+														"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 270, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
+														"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
+														"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] },
+														"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] }
+													}
 												}
 											]
 										}
 									]
 								},
 								{
-									"name": "RimStatic15",
+									"name": "Rim15",
 									"from": [ 0.0, 0.0, 0.0 ],
 									"to": [ 0.0, 0.0, 0.0 ],
 									"rotationOrigin": [ 0.0, 0.0, 0.0 ],
@@ -979,7 +1399,37 @@
 											}
 										},
 										{
-											"name": "RimStatic16",
+											"name": "RimRomb29",
+											"from": [ 0.0, 69.3, -5.0 ],
+											"to": [ 5.6, 74.9, 4.8 ],
+											"rotationOrigin": [ 0.0, 69.3, -5.0 ],
+											"rotationZ": -135.0,
+											"faces": {
+												"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 180, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
+												"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
+												"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 270, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
+												"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
+												"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] },
+												"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] }
+											}
+										},
+										{
+											"name": "RimRomb30",
+											"from": [ -9.8, 69.3, -5.0 ],
+											"to": [ -4.2, 74.9, 4.8 ],
+											"rotationOrigin": [ -9.8, 69.3, -5.0 ],
+											"rotationZ": -122.5,
+											"faces": {
+												"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 180, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
+												"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
+												"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 270, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
+												"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
+												"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] },
+												"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] }
+											}
+										},
+										{
+											"name": "Rim16",
 											"from": [ 0.0, 0.0, 0.01 ],
 											"to": [ 0.0, 0.0, 0.01 ],
 											"rotationOrigin": [ 0.0, 0.0, 0.0 ],
@@ -1038,6 +1488,36 @@
 														"south": { "texture": "#machinic3", "uv": [ 0.5, 2.5, 11.0, 9.5 ] },
 														"down": { "texture": "#metal", "uv": [ 0.0, 1.5, 10.5, 9.5 ] }
 													}
+												},
+												{
+													"name": "RimRomb31",
+													"from": [ 0.0, 69.3, -5.0 ],
+													"to": [ 5.6, 74.9, 4.8 ],
+													"rotationOrigin": [ 0.0, 69.3, -5.0 ],
+													"rotationZ": -135.0,
+													"faces": {
+														"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 180, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
+														"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
+														"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 270, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
+														"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
+														"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] },
+														"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] }
+													}
+												},
+												{
+													"name": "RimRomb32",
+													"from": [ -9.8, 69.3, -5.0 ],
+													"to": [ -4.2, 74.9, 4.8 ],
+													"rotationOrigin": [ -9.8, 69.3, -5.0 ],
+													"rotationZ": -122.5,
+													"faces": {
+														"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 180, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
+														"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
+														"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 270, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
+														"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
+														"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] },
+														"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] }
+													}
 												}
 											]
 										}
@@ -1046,7 +1526,7 @@
 							]
 						},
 						{
-							"name": "RimStatic17",
+							"name": "Rim17",
 							"from": [ 0.0, 0.0, 0.0 ],
 							"to": [ 0.0, 0.0, 0.0 ],
 							"rotationOrigin": [ 0.0, 0.0, 0.0 ],
@@ -1107,7 +1587,37 @@
 									}
 								},
 								{
-									"name": "RimStatic18",
+									"name": "RimRomb33",
+									"from": [ 0.0, 69.3, -5.0 ],
+									"to": [ 5.6, 74.9, 4.8 ],
+									"rotationOrigin": [ 0.0, 69.3, -5.0 ],
+									"rotationZ": -135.0,
+									"faces": {
+										"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 180, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
+										"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
+										"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 270, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
+										"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
+										"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] },
+										"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] }
+									}
+								},
+								{
+									"name": "RimRomb34",
+									"from": [ -9.8, 69.3, -5.0 ],
+									"to": [ -4.2, 74.9, 4.8 ],
+									"rotationOrigin": [ -9.8, 69.3, -5.0 ],
+									"rotationZ": -122.5,
+									"faces": {
+										"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 180, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
+										"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
+										"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 270, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
+										"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
+										"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] },
+										"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] }
+									}
+								},
+								{
+									"name": "Rim18",
 									"from": [ 0.0, 0.0, 0.01 ],
 									"to": [ 0.0, 0.0, 0.01 ],
 									"rotationOrigin": [ 0.0, 0.0, 0.0 ],
@@ -1166,11 +1676,41 @@
 												"south": { "texture": "#machinic3", "uv": [ 0.5, 2.5, 11.0, 9.5 ] },
 												"down": { "texture": "#metal", "uv": [ 0.0, 1.5, 10.5, 9.5 ] }
 											}
+										},
+										{
+											"name": "RimRomb35",
+											"from": [ 0.0, 69.3, -5.0 ],
+											"to": [ 5.6, 74.9, 4.8 ],
+											"rotationOrigin": [ 0.0, 69.3, -5.0 ],
+											"rotationZ": -135.0,
+											"faces": {
+												"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 180, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
+												"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
+												"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 270, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
+												"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
+												"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] },
+												"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] }
+											}
+										},
+										{
+											"name": "RimRomb36",
+											"from": [ -9.8, 69.3, -5.0 ],
+											"to": [ -4.2, 74.9, 4.8 ],
+											"rotationOrigin": [ -9.8, 69.3, -5.0 ],
+											"rotationZ": -122.5,
+											"faces": {
+												"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 180, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
+												"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
+												"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 270, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
+												"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
+												"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] },
+												"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] }
+											}
 										}
 									]
 								},
 								{
-									"name": "RimStatic19",
+									"name": "Rim19",
 									"from": [ 0.0, 0.0, 0.0 ],
 									"to": [ 0.0, 0.0, 0.0 ],
 									"rotationOrigin": [ 0.0, 0.0, 0.0 ],
@@ -1231,7 +1771,37 @@
 											}
 										},
 										{
-											"name": "RimStatic20",
+											"name": "RimRomb37",
+											"from": [ 0.0, 69.3, -5.0 ],
+											"to": [ 5.6, 74.9, 4.8 ],
+											"rotationOrigin": [ 0.0, 69.3, -5.0 ],
+											"rotationZ": -135.0,
+											"faces": {
+												"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 180, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
+												"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
+												"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 270, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
+												"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
+												"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] },
+												"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] }
+											}
+										},
+										{
+											"name": "RimRomb38",
+											"from": [ -9.8, 69.3, -5.0 ],
+											"to": [ -4.2, 74.9, 4.8 ],
+											"rotationOrigin": [ -9.8, 69.3, -5.0 ],
+											"rotationZ": -122.5,
+											"faces": {
+												"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 180, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
+												"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
+												"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 270, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
+												"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
+												"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] },
+												"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] }
+											}
+										},
+										{
+											"name": "Rim20",
 											"from": [ 0.0, 0.0, 0.01 ],
 											"to": [ 0.0, 0.0, 0.01 ],
 											"rotationOrigin": [ 0.0, 0.0, 0.0 ],
@@ -1290,13 +1860,43 @@
 														"south": { "texture": "#machinic3", "uv": [ 0.5, 2.5, 11.0, 9.5 ] },
 														"down": { "texture": "#metal", "uv": [ 0.0, 1.5, 10.5, 9.5 ] }
 													}
+												},
+												{
+													"name": "RimRomb39",
+													"from": [ 0.0, 69.3, -5.0 ],
+													"to": [ 5.6, 74.9, 4.8 ],
+													"rotationOrigin": [ 0.0, 69.3, -5.0 ],
+													"rotationZ": -135.0,
+													"faces": {
+														"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 180, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
+														"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
+														"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 270, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
+														"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
+														"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] },
+														"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] }
+													}
+												},
+												{
+													"name": "RimRomb40",
+													"from": [ -9.8, 69.3, -5.0 ],
+													"to": [ -4.2, 74.9, 4.8 ],
+													"rotationOrigin": [ -9.8, 69.3, -5.0 ],
+													"rotationZ": -122.5,
+													"faces": {
+														"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 180, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
+														"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
+														"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 270, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
+														"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
+														"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] },
+														"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] }
+													}
 												}
 											]
 										}
 									]
 								},
 								{
-									"name": "RimStatic21",
+									"name": "Rim21",
 									"from": [ 0.0, 0.0, 0.0 ],
 									"to": [ 0.0, 0.0, 0.0 ],
 									"rotationOrigin": [ 0.0, 0.0, 0.0 ],
@@ -1357,7 +1957,37 @@
 											}
 										},
 										{
-											"name": "RimStatic22",
+											"name": "RimRomb41",
+											"from": [ 0.0, 69.3, -5.0 ],
+											"to": [ 5.6, 74.9, 4.8 ],
+											"rotationOrigin": [ 0.0, 69.3, -5.0 ],
+											"rotationZ": -135.0,
+											"faces": {
+												"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 180, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
+												"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
+												"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 270, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
+												"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
+												"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] },
+												"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] }
+											}
+										},
+										{
+											"name": "RimRomb42",
+											"from": [ -9.8, 69.3, -5.0 ],
+											"to": [ -4.2, 74.9, 4.8 ],
+											"rotationOrigin": [ -9.8, 69.3, -5.0 ],
+											"rotationZ": -122.5,
+											"faces": {
+												"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 180, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
+												"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
+												"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 270, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
+												"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
+												"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] },
+												"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] }
+											}
+										},
+										{
+											"name": "Rim22",
 											"from": [ 0.0, 0.0, 0.01 ],
 											"to": [ 0.0, 0.0, 0.01 ],
 											"rotationOrigin": [ 0.0, 0.0, 0.0 ],
@@ -1416,13 +2046,43 @@
 														"south": { "texture": "#machinic3", "uv": [ 0.5, 2.5, 11.0, 9.5 ] },
 														"down": { "texture": "#metal", "uv": [ 0.0, 1.5, 10.5, 9.5 ] }
 													}
+												},
+												{
+													"name": "RimRomb43",
+													"from": [ 0.0, 69.3, -5.0 ],
+													"to": [ 5.6, 74.9, 4.8 ],
+													"rotationOrigin": [ 0.0, 69.3, -5.0 ],
+													"rotationZ": -135.0,
+													"faces": {
+														"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 180, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
+														"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
+														"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 270, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
+														"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
+														"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] },
+														"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] }
+													}
+												},
+												{
+													"name": "RimRomb44",
+													"from": [ -9.8, 69.3, -5.0 ],
+													"to": [ -4.2, 74.9, 4.8 ],
+													"rotationOrigin": [ -9.8, 69.3, -5.0 ],
+													"rotationZ": -122.5,
+													"faces": {
+														"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 180, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
+														"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
+														"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 270, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
+														"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
+														"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] },
+														"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] }
+													}
 												}
 											]
 										}
 									]
 								},
 								{
-									"name": "RimStatic23",
+									"name": "Rim23",
 									"from": [ 0.0, 0.0, 0.0 ],
 									"to": [ 0.0, 0.0, 0.0 ],
 									"rotationOrigin": [ 0.0, 0.0, 0.0 ],
@@ -1483,7 +2143,37 @@
 											}
 										},
 										{
-											"name": "RimStatic24",
+											"name": "RimRomb45",
+											"from": [ 0.0, 69.3, -5.0 ],
+											"to": [ 5.6, 74.9, 4.8 ],
+											"rotationOrigin": [ 0.0, 69.3, -5.0 ],
+											"rotationZ": -135.0,
+											"faces": {
+												"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 180, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
+												"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
+												"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 270, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
+												"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
+												"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] },
+												"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] }
+											}
+										},
+										{
+											"name": "RimRomb46",
+											"from": [ -9.8, 69.3, -5.0 ],
+											"to": [ -4.2, 74.9, 4.8 ],
+											"rotationOrigin": [ -9.8, 69.3, -5.0 ],
+											"rotationZ": -122.5,
+											"faces": {
+												"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 180, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
+												"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
+												"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 270, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
+												"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
+												"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] },
+												"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] }
+											}
+										},
+										{
+											"name": "Rim24",
 											"from": [ 0.0, 0.0, 0.01 ],
 											"to": [ 0.0, 0.0, 0.01 ],
 											"rotationOrigin": [ 0.0, 0.0, 0.0 ],
@@ -1542,1024 +2232,7 @@
 														"south": { "texture": "#machinic3", "uv": [ 0.5, 2.5, 11.0, 9.5 ] },
 														"down": { "texture": "#metal", "uv": [ 0.0, 1.5, 10.5, 9.5 ] }
 													}
-												}
-											]
-										}
-									]
-								}
-							]
-						}
-					]
-				},
-				{
-					"name": "RimsDynamic",
-					"from": [ 0.0, 0.0, 0.0 ],
-					"to": [ 0.0, 0.0, 0.0 ],
-					"faces": {
-						"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-						"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-						"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-						"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-						"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-						"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] }
-					},
-					"children": [
-						{
-							"name": "RimDynamic1",
-							"from": [ 0.0, 0.0, 0.0 ],
-							"to": [ 0.0, 0.0, 0.0 ],
-							"faces": {
-								"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-								"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-								"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-								"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-								"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-								"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] }
-							},
-							"children": [
-								{
-									"name": "RimRomb5",
-									"from": [ 0.0, 69.3, -5.0 ],
-									"to": [ 5.6, 74.9, 4.8 ],
-									"rotationOrigin": [ 0.0, 69.3, -5.0 ],
-									"rotationZ": -135.0,
-									"faces": {
-										"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 180, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
-										"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
-										"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 270, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
-										"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
-										"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] },
-										"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] }
-									}
-								},
-								{
-									"name": "RimRomb6",
-									"from": [ -9.8, 69.3, -5.0 ],
-									"to": [ -4.2, 74.9, 4.8 ],
-									"rotationOrigin": [ -9.8, 69.3, -5.0 ],
-									"rotationZ": -122.5,
-									"faces": {
-										"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 180, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
-										"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
-										"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 270, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
-										"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
-										"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] },
-										"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] }
-									}
-								},
-								{
-									"name": "RimDynamic2",
-									"from": [ 0.0, 0.0, 0.0 ],
-									"to": [ 0.0, 0.0, 0.0 ],
-									"rotationOrigin": [ 0.0, 0.0, 0.0 ],
-									"rotationZ": 15.0,
-									"faces": {
-										"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-										"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-										"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-										"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-										"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-										"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] }
-									},
-									"children": [
-										{
-											"name": "RimRomb7",
-											"from": [ 0.0, 69.3, -5.0 ],
-											"to": [ 5.6, 74.9, 4.8 ],
-											"rotationOrigin": [ 0.0, 69.3, -5.0 ],
-											"rotationZ": -135.0,
-											"faces": {
-												"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 180, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
-												"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
-												"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 270, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
-												"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
-												"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] },
-												"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] }
-											}
-										},
-										{
-											"name": "RimRomb8",
-											"from": [ -9.8, 69.3, -5.0 ],
-											"to": [ -4.2, 74.9, 4.8 ],
-											"rotationOrigin": [ -9.8, 69.3, -5.0 ],
-											"rotationZ": -122.5,
-											"faces": {
-												"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 180, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
-												"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
-												"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 270, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
-												"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
-												"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] },
-												"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] }
-											}
-										}
-									]
-								},
-								{
-									"name": "RimDynamic3",
-									"from": [ 0.0, 0.0, 0.0 ],
-									"to": [ 0.0, 0.0, 0.0 ],
-									"rotationOrigin": [ 0.0, 0.0, 0.0 ],
-									"rotationZ": 30.0,
-									"faces": {
-										"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-										"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-										"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-										"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-										"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-										"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] }
-									},
-									"children": [
-										{
-											"name": "RimRomb9",
-											"from": [ 0.0, 69.3, -5.0 ],
-											"to": [ 5.6, 74.9, 4.8 ],
-											"rotationOrigin": [ 0.0, 69.3, -5.0 ],
-											"rotationZ": -135.0,
-											"faces": {
-												"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 180, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
-												"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
-												"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 270, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
-												"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
-												"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] },
-												"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] }
-											}
-										},
-										{
-											"name": "RimRomb10",
-											"from": [ -9.8, 69.3, -5.0 ],
-											"to": [ -4.2, 74.9, 4.8 ],
-											"rotationOrigin": [ -9.8, 69.3, -5.0 ],
-											"rotationZ": -122.5,
-											"faces": {
-												"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 180, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
-												"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
-												"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 270, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
-												"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
-												"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] },
-												"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] }
-											}
-										},
-										{
-											"name": "RimDynamic4",
-											"from": [ 0.0, 0.0, 0.0 ],
-											"to": [ 0.0, 0.0, 0.0 ],
-											"rotationOrigin": [ 0.0, 0.0, 0.0 ],
-											"rotationZ": 15.0,
-											"faces": {
-												"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-												"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-												"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-												"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-												"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-												"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] }
-											},
-											"children": [
-												{
-													"name": "RimRomb11",
-													"from": [ 0.0, 69.3, -5.0 ],
-													"to": [ 5.6, 74.9, 4.8 ],
-													"rotationOrigin": [ 0.0, 69.3, -5.0 ],
-													"rotationZ": -135.0,
-													"faces": {
-														"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 180, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
-														"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
-														"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 270, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
-														"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
-														"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] },
-														"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] }
-													}
 												},
-												{
-													"name": "RimRomb12",
-													"from": [ -9.8, 69.3, -5.0 ],
-													"to": [ -4.2, 74.9, 4.8 ],
-													"rotationOrigin": [ -9.8, 69.3, -5.0 ],
-													"rotationZ": -122.5,
-													"faces": {
-														"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 180, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
-														"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
-														"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 270, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
-														"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
-														"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] },
-														"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] }
-													}
-												}
-											]
-										}
-									]
-								},
-								{
-									"name": "RimDynamic5",
-									"from": [ 0.0, 0.0, 0.0 ],
-									"to": [ 0.0, 0.0, 0.0 ],
-									"rotationOrigin": [ 0.0, 0.0, 0.0 ],
-									"rotationZ": 60.0,
-									"faces": {
-										"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-										"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-										"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-										"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-										"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-										"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] }
-									},
-									"children": [
-										{
-											"name": "RimRomb13",
-											"from": [ 0.0, 69.3, -5.0 ],
-											"to": [ 5.6, 74.9, 4.8 ],
-											"rotationOrigin": [ 0.0, 69.3, -5.0 ],
-											"rotationZ": -135.0,
-											"faces": {
-												"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 180, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
-												"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
-												"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 270, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
-												"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
-												"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] },
-												"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] }
-											}
-										},
-										{
-											"name": "RimRomb14",
-											"from": [ -9.8, 69.3, -5.0 ],
-											"to": [ -4.2, 74.9, 4.8 ],
-											"rotationOrigin": [ -9.8, 69.3, -5.0 ],
-											"rotationZ": -122.5,
-											"faces": {
-												"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 180, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
-												"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
-												"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 270, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
-												"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
-												"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] },
-												"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] }
-											}
-										},
-										{
-											"name": "RimDynamic6",
-											"from": [ 0.0, 0.0, 0.0 ],
-											"to": [ 0.0, 0.0, 0.0 ],
-											"rotationOrigin": [ 0.0, 0.0, 0.0 ],
-											"rotationZ": 15.0,
-											"faces": {
-												"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-												"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-												"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-												"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-												"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-												"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] }
-											},
-											"children": [
-												{
-													"name": "RimRomb15",
-													"from": [ 0.0, 69.3, -5.0 ],
-													"to": [ 5.6, 74.9, 4.8 ],
-													"rotationOrigin": [ 0.0, 69.3, -5.0 ],
-													"rotationZ": -135.0,
-													"faces": {
-														"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 180, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
-														"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
-														"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 270, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
-														"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
-														"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] },
-														"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] }
-													}
-												},
-												{
-													"name": "RimRomb16",
-													"from": [ -9.8, 69.3, -5.0 ],
-													"to": [ -4.2, 74.9, 4.8 ],
-													"rotationOrigin": [ -9.8, 69.3, -5.0 ],
-													"rotationZ": -122.5,
-													"faces": {
-														"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 180, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
-														"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
-														"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 270, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
-														"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
-														"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] },
-														"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] }
-													}
-												}
-											]
-										}
-									]
-								},
-								{
-									"name": "RimDynamic7",
-									"from": [ 0.0, 0.0, 0.0 ],
-									"to": [ 0.0, 0.0, 0.0 ],
-									"rotationOrigin": [ 0.0, 0.0, 0.0 ],
-									"rotationZ": 90.0,
-									"faces": {
-										"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-										"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-										"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-										"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-										"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-										"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] }
-									},
-									"children": [
-										{
-											"name": "RimRomb17",
-											"from": [ 0.0, 69.3, -5.0 ],
-											"to": [ 5.6, 74.9, 4.8 ],
-											"rotationOrigin": [ 0.0, 69.3, -5.0 ],
-											"rotationZ": -135.0,
-											"faces": {
-												"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 180, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
-												"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
-												"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 270, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
-												"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
-												"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] },
-												"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] }
-											}
-										},
-										{
-											"name": "RimRomb18",
-											"from": [ -9.8, 69.3, -5.0 ],
-											"to": [ -4.2, 74.9, 4.8 ],
-											"rotationOrigin": [ -9.8, 69.3, -5.0 ],
-											"rotationZ": -122.5,
-											"faces": {
-												"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 180, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
-												"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
-												"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 270, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
-												"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
-												"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] },
-												"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] }
-											}
-										},
-										{
-											"name": "RimDynamic8",
-											"from": [ 0.0, 0.0, 0.0 ],
-											"to": [ 0.0, 0.0, 0.0 ],
-											"rotationOrigin": [ 0.0, 0.0, 0.0 ],
-											"rotationZ": 15.0,
-											"faces": {
-												"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-												"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-												"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-												"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-												"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-												"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] }
-											},
-											"children": [
-												{
-													"name": "RimRomb19",
-													"from": [ 0.0, 69.3, -5.0 ],
-													"to": [ 5.6, 74.9, 4.8 ],
-													"rotationOrigin": [ 0.0, 69.3, -5.0 ],
-													"rotationZ": -135.0,
-													"faces": {
-														"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 180, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
-														"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
-														"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 270, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
-														"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
-														"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] },
-														"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] }
-													}
-												},
-												{
-													"name": "RimRomb20",
-													"from": [ -9.8, 69.3, -5.0 ],
-													"to": [ -4.2, 74.9, 4.8 ],
-													"rotationOrigin": [ -9.8, 69.3, -5.0 ],
-													"rotationZ": -122.5,
-													"faces": {
-														"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 180, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
-														"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
-														"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 270, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
-														"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
-														"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] },
-														"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] }
-													}
-												}
-											]
-										}
-									]
-								}
-							]
-						},
-						{
-							"name": "RimDynamic9",
-							"from": [ 0.0, 0.0, 0.0 ],
-							"to": [ 0.0, 0.0, 0.0 ],
-							"rotationOrigin": [ 0.0, 0.0, 0.0 ],
-							"rotationZ": 120.0,
-							"faces": {
-								"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-								"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-								"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-								"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-								"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-								"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] }
-							},
-							"children": [
-								{
-									"name": "RimRomb21",
-									"from": [ 0.0, 69.3, -5.0 ],
-									"to": [ 5.6, 74.9, 4.8 ],
-									"rotationOrigin": [ 0.0, 69.3, -5.0 ],
-									"rotationZ": -135.0,
-									"faces": {
-										"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 180, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
-										"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
-										"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 270, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
-										"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
-										"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] },
-										"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] }
-									}
-								},
-								{
-									"name": "RimRomb22",
-									"from": [ -9.8, 69.3, -5.0 ],
-									"to": [ -4.2, 74.9, 4.8 ],
-									"rotationOrigin": [ -9.8, 69.3, -5.0 ],
-									"rotationZ": -122.5,
-									"faces": {
-										"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 180, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
-										"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
-										"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 270, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
-										"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
-										"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] },
-										"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] }
-									}
-								},
-								{
-									"name": "RimDynamic10",
-									"from": [ 0.0, 0.0, 0.0 ],
-									"to": [ 0.0, 0.0, 0.0 ],
-									"rotationOrigin": [ 0.0, 0.0, 0.0 ],
-									"rotationZ": 15.0,
-									"faces": {
-										"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-										"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-										"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-										"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-										"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-										"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] }
-									},
-									"children": [
-										{
-											"name": "RimRomb23",
-											"from": [ 0.0, 69.3, -5.0 ],
-											"to": [ 5.6, 74.9, 4.8 ],
-											"rotationOrigin": [ 0.0, 69.3, -5.0 ],
-											"rotationZ": -135.0,
-											"faces": {
-												"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 180, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
-												"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
-												"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 270, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
-												"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
-												"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] },
-												"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] }
-											}
-										},
-										{
-											"name": "RimRomb24",
-											"from": [ -9.8, 69.3, -5.0 ],
-											"to": [ -4.2, 74.9, 4.8 ],
-											"rotationOrigin": [ -9.8, 69.3, -5.0 ],
-											"rotationZ": -122.5,
-											"faces": {
-												"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 180, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
-												"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
-												"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 270, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
-												"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
-												"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] },
-												"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] }
-											}
-										}
-									]
-								},
-								{
-									"name": "RimDynamic11",
-									"from": [ 0.0, 0.0, 0.0 ],
-									"to": [ 0.0, 0.0, 0.0 ],
-									"rotationOrigin": [ 0.0, 0.0, 0.0 ],
-									"rotationZ": 30.0,
-									"faces": {
-										"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-										"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-										"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-										"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-										"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-										"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] }
-									},
-									"children": [
-										{
-											"name": "RimRomb25",
-											"from": [ 0.0, 69.3, -5.0 ],
-											"to": [ 5.6, 74.9, 4.8 ],
-											"rotationOrigin": [ 0.0, 69.3, -5.0 ],
-											"rotationZ": -135.0,
-											"faces": {
-												"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 180, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
-												"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
-												"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 270, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
-												"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
-												"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] },
-												"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] }
-											}
-										},
-										{
-											"name": "RimRomb26",
-											"from": [ -9.8, 69.3, -5.0 ],
-											"to": [ -4.2, 74.9, 4.8 ],
-											"rotationOrigin": [ -9.8, 69.3, -5.0 ],
-											"rotationZ": -122.5,
-											"faces": {
-												"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 180, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
-												"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
-												"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 270, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
-												"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
-												"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] },
-												"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] }
-											}
-										},
-										{
-											"name": "RimDynamic12",
-											"from": [ 0.0, 0.0, 0.0 ],
-											"to": [ 0.0, 0.0, 0.0 ],
-											"rotationOrigin": [ 0.0, 0.0, 0.0 ],
-											"rotationZ": 15.0,
-											"faces": {
-												"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-												"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-												"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-												"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-												"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-												"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] }
-											},
-											"children": [
-												{
-													"name": "RimRomb27",
-													"from": [ 0.0, 69.3, -5.0 ],
-													"to": [ 5.6, 74.9, 4.8 ],
-													"rotationOrigin": [ 0.0, 69.3, -5.0 ],
-													"rotationZ": -135.0,
-													"faces": {
-														"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 180, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
-														"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
-														"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 270, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
-														"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
-														"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] },
-														"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] }
-													}
-												},
-												{
-													"name": "RimRomb28",
-													"from": [ -9.8, 69.3, -5.0 ],
-													"to": [ -4.2, 74.9, 4.8 ],
-													"rotationOrigin": [ -9.8, 69.3, -5.0 ],
-													"rotationZ": -122.5,
-													"faces": {
-														"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 180, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
-														"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
-														"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 270, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
-														"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
-														"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] },
-														"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] }
-													}
-												}
-											]
-										}
-									]
-								},
-								{
-									"name": "RimDynamic13",
-									"from": [ 0.0, 0.0, 0.0 ],
-									"to": [ 0.0, 0.0, 0.0 ],
-									"rotationOrigin": [ 0.0, 0.0, 0.0 ],
-									"rotationZ": 60.0,
-									"faces": {
-										"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-										"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-										"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-										"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-										"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-										"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] }
-									},
-									"children": [
-										{
-											"name": "RimRomb29",
-											"from": [ 0.0, 69.3, -5.0 ],
-											"to": [ 5.6, 74.9, 4.8 ],
-											"rotationOrigin": [ 0.0, 69.3, -5.0 ],
-											"rotationZ": -135.0,
-											"faces": {
-												"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 180, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
-												"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
-												"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 270, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
-												"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
-												"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] },
-												"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] }
-											}
-										},
-										{
-											"name": "RimRomb30",
-											"from": [ -9.8, 69.3, -5.0 ],
-											"to": [ -4.2, 74.9, 4.8 ],
-											"rotationOrigin": [ -9.8, 69.3, -5.0 ],
-											"rotationZ": -122.5,
-											"faces": {
-												"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 180, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
-												"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
-												"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 270, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
-												"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
-												"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] },
-												"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] }
-											}
-										},
-										{
-											"name": "RimDynamic14",
-											"from": [ 0.0, 0.0, 0.0 ],
-											"to": [ 0.0, 0.0, 0.0 ],
-											"rotationOrigin": [ 0.0, 0.0, 0.0 ],
-											"rotationZ": 15.0,
-											"faces": {
-												"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-												"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-												"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-												"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-												"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-												"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] }
-											},
-											"children": [
-												{
-													"name": "RimRomb31",
-													"from": [ 0.0, 69.3, -5.0 ],
-													"to": [ 5.6, 74.9, 4.8 ],
-													"rotationOrigin": [ 0.0, 69.3, -5.0 ],
-													"rotationZ": -135.0,
-													"faces": {
-														"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 180, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
-														"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
-														"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 270, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
-														"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
-														"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] },
-														"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] }
-													}
-												},
-												{
-													"name": "RimRomb32",
-													"from": [ -9.8, 69.3, -5.0 ],
-													"to": [ -4.2, 74.9, 4.8 ],
-													"rotationOrigin": [ -9.8, 69.3, -5.0 ],
-													"rotationZ": -122.5,
-													"faces": {
-														"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 180, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
-														"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
-														"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 270, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
-														"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
-														"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] },
-														"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] }
-													}
-												}
-											]
-										}
-									]
-								},
-								{
-									"name": "RimDynamic15",
-									"from": [ 0.0, 0.0, 0.0 ],
-									"to": [ 0.0, 0.0, 0.0 ],
-									"rotationOrigin": [ 0.0, 0.0, 0.0 ],
-									"rotationZ": 90.0,
-									"faces": {
-										"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-										"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-										"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-										"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-										"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-										"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] }
-									},
-									"children": [
-										{
-											"name": "RimRomb33",
-											"from": [ 0.0, 69.3, -5.0 ],
-											"to": [ 5.6, 74.9, 4.8 ],
-											"rotationOrigin": [ 0.0, 69.3, -5.0 ],
-											"rotationZ": -135.0,
-											"faces": {
-												"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 180, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
-												"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
-												"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 270, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
-												"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
-												"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] },
-												"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] }
-											}
-										},
-										{
-											"name": "RimRomb34",
-											"from": [ -9.8, 69.3, -5.0 ],
-											"to": [ -4.2, 74.9, 4.8 ],
-											"rotationOrigin": [ -9.8, 69.3, -5.0 ],
-											"rotationZ": -122.5,
-											"faces": {
-												"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 180, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
-												"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
-												"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 270, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
-												"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
-												"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] },
-												"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] }
-											}
-										},
-										{
-											"name": "RimDynamic16",
-											"from": [ 0.0, 0.0, 0.0 ],
-											"to": [ 0.0, 0.0, 0.0 ],
-											"rotationOrigin": [ 0.0, 0.0, 0.0 ],
-											"rotationZ": 15.0,
-											"faces": {
-												"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-												"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-												"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-												"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-												"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-												"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] }
-											},
-											"children": [
-												{
-													"name": "RimRomb35",
-													"from": [ 0.0, 69.3, -5.0 ],
-													"to": [ 5.6, 74.9, 4.8 ],
-													"rotationOrigin": [ 0.0, 69.3, -5.0 ],
-													"rotationZ": -135.0,
-													"faces": {
-														"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 180, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
-														"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
-														"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 270, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
-														"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
-														"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] },
-														"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] }
-													}
-												},
-												{
-													"name": "RimRomb36",
-													"from": [ -9.8, 69.3, -5.0 ],
-													"to": [ -4.2, 74.9, 4.8 ],
-													"rotationOrigin": [ -9.8, 69.3, -5.0 ],
-													"rotationZ": -122.5,
-													"faces": {
-														"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 180, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
-														"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
-														"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 270, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
-														"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
-														"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] },
-														"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] }
-													}
-												}
-											]
-										}
-									]
-								}
-							]
-						},
-						{
-							"name": "RimDynamic17",
-							"from": [ 0.0, 0.0, 0.0 ],
-							"to": [ 0.0, 0.0, 0.0 ],
-							"rotationOrigin": [ 0.0, 0.0, 0.0 ],
-							"rotationZ": 240.0,
-							"faces": {
-								"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-								"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-								"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-								"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-								"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-								"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] }
-							},
-							"children": [
-								{
-									"name": "RimRomb37",
-									"from": [ 0.0, 69.3, -5.0 ],
-									"to": [ 5.6, 74.9, 4.8 ],
-									"rotationOrigin": [ 0.0, 69.3, -5.0 ],
-									"rotationZ": -135.0,
-									"faces": {
-										"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 180, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
-										"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
-										"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 270, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
-										"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
-										"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] },
-										"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] }
-									}
-								},
-								{
-									"name": "RimRomb38",
-									"from": [ -9.8, 69.3, -5.0 ],
-									"to": [ -4.2, 74.9, 4.8 ],
-									"rotationOrigin": [ -9.8, 69.3, -5.0 ],
-									"rotationZ": -122.5,
-									"faces": {
-										"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 180, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
-										"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
-										"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 270, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
-										"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
-										"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] },
-										"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] }
-									}
-								},
-								{
-									"name": "RimDynamic18",
-									"from": [ 0.0, 0.0, 0.0 ],
-									"to": [ 0.0, 0.0, 0.0 ],
-									"rotationOrigin": [ 0.0, 0.0, 0.0 ],
-									"rotationZ": 15.0,
-									"faces": {
-										"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-										"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-										"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-										"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-										"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-										"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] }
-									},
-									"children": [
-										{
-											"name": "RimRomb39",
-											"from": [ 0.0, 69.3, -5.0 ],
-											"to": [ 5.6, 74.9, 4.8 ],
-											"rotationOrigin": [ 0.0, 69.3, -5.0 ],
-											"rotationZ": -135.0,
-											"faces": {
-												"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 180, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
-												"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
-												"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 270, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
-												"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
-												"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] },
-												"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] }
-											}
-										},
-										{
-											"name": "RimRomb40",
-											"from": [ -9.8, 69.3, -5.0 ],
-											"to": [ -4.2, 74.9, 4.8 ],
-											"rotationOrigin": [ -9.8, 69.3, -5.0 ],
-											"rotationZ": -122.5,
-											"faces": {
-												"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 180, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
-												"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
-												"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 270, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
-												"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
-												"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] },
-												"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] }
-											}
-										}
-									]
-								},
-								{
-									"name": "RimDynamic19",
-									"from": [ 0.0, 0.0, 0.0 ],
-									"to": [ 0.0, 0.0, 0.0 ],
-									"rotationOrigin": [ 0.0, 0.0, 0.0 ],
-									"rotationZ": 30.0,
-									"faces": {
-										"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-										"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-										"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-										"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-										"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-										"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] }
-									},
-									"children": [
-										{
-											"name": "RimRomb41",
-											"from": [ 0.0, 69.3, -5.0 ],
-											"to": [ 5.6, 74.9, 4.8 ],
-											"rotationOrigin": [ 0.0, 69.3, -5.0 ],
-											"rotationZ": -135.0,
-											"faces": {
-												"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 180, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
-												"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
-												"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 270, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
-												"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
-												"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] },
-												"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] }
-											}
-										},
-										{
-											"name": "RimRomb42",
-											"from": [ -9.8, 69.3, -5.0 ],
-											"to": [ -4.2, 74.9, 4.8 ],
-											"rotationOrigin": [ -9.8, 69.3, -5.0 ],
-											"rotationZ": -122.5,
-											"faces": {
-												"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 180, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
-												"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
-												"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 270, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
-												"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
-												"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] },
-												"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] }
-											}
-										},
-										{
-											"name": "RimDynamic20",
-											"from": [ 0.0, 0.0, 0.0 ],
-											"to": [ 0.0, 0.0, 0.0 ],
-											"rotationOrigin": [ 0.0, 0.0, 0.0 ],
-											"rotationZ": 15.0,
-											"faces": {
-												"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-												"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-												"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-												"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-												"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-												"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] }
-											},
-											"children": [
-												{
-													"name": "RimRomb43",
-													"from": [ 0.0, 69.3, -5.0 ],
-													"to": [ 5.6, 74.9, 4.8 ],
-													"rotationOrigin": [ 0.0, 69.3, -5.0 ],
-													"rotationZ": -135.0,
-													"faces": {
-														"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 180, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
-														"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
-														"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 270, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
-														"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
-														"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] },
-														"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] }
-													}
-												},
-												{
-													"name": "RimRomb44",
-													"from": [ -9.8, 69.3, -5.0 ],
-													"to": [ -4.2, 74.9, 4.8 ],
-													"rotationOrigin": [ -9.8, 69.3, -5.0 ],
-													"rotationZ": -122.5,
-													"faces": {
-														"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 180, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
-														"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
-														"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 270, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
-														"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
-														"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] },
-														"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] }
-													}
-												}
-											]
-										}
-									]
-								},
-								{
-									"name": "RimDynamic21",
-									"from": [ 0.0, 0.0, 0.0 ],
-									"to": [ 0.0, 0.0, 0.0 ],
-									"rotationOrigin": [ 0.0, 0.0, 0.0 ],
-									"rotationZ": 60.0,
-									"faces": {
-										"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-										"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-										"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-										"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-										"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-										"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] }
-									},
-									"children": [
-										{
-											"name": "RimRomb45",
-											"from": [ 0.0, 69.3, -5.0 ],
-											"to": [ 5.6, 74.9, 4.8 ],
-											"rotationOrigin": [ 0.0, 69.3, -5.0 ],
-											"rotationZ": -135.0,
-											"faces": {
-												"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 180, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
-												"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
-												"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 270, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
-												"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
-												"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] },
-												"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] }
-											}
-										},
-										{
-											"name": "RimRomb46",
-											"from": [ -9.8, 69.3, -5.0 ],
-											"to": [ -4.2, 74.9, 4.8 ],
-											"rotationOrigin": [ -9.8, 69.3, -5.0 ],
-											"rotationZ": -122.5,
-											"faces": {
-												"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 180, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
-												"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
-												"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 270, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
-												"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
-												"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] },
-												"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] }
-											}
-										},
-										{
-											"name": "RimDynamic22",
-											"from": [ 0.0, 0.0, 0.0 ],
-											"to": [ 0.0, 0.0, 0.0 ],
-											"rotationOrigin": [ 0.0, 0.0, 0.0 ],
-											"rotationZ": 15.0,
-											"faces": {
-												"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-												"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-												"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-												"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-												"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-												"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] }
-											},
-											"children": [
 												{
 													"name": "RimRomb47",
 													"from": [ 0.0, 69.3, -5.0 ],
@@ -2577,100 +2250,6 @@
 												},
 												{
 													"name": "RimRomb48",
-													"from": [ -9.8, 69.3, -5.0 ],
-													"to": [ -4.2, 74.9, 4.8 ],
-													"rotationOrigin": [ -9.8, 69.3, -5.0 ],
-													"rotationZ": -122.5,
-													"faces": {
-														"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 180, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
-														"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
-														"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 270, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
-														"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
-														"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] },
-														"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] }
-													}
-												}
-											]
-										}
-									]
-								},
-								{
-									"name": "RimDynamic23",
-									"from": [ 0.0, 0.0, 0.0 ],
-									"to": [ 0.0, 0.0, 0.0 ],
-									"rotationOrigin": [ 0.0, 0.0, 0.0 ],
-									"rotationZ": 90.0,
-									"faces": {
-										"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-										"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-										"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-										"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-										"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-										"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] }
-									},
-									"children": [
-										{
-											"name": "RimRomb49",
-											"from": [ 0.0, 69.3, -5.0 ],
-											"to": [ 5.6, 74.9, 4.8 ],
-											"rotationOrigin": [ 0.0, 69.3, -5.0 ],
-											"rotationZ": -135.0,
-											"faces": {
-												"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 180, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
-												"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
-												"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 270, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
-												"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
-												"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] },
-												"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] }
-											}
-										},
-										{
-											"name": "RimRomb50",
-											"from": [ -9.8, 69.3, -5.0 ],
-											"to": [ -4.2, 74.9, 4.8 ],
-											"rotationOrigin": [ -9.8, 69.3, -5.0 ],
-											"rotationZ": -122.5,
-											"faces": {
-												"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 180, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
-												"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
-												"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 270, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
-												"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
-												"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] },
-												"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] }
-											}
-										},
-										{
-											"name": "RimDynamic24",
-											"from": [ 0.0, 0.0, 0.0 ],
-											"to": [ 0.0, 0.0, 0.0 ],
-											"rotationOrigin": [ 0.0, 0.0, 0.0 ],
-											"rotationZ": 15.0,
-											"faces": {
-												"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-												"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-												"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-												"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-												"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
-												"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 0.5, 0.5 ] }
-											},
-											"children": [
-												{
-													"name": "RimRomb51",
-													"from": [ 0.0, 69.3, -5.0 ],
-													"to": [ 5.6, 74.9, 4.8 ],
-													"rotationOrigin": [ 0.0, 69.3, -5.0 ],
-													"rotationZ": -135.0,
-													"faces": {
-														"north": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 180, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
-														"east": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
-														"south": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 5.5 ], "rotation": 270, "windMode": [-1,-1,-1,-1], "windData": [6,6,5,6] },
-														"west": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 9.5, 5.5 ] },
-														"up": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] },
-														"down": { "texture": "#iron-sheet1", "uv": [ 0.0, 0.0, 5.5, 9.5 ] }
-													}
-												},
-												{
-													"name": "RimRomb52",
 													"from": [ -9.8, 69.3, -5.0 ],
 													"to": [ -4.2, 74.9, 4.8 ],
 													"rotationOrigin": [ -9.8, 69.3, -5.0 ],
@@ -3009,8 +2588,8 @@
 						},
 						{
 							"name": "Spoke2",
-							"from": [ -4.2, 15.0, -4.21 ],
-							"to": [ 4.2, 20.6, 4.19 ],
+							"from": [ -4.2, 15.0, -4.2 ],
+							"to": [ 4.2, 20.6, 4.2 ],
 							"rotationOrigin": [ 0.0, 0.0, 0.0 ],
 							"rotationZ": 45.0,
 							"faces": {
@@ -3629,8 +3208,8 @@
 						},
 						{
 							"name": "Spoke4",
-							"from": [ -4.2, 15.0, -4.21 ],
-							"to": [ 4.2, 20.6, 4.19 ],
+							"from": [ -4.2, 15.0, -4.2 ],
+							"to": [ 4.2, 20.6, 4.2 ],
 							"rotationOrigin": [ 0.0, 0.0, 0.0 ],
 							"rotationZ": 135.0,
 							"faces": {
@@ -4249,8 +3828,8 @@
 						},
 						{
 							"name": "Spoke6",
-							"from": [ -4.2, 15.0, -4.21 ],
-							"to": [ 4.2, 20.6, 4.19 ],
+							"from": [ -4.2, 15.0, -4.2 ],
+							"to": [ 4.2, 20.6, 4.2 ],
 							"rotationOrigin": [ 0.0, 0.0, 0.0 ],
 							"rotationZ": 225.0,
 							"faces": {
@@ -4869,8 +4448,8 @@
 						},
 						{
 							"name": "Spoke8",
-							"from": [ -4.2, 15.0, -4.21 ],
-							"to": [ 4.2, 20.6, 4.19 ],
+							"from": [ -4.2, 15.0, -4.2 ],
+							"to": [ 4.2, 20.6, 4.2 ],
 							"rotationOrigin": [ 0.0, 0.0, 0.0 ],
 							"rotationZ": 315.0,
 							"faces": {
@@ -5194,6 +4773,7 @@
 					"frame": 0,
 					"elements": {
 						"Spoke1": { "offsetX": 0.0, "offsetY": 0.0, "offsetZ": 0.0 },
+						"Origin": { "offsetX": 0.0, "offsetY": 0.0, "offsetZ": 0.0 },
 						"Spoke2": { "offsetX": 0.0, "offsetY": 0.0, "offsetZ": 0.0 },
 						"Spoke3": { "offsetX": 0.0, "offsetY": 0.0, "offsetZ": 0.0 },
 						"Spoke4": { "offsetX": 0.0, "offsetY": 0.0, "offsetZ": 0.0 },
@@ -5206,14 +4786,14 @@
 				{
 					"frame": 29,
 					"elements": {
-						"Spoke1": { "offsetX": 0.0, "offsetY": 65.0, "offsetZ": 0.0 },
-						"Spoke2": { "offsetX": 0.0, "offsetY": 65.0, "offsetZ": 0.0 },
-						"Spoke3": { "offsetX": 0.0, "offsetY": 65.0, "offsetZ": 0.0 },
-						"Spoke4": { "offsetX": 0.0, "offsetY": 65.0, "offsetZ": 0.0 },
-						"Spoke5": { "offsetX": 0.0, "offsetY": 65.0, "offsetZ": 0.0 },
-						"Spoke6": { "offsetX": 0.0, "offsetY": 65.0, "offsetZ": 0.0 },
-						"Spoke7": { "offsetX": 0.0, "offsetY": 65.0, "offsetZ": 0.0 },
-						"Spoke8": { "offsetX": 0.0, "offsetY": 65.0, "offsetZ": 0.0 }
+						"Spoke1": { "offsetX": 0.0, "offsetY": 40.0, "offsetZ": 0.0 },
+						"Spoke2": { "offsetX": 0.0, "offsetY": 40.0, "offsetZ": 0.0 },
+						"Spoke3": { "offsetX": 0.0, "offsetY": 40.0, "offsetZ": 0.0 },
+						"Spoke4": { "offsetX": 0.0, "offsetY": 40.0, "offsetZ": 0.0 },
+						"Spoke5": { "offsetX": 0.0, "offsetY": 40.0, "offsetZ": 0.0 },
+						"Spoke6": { "offsetX": 0.0, "offsetY": 40.0, "offsetZ": 0.0 },
+						"Spoke7": { "offsetX": 0.0, "offsetY": 40.0, "offsetZ": 0.0 },
+						"Spoke8": { "offsetX": 0.0, "offsetY": 40.0, "offsetZ": 0.0 }
 					}
 				}
 			]
@@ -5229,13 +4809,7 @@
 				{
 					"frame": 0,
 					"elements": {
-						"RimsDynamic": { "rotationX": 0.0, "rotationY": 0.0, "rotationZ": 0.0 }
-					}
-				},
-				{
-					"frame": 29,
-					"elements": {
-						"RimsDynamic": { "rotationX": 0.0, "rotationY": 0.0, "rotationZ": 348.0 }
+						"Spoke1": { "offsetX": 0.0, "offsetY": 0.0, "offsetZ": 0.0 }
 					}
 				}
 			]

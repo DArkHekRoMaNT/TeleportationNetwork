@@ -48,7 +48,20 @@
     "steel": { "base": "game:block/metal/tarnished/steel" },
     "nailtexture": { "base": "game:block/nailtexture" },
     "tallow": { "base": "game:block/tallow" },
-    "charred": { "base": "game:block/wood/charred" }
+    "charred": { "base": "game:block/wood/charred" },
+
+    
+		//"smoky": "block/glass/smoky",
+		"iron-sheet1": { "base": "game:block/metal/tarnished/iron-sheet1" },
+		"machinic": { "base": "game:block/metal/tarnished/machinic/machinic" },
+		"machinic2": { "base": "game:block/metal/tarnished/machinic/machinic2" },
+		"machinic3": { "base": "game:block/metal/tarnished/machinic/machinic3" },
+		"machinic4": { "base": "game:block/metal/tarnished/machinic/machinic4" },
+		"metal": { "base": "game:block/metal/tarnished/rusty-iron" },
+		//"rusty-iron": "block/metal/tarnished/rusty-iron",
+		"rusty-iron2": { "base": "game:block/metal/tarnished/rusty-iron2" },
+		//"steel": "block/metal/tarnished/steel",
+		//"charred": "block/wood/charred"
   },
   "variantgroups": [
     { "code": "type", "states": ["smallgate", "largegate"] },
@@ -65,9 +78,23 @@
     }]
   },
   "attributes": {
-    "gateSizeByType": {
-      "*-smallgate-*" : 5,
-      "*-largegate-*" : 10
+    "gateByType": {
+      "*-smallgate-*" : {
+        "size": 5,
+        "thick": 0.25
+      }
+      "*-largegate-*" : {
+        "size": 10,
+        "thick": 0.5
+      }
+    },
+    "gate": {
+      "rotationByType": { "*-north": 0, "*-west": 90, "*-south": 180, "*-east": 270 },
+      "shapes": {
+        "static": "block/gate/static",
+        "dynamic": "block/gate/dynamic",
+        "rod": "block/gate/rod"
+      }
     }
   },
   "replaceable": 200,

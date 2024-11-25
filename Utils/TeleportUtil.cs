@@ -10,7 +10,6 @@ namespace TeleportationNetwork
 {
     public static class TeleportUtil
     {
-
         public static void StabilityRelatedTeleportTo(this Entity entity, Vec3d pos, ILogger logger, Action? onTeleported = null)
         {
             var entityPos = entity.Pos.Copy();

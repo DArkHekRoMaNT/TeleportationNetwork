@@ -86,18 +86,9 @@ namespace TeleportationNetwork
                 return TextCommandResult.Error(error);
             }
 
-            //TODO: Update in CommonLib schematic.ImportToWorldEdit();
-
             var player = (IServerPlayer)args.Caller.Player;
-            var worldEdit = player.Entity.Api.ModLoader.GetModSystem<WorldEdit>();
-            if (WorldEdit.CanUseWorldEdit(player, true))
-            {
-                var clipboardBlockDataField = typeof(WorldEditWorkspace).GetField("clipboardBlockData", BindingFlags.Instance | BindingFlags.NonPublic);
-                var workSpace = worldEdit.GetWorkSpace(player.PlayerUID);
-                clipboardBlockDataField?.SetValue(workSpace, schematic);
-                Api.ChatCommands.ExecuteUnparsed("/we tool import", new TextCommandCallingArgs() { Caller = args.Caller });
-                Api.ChatCommands.ExecuteUnparsed("/we imc", new TextCommandCallingArgs() { Caller = args.Caller });
-            }
+            schematic.ImportToWorldEdit(player);
+
             return TextCommandResult.Success();
         }
 
