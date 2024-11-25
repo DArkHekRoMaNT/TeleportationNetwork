@@ -96,7 +96,8 @@ namespace TeleportationNetwork.WorldGen
             {
                 var selected = _random.GetItem(alternatives)
                     .Replace("{wood}", _currentWood)
-                    .Replace("{clay}", _currentClay);
+                    .Replace("{clay}", _currentClay)
+                    .Replace("{painting}", _random.GetItem(_system.Paintings));
                 code = new AssetLocation(selected);
             }
 

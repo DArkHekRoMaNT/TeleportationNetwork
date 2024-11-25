@@ -16,6 +16,7 @@ namespace TeleportationNetwork.WorldGen
         public Dictionary<AssetLocation, string[]> ResolvedReplaceBlocks { get; } = [];
         public string[] Woods { get; }
         public string[] Clays { get; }
+        public string[] Paintings { get; }
         public List<AssetLocation> LightBlocks { get; } = [];
         public string[] LanternMaterials => _props.LanternMaterials;
 
@@ -25,7 +26,11 @@ namespace TeleportationNetwork.WorldGen
 
             var woodProps = api.Assets.Get("game:worldproperties/block/wood.json").ToObject<WoodWorldProperty>();
             Woods = woodProps.Variants.Select(v => v.Code.ToShortString()).AddItem("aged").ToArray();
+
             Clays = ["black", "brown", "cream", "fire", "gray", "orange", "red", "tan"];
+
+            var paintingProps = api.Assets.Get("game:worldproperties/block/painting.json").ToObject<WoodWorldProperty>();
+            Paintings = paintingProps.Variants.Select(v => v.Code.ToShortString()).ToArray();
 
             foreach (var lightBlock in _props.LightBlocks)
             {
@@ -38,36 +43,50 @@ namespace TeleportationNetwork.WorldGen
 
         private void ResolveBlocks(ICoreServerAPI api)
         {
-            foreach (var (codeStr, pattern) in _props.ReplaceBlocks)
+            foreach (var (code, pattern) in _props.ReplaceBlocks)
             {
-                var code = (AssetLocation)codeStr;
-                foreach (var block in api.World.SearchBlocks(code))
+                void CheckBlocks(string code)
                 {
-                    var currentPattern = pattern;
-                    var suitableCodes = new List<string>();
-
-                    if (pattern.Contains('*'))
+                    foreach (var block in api.World.SearchBlocks((AssetLocation)code))
                     {
-                        var value = WildcardUtil.GetWildcardValue(code, block.Code);
-                        currentPattern = pattern.Replace("*", value);
-                    }
+                        var currentPattern = pattern;
+                        var suitableCodes = new List<string>();
 
-                    if (currentPattern.Contains("{any}"))
-                    {
-                        var anyBlocks = api.World.SearchBlocks(new AssetLocation(currentPattern.Replace("{any}", "*")));
-                        suitableCodes.AddRange(anyBlocks.Select(b => b.Code.ToString()));
-                    }
-                    else
-                    {
-                        suitableCodes.Add((AssetLocation)currentPattern);
-                    }
+                        if (currentPattern.Contains('*'))
+                        {
+                            var value = WildcardUtil.GetWildcardValue((AssetLocation)code, block.Code);
+                            currentPattern = currentPattern.Replace("*", value);
+                        }
 
-                    foreach (var excludeCode in _props.ExcludeCodes)
-                    {
-                        suitableCodes.Remove((AssetLocation)excludeCode);
-                    }
+                        if (currentPattern.Contains("{any}"))
+                        {
+                            var anyBlocks = api.World.SearchBlocks(new AssetLocation(currentPattern.Replace("{any}", "*")));
+                            suitableCodes.AddRange(anyBlocks.Select(b => b.Code.ToString()));
+                        }
+                        else
+                        {
+                            suitableCodes.Add((AssetLocation)currentPattern);
+                        }
 
-                    ResolvedReplaceBlocks.Add(block.Code, suitableCodes.ToArray());
+                        foreach (var excludeCode in _props.ExcludeCodes)
+                        {
+                            suitableCodes.Remove((AssetLocation)excludeCode);
+                        }
+
+                        ResolvedReplaceBlocks.Add(block.Code, suitableCodes.ToArray());
+                    }
+                }
+
+                if (code.Contains("{painting}"))
+                {
+                    foreach(var paiting in Paintings)
+                    {
+                        CheckBlocks(code.Replace("{painting}", paiting));
+                    }
+                }
+                else
+                {
+                    CheckBlocks(code);
                 }
             }
         }

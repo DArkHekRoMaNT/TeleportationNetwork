@@ -1,6 +1,5 @@
 namespace TeleportationNetwork
 {
-    //TODO: Rename?
     public static class Constants
     {
         public static string ModId => "tpnet";

@@ -28,18 +28,18 @@
     "supportbeam-aged": "supportbeam-{wood}",
 
     /* Clay */
-    "slantedroofing-gray*":  "slantedroofing-{clay}*",
-    "slantedroofingcornerinner-gray*":  "slantedroofingcornerinner-{clay}*",
-    "slantedroofingcornerouter-gray*":  "slantedroofingcornerouter-{clay}*",
-    "slantedroofingridge-gray*":  "slantedroofingridge-{clay}*",
-    "slantedroofingtip-gray*":  "slantedroofingtip-{clay}*",
-    "clayshingleblock-gray":  "clayshingleblock-{clay}",
-    "clayshinglelabs-gray-*":  "clayshinglelabs-{clay}-*",
-    "clayshinglestairs-gray-*":  "clayshinglestairs-{clay}-*",
+    "slantedroofing-gray*": "slantedroofing-{clay}*",
+    "slantedroofingcornerinner-gray*": "slantedroofingcornerinner-{clay}*",
+    "slantedroofingcornerouter-gray*": "slantedroofingcornerouter-{clay}*",
+    "slantedroofingridge-gray*": "slantedroofingridge-{clay}*",
+    "slantedroofingtip-gray*": "slantedroofingtip-{clay}*",
+    "clayshingleblock-gray": "clayshingleblock-{clay}",
+    "clayshinglelabs-gray-*": "clayshinglelabs-{clay}-*",
+    "clayshinglestairs-gray-*": "clayshinglestairs-{clay}-*",
+    "beam-ridge-grayclay-*": "beam-ridge-{clay}clay-*",
 
     /* Other */
-    "painting-elk-*": "painting-{any}-*",
-    "painting-forestdawn-*": "painting-{any}-*",
+    "painting-{painting}-*": "painting-{painting}-*",
     "storagevessel-burned": "storagevessel-{any}",
     "chair-plain": "chair-{any}",
 
@@ -51,7 +51,11 @@
     "buncheocandles-6": "buncheocandles-{any}",
     "buncheocandles-7": "buncheocandles-{any}",
     "buncheocandles-8": "buncheocandles-{any}",
-    "buncheocandles-9": "buncheocandles-{any}"
+    "buncheocandles-9": "buncheocandles-{any}",
+
+    /* Meta */
+    "tpnet:meta-water": "water-still-7",
+    "tpnet:meta-lava": "lava-still-7"
   },
   "excludeCodes": [
     "storagevessel-raw"
