@@ -78,22 +78,14 @@
     }]
   },
   "attributes": {
-    "gateByType": {
-      "*-smallgate-*" : {
-        "size": 5,
-        "thick": 0.25
-      }
-      "*-largegate-*" : {
-        "size": 10,
-        "thick": 0.5
-      }
-    },
     "gate": {
+      "sizeByType": { "*-smallgate-*": 5, "*-largegate-*": 10 },
+      "thickByType": { "*-smallgate-*": 0.25, "*-largegate-*": 0.5 },
       "rotationByType": { "*-north": 0, "*-west": 90, "*-south": 180, "*-east": 270 },
       "shapes": {
-        "static": "block/gate/static",
-        "dynamic": "block/gate/dynamic",
-        "rod": "block/gate/rod"
+        "static": "tpnet:block/gate/static",
+        "dynamic": "tpnet:block/gate/dynamic",
+        "rod": "tpnet:block/gate/rod"
       }
     }
   },

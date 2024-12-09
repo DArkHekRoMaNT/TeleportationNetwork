@@ -6,7 +6,6 @@ using Vintagestory.ServerMods;
 
 namespace TeleportationNetwork.WorldGen
 {
-    [HarmonyDebug]
     [HarmonyPatch(typeof(BlockSchematicStructure))]
     public static class Patch_BlockSchematicStructure
     {

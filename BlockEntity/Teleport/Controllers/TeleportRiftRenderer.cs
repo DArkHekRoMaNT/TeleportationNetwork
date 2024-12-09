@@ -5,7 +5,7 @@ using Vintagestory.GameContent;
 
 namespace TeleportationNetwork
 {
-    public sealed class TeleportRiftRenderer : IRenderer, ITeleportController
+    public sealed class TeleportRiftRenderer : IRenderer
     {
         public double RenderOrder => 0.05;
         public int RenderRange => 100;
@@ -45,7 +45,7 @@ namespace TeleportationNetwork
             _broken = !teleport.Enabled;
         }
 
-        public void Update(float dt, TeleportActivator status)
+        public void Update(TeleportActivator status)
         {
             _activationProgress = GameMath.Clamp(status.Progress, 0, 1);
         }
@@ -128,8 +128,6 @@ namespace TeleportationNetwork
 
             _api.Render.GlDisableCullFace();
             _api.Render.GLDepthMask(true);
-
-            _counter += deltaTime;
         }
 
         public void Dispose()

@@ -40,7 +40,7 @@ namespace CommonLib.Templates //TODO: Move to CommonLib
             harmonyInstance = new Harmony(patchCode);
             harmonyInstance.PatchAll();
             var patchedMethods = harmonyInstance.GetPatchedMethods();
-            Mod.Logger.Notification($"Harmony patched: {string.Join(",", patchedMethods)}");
+            Mod.Logger.Notification($"Harmony patched:\n{string.Join("\n", patchedMethods)}");
         }
 
         public override void Dispose()

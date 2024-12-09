@@ -35,7 +35,7 @@ namespace TeleportationNetwork
             Enabled = false;
             Pos = new BlockPos(0);
             Target = null;
-            Size = 0;
+            Size = 1;
             OrientationIndex = 0;
             ActivatedByPlayers = [];
             ClientData = [];
@@ -83,7 +83,7 @@ namespace TeleportationNetwork
         public void UpdateBlockInfo(Block block)
         {
             OrientationIndex = BlockFacing.FromCode(block.LastCodePart())?.Index ?? 0;
-            Size = block.Attributes["gateSize"].AsFloat(0f);
+            Size = (block as BlockTeleport)?.Gate.Size ?? 1f;
         }
     }
 }

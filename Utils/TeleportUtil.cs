@@ -74,7 +74,7 @@ namespace TeleportationNetwork
                             var entityPos = entity.SidedPos.Copy();
                             entityPos.Y = pos.Y;
                             entity.TeleportTo(entityPos, onTeleported);
-                            return;
+                            break;
                         }
                     }
                     onTeleported?.Invoke();

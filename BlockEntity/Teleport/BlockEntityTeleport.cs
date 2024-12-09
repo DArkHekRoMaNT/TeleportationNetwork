@@ -37,7 +37,7 @@ namespace TeleportationNetwork
             {
                 var gateSettings = (Block as BlockTeleport)?.Gate;
                 if (gateSettings != null)
-                    _controllers = new TeleportControllers(capi, Pos, settings);
+                    _controllers = new TeleportControllers(capi, Pos, Block, gateSettings);
                 UpdateState(Status.State);
             }
 
@@ -57,6 +57,11 @@ namespace TeleportationNetwork
 
             RegisterGameTickListener(OnGameTick, 50);
             RegisterGameTickListener(OnGameRenderTick, 10); // For prevent shader lags on open/close
+        }
+
+        public override bool OnTesselation(ITerrainMeshPool mesher, ITesselatorAPI tessThreadTesselator)
+        {
+            return true;
         }
 
         private void UpdateState(TeleportActivator.FSMState state)
@@ -168,7 +173,7 @@ namespace TeleportationNetwork
             }
 
             var motion = entityPos.Motion.Clone();
-            TeleportUtil.StabilityRelatedTeleportTo(entity, entityPos, Logger, () =>
+            TeleportUtil.StabilityRelatedTeleportTo(entity, entityPos, Logger, () => //TODO: Random teleport sound + text?
             {
                 entity.ServerPos.Motion = motion;
                 var soundLoc = new AssetLocation("sounds/effect/translocate-breakdimension.ogg");
