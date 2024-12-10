@@ -28,5 +28,7 @@
   "edittpdlg-title": "Edit teleport",
   "edittpdlg-order-label": "Sort",
 
-  "game:maplayer-tpnetwaypoints": "Teleports"
+  "game:maplayer-tpnetwaypoints": "Teleports",
+
+  "linked-teleport-info": "Linked to {0}"
 }

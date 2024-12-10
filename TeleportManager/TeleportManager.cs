@@ -11,7 +11,7 @@ namespace TeleportationNetwork
     {
         private ICoreAPI _api = null!;
 
-        public TeleportListNew Points { get; } = [];
+        public TeleportList Points { get; } = [];
         public TeleportNameGenerator NameGenerator { get; } = new();
 
         private TeleportSyncManagerClient? _clientSyncManager;

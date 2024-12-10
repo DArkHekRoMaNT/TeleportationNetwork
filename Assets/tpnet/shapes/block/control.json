@@ -1,6 +1,6 @@
 {
 	"editor": {
-		"collapsedPaths": "Root/ShaftUD12,Root/hands/originHand,Root/originControl,Root/orig/originHand,Root/gear12,Root/gear36orig/ShaftUD36,Root/tempBase/line2,Root/hands/originHand/forearm-bone/wrist-bone/Palm1,Root/tempBase/line3,Root/tempBase/line4,Root/tempBase/line5,Root/hand2,Root/tempBase,Root/hand3,Root/hand4,Root/base,Root/orig3,Root/hands/originHand2,Root/gear12orig,Root/hands/originHand3,Root/orig4,Root/hands/originHand4,Root/base/line5,Root/base/line2,Root/orig,Root/base/line1,Root/base/line4,Root/base/line3,Root/gear36orig,Root/gear12orig2",
+		"collapsedPaths": "Root/ShaftUD12,Root/hands/originHand,Root/orig/originHand,Root/gear12,Root/gear36orig/ShaftUD36,Root/tempBase/line2,Root/hands/originHand/forearm-bone/wrist-bone/Palm1,Root/tempBase/line3,Root/tempBase/line4,Root/tempBase/line5,Root/hand2,Root/tempBase,Root/hand3,Root/hand4,Root/base,Root/orig3,Root/hands/originHand2,Root/gear12orig,Root/hands/originHand3,Root/orig4,Root/hands/originHand4,Root/base/line5,Root/base/line2,Root/orig,Root/base/line1,Root/base/line4,Root/base/line3,Root/gear36orig,Root/gear12orig2",
 		"allAngles": false,
 		"entityTextureMode": false
 	},
@@ -385,78 +385,9 @@
 								"up": { "texture": "#nailtexture", "uv": [ 5.0, 9.0, 7.0, 9.5 ] },
 								"down": { "texture": "#nailtexture", "uv": [ 5.0, 13.0, 7.0, 13.5 ] }
 							}
-						},
-						{
-							"name": "pipe",
-							"from": [ 1.0, 0.5, -1.0 ],
-							"to": [ 3.0, 2.5, 0.0 ],
-							"rotationOrigin": [ 2.0, 1.5, 1.0 ],
-							"faces": {
-								"north": { "texture": "#rusty-iron", "uv": [ 1.5, 5.0, 3.5, 7.0 ] },
-								"east": { "texture": "#rusty-iron", "uv": [ 4.0, 1.5, 5.0, 3.5 ] },
-								"west": { "texture": "#rusty-iron", "uv": [ 0.0, 12.0, 1.0, 14.0 ] },
-								"up": { "texture": "#rusty-iron", "uv": [ 1.0, 7.0, 3.0, 8.0 ] },
-								"down": { "texture": "#rusty-iron", "uv": [ 8.5, 3.0, 10.5, 4.0 ] }
-							},
-							"children": [
-								{
-									"name": "pipe-d",
-									"from": [ 0.0, 0.0, -1.0 ],
-									"to": [ 1.5, 0.5, 0.0 ],
-									"rotationOrigin": [ 0.0, 0.0, -1.0 ],
-									"faces": {
-										"north": { "texture": "#rusty-iron", "uv": [ 9.0, 5.5, 10.5, 6.0 ] },
-										"east": { "texture": "#rusty-iron", "uv": [ 12.0, 6.0, 13.0, 6.5 ] },
-										"west": { "texture": "#rusty-iron", "uv": [ 2.0, 6.0, 3.0, 6.5 ] },
-										"up": { "texture": "#rusty-iron", "uv": [ 10.5, 11.5, 12.0, 12.5 ] },
-										"down": { "texture": "#rusty-iron", "uv": [ 0.5, 10.0, 2.0, 11.0 ] }
-									}
-								},
-								{
-									"name": "pipe-u",
-									"from": [ 0.5, 1.5, -2.0 ],
-									"to": [ 2.0, 2.0, 0.0 ],
-									"rotationOrigin": [ 0.5, 1.5, -1.0 ],
-									"faces": {
-										"north": { "texture": "#rusty-iron", "uv": [ 0.5, 7.5, 2.0, 8.0 ] },
-										"east": { "texture": "#rusty-iron", "uv": [ 1.0, 14.0, 3.0, 14.5 ] },
-										"west": { "texture": "#rusty-iron", "uv": [ 10.5, 7.5, 12.5, 8.0 ] },
-										"up": { "texture": "#rusty-iron", "uv": [ 1.0, 10.5, 2.5, 12.5 ] },
-										"down": { "texture": "#rusty-iron", "uv": [ 5.0, 13.0, 6.5, 15.0 ] }
-									}
-								},
-								{
-									"name": "pipe-w",
-									"from": [ 0.0, 0.5, -1.5 ],
-									"to": [ 0.5, 1.5, 0.0 ],
-									"rotationOrigin": [ 0.0, 0.5, 0.0 ],
-									"faces": {
-										"north": { "texture": "#rusty-iron", "uv": [ 5.5, 12.0, 6.0, 13.0 ] },
-										"east": { "texture": "#rusty-iron", "uv": [ 14.0, 5.0, 15.5, 6.0 ] },
-										"west": { "texture": "#rusty-iron", "uv": [ 6.5, 2.5, 8.0, 3.5 ] },
-										"up": { "texture": "#rusty-iron", "uv": [ 0.0, 6.0, 0.5, 7.5 ] },
-										"down": { "texture": "#rusty-iron", "uv": [ 0.0, 6.5, 0.5, 8.0 ] }
-									}
-								},
-								{
-									"name": "pipe-e",
-									"from": [ 1.5, 0.0, -0.5 ],
-									"to": [ 2.0, 1.5, 0.0 ],
-									"rotationOrigin": [ 1.5, 0.0, 1.0 ],
-									"faces": {
-										"north": { "texture": "#rusty-iron", "uv": [ 1.5, 6.5, 2.0, 8.0 ] },
-										"east": { "texture": "#rusty-iron", "uv": [ 14.0, 3.0, 14.5, 4.5 ] },
-										"west": { "texture": "#rusty-iron", "uv": [ 10.5, 13.5, 11.0, 15.0 ] },
-										"down": { "texture": "#rusty-iron", "uv": [ 11.0, 11.5, 11.5, 12.0 ] }
-									}
-								}
-							]
 						}
 					]
 				}
 			]
 		}
-	],
-	"animations": [
-	]
-}
+	]}

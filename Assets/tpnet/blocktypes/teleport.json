@@ -9,7 +9,6 @@
   },
   "behaviors": [
     { "name": "HorizontalOrientable" },
-    //{ "name": "WrenchOrientable", "properties": { "baseCode": "teleport-{state}"  } },
     {
       "name": "Multiblock",
       "propertiesByType": {
@@ -38,30 +37,14 @@
       }
     }
   ],
-  "textures":  {
-    "smoky": { "base": "game:block/glass/smoky" },
-    "device-plate": { "base": "game:block/machine/device-plate" },
-    "rustyglow": { "base": "game:block/machine/statictranslocator/rustyglow" },
-    "brass": { "base": "game:block/metal/tarnished/brass" },
-    "gold": { "base": "game:block/metal/tarnished/gold" },
-    "rusty-iron": { "base": "game:block/metal/tarnished/rusty-iron" },
-    "steel": { "base": "game:block/metal/tarnished/steel" },
-    "nailtexture": { "base": "game:block/nailtexture" },
-    "tallow": { "base": "game:block/tallow" },
-    "charred": { "base": "game:block/wood/charred" },
-
-    
-		//"smoky": "block/glass/smoky",
+  "textures": {
 		"iron-sheet1": { "base": "game:block/metal/tarnished/iron-sheet1" },
 		"machinic": { "base": "game:block/metal/tarnished/machinic/machinic" },
 		"machinic2": { "base": "game:block/metal/tarnished/machinic/machinic2" },
 		"machinic3": { "base": "game:block/metal/tarnished/machinic/machinic3" },
 		"machinic4": { "base": "game:block/metal/tarnished/machinic/machinic4" },
 		"metal": { "base": "game:block/metal/tarnished/rusty-iron" },
-		//"rusty-iron": "block/metal/tarnished/rusty-iron",
-		"rusty-iron2": { "base": "game:block/metal/tarnished/rusty-iron2" },
-		//"steel": "block/metal/tarnished/steel",
-		//"charred": "block/wood/charred"
+		"rusty-iron2": { "base": "game:block/metal/tarnished/rusty-iron2" }
   },
   "variantgroups": [
     { "code": "type", "states": ["smallgate", "largegate"] },

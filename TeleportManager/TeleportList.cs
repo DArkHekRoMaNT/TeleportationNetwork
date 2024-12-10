@@ -11,7 +11,7 @@ namespace TeleportationNetwork
     /// <summary>
     /// Thread safe collection of teleports
     /// </summary>
-    public class TeleportListNew : IEnumerable<Teleport>
+    public class TeleportList : IEnumerable<Teleport>
     {
         private readonly Dictionary<BlockPos, Teleport> _points = [];
         private readonly object _pointsLock = new();
