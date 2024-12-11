@@ -1,7 +1,6 @@
 using ProtoBuf;
 using System.Collections.Generic;
 using Vintagestory.API.Client;
-using Vintagestory.API.Common;
 using Vintagestory.API.MathTools;
 
 namespace TeleportationNetwork
@@ -23,7 +22,7 @@ namespace TeleportationNetwork
         [ProtoMember(5)] public float Size { get; private set; }
         [ProtoMember(6)] public int OrientationIndex { get; private set; }
         [ProtoMember(7)] public List<string> ActivatedByPlayers { get; private set; }
-        [ProtoMember(8)] public Dictionary<string, TeleportClientData> ClientData { get; private set; }
+        [ProtoMember(8)] public Dictionary<string, TeleportClientData> ClientData { get; private set; } //TODO: Store it at client side?
 
         public BlockFacing Orientation => BlockFacing.ALLFACES[OrientationIndex];
 
@@ -41,12 +40,12 @@ namespace TeleportationNetwork
             ClientData = [];
         }
 
-        public Teleport(BlockPos pos, string name, bool enabled, Block block) : this()
+        public Teleport(BlockPos pos, string name, bool enabled, BlockEntityTeleport be) : this()
         {
             Pos = pos;
             Name = name;
             Enabled = enabled;
-            UpdateBlockInfo(block);
+            UpdateBlockInfo(be);
         }
 
         public TeleportClientData GetClientData(ICoreClientAPI capi) => GetClientData(capi.World.Player.PlayerUID);
@@ -80,10 +79,10 @@ namespace TeleportationNetwork
             return teleport;
         }
 
-        public void UpdateBlockInfo(Block block)
+        public void UpdateBlockInfo(BlockEntityTeleport be)
         {
-            OrientationIndex = BlockFacing.FromCode(block.LastCodePart())?.Index ?? 0;
-            Size = (block as BlockTeleport)?.Gate.Size ?? 1f;
+            OrientationIndex = (be.Block as BlockTeleport)?.Orientation.Index ?? BlockFacing.indexNORTH;
+            Size = be.Size;
         }
     }
 }

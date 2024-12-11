@@ -14,11 +14,11 @@ namespace TeleportationNetwork
     public class BlockEntityTeleport : BlockEntity, IDisposable
     {
         private ILogger Logger => _modLogger ?? Api.Logger;
-        private TeleportParticleController? ParticleController => (Block as BlockTeleport)?.ParticleController;
-        private TeleportActivator Status { get; } = new();
+        public TeleportStatus Status { get; } = new();
+        public int Size { get; set; }
 
         private TeleportManager _manager = null!;
-        private TeleportControllers? _controllers = null!;
+        private TeleportControllers? _controllers;
         private ILogger? _modLogger;
         private BlockPos? _lastTargetPos;
         private GuiDialogTeleportList? _teleportDialog;
@@ -31,29 +31,20 @@ namespace TeleportationNetwork
             _modLogger = api.ModLoader.GetModSystem<Core>().Mod.Logger;
             _manager = api.ModLoader.GetModSystem<TeleportManager>();
 
-            Status.StateChanged += (prev, next) => UpdateState(next);
-
             if (api is ICoreClientAPI capi)
             {
-                var gateSettings = (Block as BlockTeleport)?.Gate;
-                if (gateSettings != null)
-                    _controllers = new TeleportControllers(capi, Pos, Block, gateSettings);
-                UpdateState(Status.State);
+                _controllers = new TeleportControllers(capi, Pos);
             }
 
             var teleport = GetOrCreateTeleport();
-            _controllers?.UpdateTeleport(teleport);
 
             if (teleport.Target != null) // Fix reactivating on other side (unloaded chunk)
             {
                 _lastTargetPos = teleport.Target;
-                Status.State = TeleportActivator.FSMState.Activated;
+                Status.State = TeleportStatus.FSMState.Activated;
             }
 
-            if (Status.State == TeleportActivator.FSMState.Activated)
-            {
-                _controllers?.FastForward(Status);
-            }
+            _controllers?.UpdateTeleport(this);
 
             RegisterGameTickListener(OnGameTick, 50);
             RegisterGameTickListener(OnGameRenderTick, 10); // For prevent shader lags on open/close
@@ -64,19 +55,10 @@ namespace TeleportationNetwork
             return true;
         }
 
-        private void UpdateState(TeleportActivator.FSMState state)
-        {
-            var active =
-                state == TeleportActivator.FSMState.Activating ||
-                state == TeleportActivator.FSMState.Activated;
-
-            (Block as BlockTeleport)?.SetActive(active, Pos);
-        }
-
         private void OnGameRenderTick(float dt)
         {
             Status.OnTick(dt);
-            _controllers?.Update(dt, Status);
+            _controllers?.Update(Status);
         }
 
         private void OnGameTick(float dt)
@@ -92,14 +74,14 @@ namespace TeleportationNetwork
 
             Status.Start();
 
-            if (Status.State != TeleportActivator.FSMState.Activated) return;
+            if (Status.State != TeleportStatus.FSMState.Activated) return;
 
             var center = teleport.GetGateCenter();
             var orientation = teleport.Orientation;
 
             var radius = teleport.Size / 2f;
             var thick = 0.5f;
-            ParticleController?.SpawnGateParticles(radius, thick, center, orientation);
+            _controllers?.Particles.SpawnGateParticles(radius, thick, center, orientation);
 
             if (Api is ICoreServerAPI)
             {
@@ -118,24 +100,6 @@ namespace TeleportationNetwork
                     }
                 }
             }
-        }
-
-        /// <returns> True for skip base </returns>
-        public bool OnEntityCollide(Entity entity)
-        {
-            if (Status.State != TeleportActivator.FSMState.Activated) return false;
-
-            var teleport = GetOrCreateTeleport();
-            if (teleport.Target == null) return false;
-
-            if (!_manager.Points.TryGetValue(teleport.Target, out var targetTeleport) || targetTeleport.Target != Pos)
-            {
-                _manager.Points.Unlink(Pos);
-                return false;
-            }
-
-            TeleportEntity(entity, teleport, targetTeleport);
-            return true;
         }
 
         private void TeleportEntity(Entity entity, Teleport teleport, Teleport targetTeleport)
@@ -205,8 +169,7 @@ namespace TeleportationNetwork
             else
             {
                 var name = _manager.NameGenerator.Next();
-                var repaired = (Block as BlockTeleport)?.IsNormal ?? false;
-                teleport = new Teleport(Pos, name, repaired, Block);
+                teleport = new Teleport(Pos, name, Status.IsRepaired, this);
                 _manager.Points.AddOrUpdate(teleport);
                 return teleport;
             }
@@ -218,6 +181,7 @@ namespace TeleportationNetwork
             Status.ToTreeAttributes(tree);
             if (_lastTargetPos != null)
                 tree.SetBlockPos("lastTargetPos", _lastTargetPos);
+            tree.SetInt("size", Size);
         }
 
         public override void FromTreeAttributes(ITreeAttribute tree, IWorldAccessor worldAccessForResolve)
@@ -225,6 +189,7 @@ namespace TeleportationNetwork
             base.FromTreeAttributes(tree, worldAccessForResolve);
             Status.FromTreeAttributes(tree);
             _lastTargetPos = tree.GetBlockPos("lastTargetPos");
+            Size = tree.GetInt("size");
         }
 
         public override void OnReceivedClientPacket(IPlayer fromPlayer, int packetid, byte[] data)
@@ -254,7 +219,7 @@ namespace TeleportationNetwork
                 var entity = Api.World.GetEntityById(BitConverter.ToInt64(data, 0));
                 if (entity != null)
                 {
-                    ParticleController?.SpawnTeleportParticles(entity);
+                    _controllers?.Particles.SpawnTeleportParticles(entity);
                 }
             }
 
@@ -283,7 +248,7 @@ namespace TeleportationNetwork
                     dsc.AppendLine($"Status: {Status.State} {Status.Progress:0%}");
                 }
 
-                if (Status.State == TeleportActivator.FSMState.Activated && teleport.Target != null)
+                if (Status.State == TeleportStatus.FSMState.Activated && teleport.Target != null)
                 {
                     _manager.Points.TryGetValue(teleport.Target, out var targetTeleport);
                     dsc.AppendLine($"{teleport.Name} &gt;&gt;&gt; {targetTeleport?.Name}");
@@ -298,9 +263,9 @@ namespace TeleportationNetwork
         public void UpdateBlock()
         {
             var teleport = GetOrCreateTeleport();
-            teleport.Enabled = (Block as BlockTeleport)?.IsNormal ?? false;
-            teleport.UpdateBlockInfo(Block);
-            _controllers?.UpdateTeleport(teleport);
+            teleport.Enabled = !Status.IsBroken;
+            teleport.UpdateBlockInfo(this);
+            _controllers?.UpdateTeleport(this);
             _manager.Points.MarkDirty(Pos);
             MarkDirty(true);
         }

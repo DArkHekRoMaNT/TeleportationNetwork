@@ -1,0 +1,31 @@
+{
+  "code": "lever",
+  "class": "tpnet:BlockTeleportLever",
+  "entityClass": "tpnet:TeleportLever",
+  "attributes": {
+    "handbook": {
+      "exclude": true
+    }
+  },
+  "shape": { "base": "block/lever" },
+  "textures": {
+    "smoky": { "base": "game:block/glass/smoky" },
+		"device-plate": { "base": "game:block/machine/device-plate" },
+		"rustyglow": { "base": "game:block/machine/statictranslocator/rustyglow" },
+		"brass": { "base": "game:block/metal/tarnished/brass" },
+		"rusty-iron": { "base": "game:block/metal/tarnished/rusty-iron" },
+		"nailtexture": { "base": "game:block/nailtexture" },
+		"tallow": { "base": "game:block/tallow" },
+		"charred": { "base": "game:block/wood/charred" }
+  },
+  "creativeinventory": { "general": ["*"], "decorative": ["*"], "tpnet":  ["*"] },
+  "blockMaterial": "Stone",
+  "replaceable": 200,
+  "resistance": 4,
+  "lightAbsorption": 0,
+  "sideOpaque": { "all": false },
+  "sideSolid": { "all": false },
+  "sounds": {
+    "walk": "game:walk/stone"
+  }
+}

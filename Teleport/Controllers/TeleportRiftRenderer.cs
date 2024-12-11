@@ -14,21 +14,21 @@ namespace TeleportationNetwork
 
         private readonly BlockPos _pos;
         private readonly ICoreClientAPI _api;
-        private readonly float _rotation;
         private readonly TeleportRenderSystem _renderSystem;
         private readonly MeshRef _meshref;
         private readonly Matrixf _matrixf;
 
+        private float _rotationDeg;
         private float _counter;
         private float _activationProgress;
         private float _size;
         private bool _broken;
 
-        public TeleportRiftRenderer(ICoreClientAPI api, BlockPos pos, float rotation)
+        public TeleportRiftRenderer(ICoreClientAPI api, BlockPos pos)
         {
             _pos = pos;
             _api = api;
-            _rotation = rotation;
+            _rotationDeg = 0;
 
             var mesh = DarkMeshUtil.GetRectangle(1, 100);
             _meshref = _api.Render.UploadMesh(mesh);
@@ -39,17 +39,24 @@ namespace TeleportationNetwork
             _renderSystem = _api.ModLoader.GetModSystem<TeleportRenderSystem>();
         }
 
-        public void UpdateTeleport(Teleport teleport)
+        public void UpdateTeleport(float size, float rotationDeg, bool broken)
         {
-            _size = teleport.Size;
-            _broken = !teleport.Enabled;
+            _size = size;
+            _rotationDeg = rotationDeg;
+            _broken = broken;
         }
 
-        public void Update(TeleportActivator status)
+        public void Update(TeleportStatus status)
         {
-            _activationProgress = GameMath.Clamp(status.Progress, 0, 1);
+            if (status.IsRepaired)
+            {
+                _activationProgress = GameMath.Clamp(status.Progress, 0, 1);
+            }
+            else
+            {
+                _activationProgress = 0;
+            }
         }
-
         public void OnRenderFrame(float deltaTime, EnumRenderStage stage)
         {
             var camPos = _api.World.Player.Entity.CameraPos;
@@ -103,7 +110,7 @@ namespace TeleportationNetwork
             Prog.Uniform("glich", GameMath.Min(glichEffectStrength * 2, 1));
             Prog.Uniform("stage", 0.2f + _activationProgress * 0.8f);
             Prog.Uniform("broken", _broken ? 1 : 0);
-            Prog.Uniform("direction", (int)(_rotation / 90));
+            Prog.Uniform("direction", (int)(_rotationDeg / 90));
 
             _matrixf.Identity();
 
@@ -112,7 +119,7 @@ namespace TeleportationNetwork
             float dz = (float)(_pos.Z - camPos.Z + 0.5f);
 
             _matrixf.Translate(dx, dy, dz);
-            _matrixf.RotateYDeg(_rotation + 180);
+            _matrixf.RotateYDeg(_rotationDeg + 180);
             if (_size == 5)
             {
                 _matrixf.Translate(0, 0, 0.25);

@@ -1,87 +1,70 @@
 {
   "code": "teleport",
   "class": "tpnet:BlockTeleport",
-  "entityclass": "tpnet:BETeleport",
-  "blockmaterial": "Stone",
-  "shapeByType": {
-    "*-broken-*": { "base": "block/teleport/{type}", "rotateYByType": { "*-north": 0, "*-west": 90, "*-south": 180, "*-east": 270 } },
-    "*-normal-*": { "base": "block/teleport/{type}", "rotateYByType": { "*-north": 0, "*-west": 90, "*-south": 180, "*-east": 270 } }
-  },
-  "behaviors": [
-    { "name": "HorizontalOrientable" },
-    {
-      "name": "Multiblock",
-      "propertiesByType": {
-        "*-smallgate-*": {
-          "sizexByType": { "@(.*)-(north|south)": 3, "@(.*)-(east|west)": 1 },
-          "sizey": 3,
-          "sizezByType": { "@(.*)-(north|south)": 1, "@(.*)-(east|west)": 3 },
-          "cpositionByType": {
-            "*-north": { "x": 1, "y": 1, "z": 0 },
-            "*-east": { "x": 0, "y": 1, "z": 1 },
-            "*-south": { "x": 1, "y": 1, "z": 0 },
-            "*-west": { "x": 0, "y": 1, "z": 1 }
-          }
-        },
-        "*-largegate-*": {
-          "sizexByType": { "@(.*)-(north|south)": 5, "@(.*)-(east|west)": 1 },
-          "sizey": 5,
-          "sizezByType": { "@(.*)-(north|south)": 1, "@(.*)-(east|west)": 5 },
-          "cpositionByType": {
-            "*-north": { "x": 2, "y": 2, "z": 0 },
-            "*-east": { "x": 0, "y": 2, "z": 2 },
-            "*-south": { "x": 2, "y": 2, "z": 0 },
-            "*-west": { "x": 0, "y": 2, "z": 2 }
-          }
-        }
-      }
-    }
-  ],
+  "entityClass": "tpnet:Teleport",
+  "blockMaterial": "Stone",
+  "shapeInventory": { "base": "block/gate/static" },
+  "shape": null,
+  "behaviors": [{ "name": "HorizontalOrientable" }],
   "textures": {
-		"iron-sheet1": { "base": "game:block/metal/tarnished/iron-sheet1" },
-		"machinic": { "base": "game:block/metal/tarnished/machinic/machinic" },
-		"machinic2": { "base": "game:block/metal/tarnished/machinic/machinic2" },
-		"machinic3": { "base": "game:block/metal/tarnished/machinic/machinic3" },
-		"machinic4": { "base": "game:block/metal/tarnished/machinic/machinic4" },
-		"metal": { "base": "game:block/metal/tarnished/rusty-iron" },
-		"rusty-iron2": { "base": "game:block/metal/tarnished/rusty-iron2" }
+    "metal": { "base": "game:block/metal/tarnished/rusty-iron" },
+    "machinic": { "base": "game:block/metal/tarnished/machinic/machinic" },
+    "machinic2": { "base": "game:block/metal/tarnished/machinic/machinic2" },
+    "machinic3": { "base": "game:block/metal/tarnished/machinic/machinic3" },
+    "machinic4": { "base": "game:block/metal/tarnished/machinic/machinic4" },
+    "iron-sheet1": { "base": "game:block/metal/tarnished/iron-sheet1" },
+    "rusty-iron2": { "base": "game:block/metal/tarnished/rusty-iron2" }
   },
-  "variantgroups": [
-    { "code": "type", "states": ["smallgate", "largegate"] },
-    { "code": "state", "states": [ "broken", "normal" ] },
-    { "code": "side", "loadFromProperties": "abstract/horizontalorientation" }
-  ],
-  "creativeinventoryStacksByType": {
+  "variantGroups": [{ "code": "side", "loadFromProperties": "abstract/horizontalorientation" }],
+  "creativeInventoryStacksByType": {
     "*-north": [{
       "tabs": [ "general", "decorative", "tpnet" ],
-      "stacks": [{
-        "type": "block",
-        "code": "teleport-{type}-{state}-{side}"
-      }]
+      "stacks": [
+        {
+          "type": "block",
+          "code": "teleport-north",
+          "attributes": {
+            "broken": "true",
+            "size": "5"
+          }
+        },
+        {
+          "type": "block",
+          "code": "teleport-north",
+          "attributes": {
+            "broken": "false",
+            "size": "5"
+          }
+        },
+        {
+          "type": "block",
+          "code": "teleport-north",
+          "attributes": {
+            "broken": "true",
+            "size": "10"
+          }
+        },
+        {
+          "type": "block",
+          "code": "teleport-north",
+          "attributes": {
+            "broken": "false",
+            "size": "10"
+          }
+        }
+      ]
     }]
   },
-  "attributes": {
-    "gate": {
-      "sizeByType": { "*-smallgate-*": 5, "*-largegate-*": 10 },
-      "thickByType": { "*-smallgate-*": 0.25, "*-largegate-*": 0.5 },
-      "rotationByType": { "*-north": 0, "*-west": 90, "*-south": 180, "*-east": 270 },
-      "shapes": {
-        "static": "tpnet:block/gate/static",
-        "dynamic": "tpnet:block/gate/dynamic",
-        "rod": "tpnet:block/gate/rod"
-      }
-    }
-  },
+  "attributes": {},
   "replaceable": 200,
   "resistance": 4,
   "lightAbsorption": 0,
   "lightHsvByType": { "*-normal-*": [ 34, 7, 7 ] },
-  "sideopaque": { "all": false },
-  "sidesolid": { "all": false },
+  "sideOpaque": { "all": false },
+  "sideSolid": { "all": false },
   "sounds": {
     "walk": "game:walk/stone"
   },
-  "entityBehaviors": [{ "name": "Animatable" }],
   "heldTpIdleAnimation": "holdbothhandslarge",
   "heldTpUseAnimation": "twohandplaceblock",
   "tpHandTransform": {

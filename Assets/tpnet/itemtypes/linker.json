@@ -1,0 +1,12 @@
+{
+  "code": "linker",
+  "class": "tpnet:ItemTeleportLeverLinker",
+  "attributes": {
+    "handbook": {
+      "exclude": true
+    }
+  },
+  "shape": { "base": "game:item/tool/scythe" },
+  "textures": { "metal": { "base": "game:item/resource/temporalgear" } },
+  "creativeinventory": { "general": ["*"], "decorative": ["*"], "tpnet":  ["*"] }
+}

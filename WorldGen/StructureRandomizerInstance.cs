@@ -67,7 +67,13 @@ namespace TeleportationNetwork.WorldGen
 
             foreach (var (_, code) in _schematic.BlockCodes)
             {
-                var blockId = world.GetBlock(code).Id;
+                var block = world.GetBlock(code);
+                if (block == null)
+                {
+                    continue;
+                }
+
+                var blockId = block.Id;
                 var newBlockId = Next(blockId, world);
                 if (newBlockId != blockId)
                 {

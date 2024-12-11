@@ -3,10 +3,12 @@ using Vintagestory.API.Datastructures;
 
 namespace TeleportationNetwork
 {
-    public class TeleportActivator
+    public class TeleportStatus
     {
         public enum FSMState
         {
+            Broken,
+            Repairing,
             Activating,
             Activated,
             Deactivating,
@@ -27,15 +29,37 @@ namespace TeleportationNetwork
             }
         }
 
-        public float Progress => _timer / Constants.TeleportActivationTime;
+        public bool IsBroken => _state == FSMState.Broken;
+
+        public bool IsRepaired => _state != FSMState.Broken && _state != FSMState.Repairing;
+
+        public float Progress => _timer / (_state == FSMState.Repairing ? Constants.TeleportRepairTime : Constants.TeleportActivationTime);
 
         private float _timer;
         private FSMState _state;
+
+        public TeleportStatus()
+        {
+            _state = FSMState.Broken;
+        }
 
         public void OnTick(float dt)
         {
             switch (State)
             {
+                case FSMState.Broken:
+                    _timer = 0;
+                    break;
+
+                case FSMState.Repairing:
+                    _timer += dt;
+                    if (_timer >= Constants.TeleportRepairTime)
+                    {
+                        State = FSMState.Deactivated;
+                        _timer = 0;
+                    }
+                    break;
+
                 case FSMState.Activating:
                     _timer += dt;
                     if (_timer >= Constants.TeleportActivationTime)
@@ -76,6 +100,14 @@ namespace TeleportationNetwork
             if (State == FSMState.Activated || State == FSMState.Activating)
             {
                 State = FSMState.Deactivating;
+            }
+        }
+
+        public void Repair()
+        {
+            if (State == FSMState.Broken)
+            {
+                State = FSMState.Repairing;
             }
         }
 

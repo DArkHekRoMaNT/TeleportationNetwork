@@ -5,6 +5,7 @@ namespace TeleportationNetwork
         public static string ModId => "tpnet";
         public static string TeleportSchematicPath => "worldgen/schematics/tpnet/teleport";
         public static float TeleportActivationTime => 3f;
+        public static float TeleportRepairTime => 3f;
         public static float SealRadius => 2.5f;
         public static int OpenTeleportPacketId => 13514;
         public static int CloseTeleportPacketId => 13515;

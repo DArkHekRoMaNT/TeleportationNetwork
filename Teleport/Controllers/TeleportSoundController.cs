@@ -10,9 +10,6 @@ namespace TeleportationNetwork
     {
         private readonly ILoadedSound _sound;
 
-        private float _soundVolume;
-        private float _soundPith;
-
         public TeleportSoundController(ICoreClientAPI capi, BlockPos pos)
         {
             _sound = capi.World.LoadSound(new SoundParams
@@ -26,27 +23,29 @@ namespace TeleportationNetwork
             });
         }
 
-        public void Update(float dt, TeleportActivator status)
+        public void Update(TeleportStatus status)
         {
-            if (_sound.IsPlaying == false)
+            if (status.IsBroken && _sound.IsPlaying)
+            {
+                _sound.Stop();
+                return;
+            }
+            else if (status.IsRepaired && !_sound.IsPlaying)
             {
                 _sound.Start();
             }
 
-            if (status.State == TeleportActivator.FSMState.Activating ||
-                status.State == TeleportActivator.FSMState.Activated)
+            if (status.State == TeleportStatus.FSMState.Activating ||
+                status.State == TeleportStatus.FSMState.Activated)
             {
-                _soundVolume = Math.Min(1f, _soundVolume + dt / 3);
-                _soundPith = Math.Min(1.5f, _soundPith + dt / 3);
+                _sound.SetVolume(0.5f + status.Progress);
+                _sound.SetPitch(0.5f + status.Progress);
             }
             else
             {
-                _soundVolume = Math.Max(0.5f, _soundVolume - dt);
-                _soundPith = Math.Max(0.5f, _soundPith - dt);
+                _sound.SetVolume(0.5f + status.Progress);
+                _sound.SetPitch(0.5f + status.Progress);
             }
-
-            _sound.SetVolume(_soundVolume);
-            _sound.SetPitch(_soundPith);
         }
 
         public void Dispose()

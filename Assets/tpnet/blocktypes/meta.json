@@ -16,11 +16,11 @@
       "*-air": "air"
     }
   },
-  "variantgroups": [{ "code": "type", "states": [ "teleport", "waterbarrier", "dome", "lava", "water" ]}],
+  "variantGroups": [{ "code": "type", "states": [ "teleport", "waterbarrier", "dome", "lava", "water" ]}],
   "shape": { "base": "game:block/basic/cube" },
-  "drawtype": "cube",
-  "creativeinventory": { "meta": ["*"], "tpnet":  ["*"] },
-  "blockmaterial": "Meta",
+  "drawType": "cube",
+  "creativeInventory": { "meta": ["*"], "tpnet":  ["*"] },
+  "blockMaterial": "Meta",
   "faceCullMode": "Merge",
   "vertexFlags": { "zOffset": 7 },
   "renderPass": "meta",
@@ -28,7 +28,7 @@
   "lightAbsorption": 0,
   "textures": { "all": { "base": "block/meta/{type}" }},
   "resistance": 0.25,
-  "sideopaque": { "all": false },
-  "sidesolid": { "all": true },
-  "collisionbox": null
+  "sideOpaque": { "all": false },
+  "sideSolid": { "all": true },
+  "collisionBox": null
 }
