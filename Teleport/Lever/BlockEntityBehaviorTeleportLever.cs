@@ -84,14 +84,18 @@ namespace TeleportationNetwork
             base.ToTreeAttributes(tree);
             if (_teleportPos != null)
             {
-                tree.SetBlockPos($"teleportPos", _teleportPos);
+                tree.SetBlockPos($"teleportPosOffset", _teleportPos - Pos);
             }
         }
 
         public override void FromTreeAttributes(ITreeAttribute tree, IWorldAccessor worldAccessForResolve)
         {
             base.FromTreeAttributes(tree, worldAccessForResolve);
-            _teleportPos = tree.GetBlockPos($"teleportPos");
+            _teleportPos = tree.GetBlockPos($"teleportPosOffset");
+            if (_teleportPos != null)
+            {
+                _teleportPos += Pos;
+            }
         }
     }
 
@@ -150,6 +154,7 @@ namespace TeleportationNetwork
                 {
                     if (be.TryLink(teleportPos))
                     {
+                        api.World.BlockAccessor.MarkBlockDirty(blockSel.Position);
                         slot.Itemstack.Attributes.RemoveAttribute("teleportPosX");
                         slot.Itemstack.Attributes.RemoveAttribute("teleportPosY");
                         slot.Itemstack.Attributes.RemoveAttribute("teleportPosZ");
