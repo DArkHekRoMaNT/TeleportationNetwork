@@ -13,7 +13,7 @@ namespace TeleportationNetwork
             " If on, teleport will be unstable at low temporal stability" +
             " (lower than StabilityConsumable) and during storms." +
             " If always, then everytime will be unstable")]
-        public string StabilityTeleportMode { get; set; } = "on";
+        public string StabilityTeleportMode { get; set; } = "on"; //TODO: Change to enum
 
         [Range(0, 1.0)]
         [Description("Consumption of stability for teleport if stability" +

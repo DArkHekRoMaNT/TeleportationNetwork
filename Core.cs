@@ -20,12 +20,12 @@ namespace TeleportationNetwork
             api.RegisterBlockClass($"{Constants.ModId}:BlockTeleport", typeof(BlockTeleport));
             api.RegisterBlockEntityClass($"{Constants.ModId}:Teleport", typeof(BlockEntityTeleport));
 
-            api.RegisterBlockClass($"{Constants.ModId}:WorldGenFillerMetaBlock", typeof(WorldGenFillerMetaBlock));
-            api.RegisterBlockEntityClass($"{Constants.ModId}:Dome", typeof(BlockEntityDome));
-
             api.RegisterItemClass($"{Constants.ModId}:ItemTeleportLeverLinker", typeof(ItemTeleportLeverLinker));
             api.RegisterBlockClass($"{Constants.ModId}:BlockTeleportLever", typeof(BlockTeleportLever));
             api.RegisterBlockEntityClass($"{Constants.ModId}:TeleportLever", typeof(BlockEntityTeleportLever));
+
+            api.RegisterBlockClass($"{Constants.ModId}:WorldGenFillerMetaBlock", typeof(WorldGenFillerMetaBlock));
+            api.RegisterBlockEntityClass($"{Constants.ModId}:Dome", typeof(BlockEntityDome));
 
             api.ChatCommands
                 .GetOrCreate("tpnet")

@@ -89,7 +89,7 @@ namespace TeleportationNetwork
             }
         }
 
-        private int GetRandomColor()
+        public int GetRandomColor()
         {
             return _temporalGear.GetRandomColor(_api, null);
         }

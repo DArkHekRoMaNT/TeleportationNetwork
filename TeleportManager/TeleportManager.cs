@@ -64,7 +64,7 @@ namespace TeleportationNetwork
             var pos = packet.Pos.ToVec3d().AddCopy(0.5, 1.5, 0.5);
             if (Points.TryGetValue(packet.Pos, out var teleport))
             {
-                pos = teleport.GetTargetPos();
+                pos = teleport.GetTeleportPoint();
             }
             fromPlayer.Entity?.StabilityRelatedTeleportTo(pos, Mod.Logger);
         }

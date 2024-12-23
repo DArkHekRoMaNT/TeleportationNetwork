@@ -1,12 +1,31 @@
 {
   "code": "linker",
   "class": "tpnet:ItemTeleportLeverLinker",
-  "attributes": {
-    "handbook": {
-      "exclude": true
-    }
-  },
+  "attributes": {},
   "shape": { "base": "game:item/tool/scythe" },
   "textures": { "metal": { "base": "game:item/resource/temporalgear" } },
-  "creativeinventory": { "general": ["*"], "decorative": ["*"], "tpnet":  ["*"] }
+  "creativeinventory": { "general": ["*"], "decorative": ["*"], "tpnet":  ["*"] },
+	"guiTransform": {
+		"translation": { "x": 0, "y": 0, "z": 0 },
+		"rotation": { "x": -93, "y": 30, "z": 44 },
+		"origin": { "x": 0.5, "y": 0, "z": 0.05 },
+		"scale": 0.82
+	},
+	"fpHandTransform": {
+		"translation": { "x": -0.2, "y": -0.2, "z": 0 },
+		"rotation": { "x": 15, "y": 15, "z": 90 },
+		"scale": 2.45
+	},
+	"groundTransform": {
+		"translation": { "x": 0, "y": 0, "z": 0 },
+		"rotation": { "x": 0, "y": 0, "z": 0 },
+		"origin": { "x": 0.5, "y": 0, "z": 0.5 },
+		"scale": 3.4
+	},
+	"tpHandTransform": {
+		"translation": { "x": -1.54, "y": -0.01, "z": -0.66 },
+		"rotation": { "x": -10, "y": 0, "z": 0 },
+		"origin": { "x": 0.5, "y": 0, "z": 0.5 },
+		"scale": 0.8
+	}
 }

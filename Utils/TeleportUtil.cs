@@ -10,6 +10,54 @@ namespace TeleportationNetwork
 {
     public static class TeleportUtil
     {
+        public static float GetThick(this Teleport teleport)
+        {
+            return 0.25f;
+        }
+
+        public static Vec3d GetCenter(this Teleport teleport)
+        {
+            if (teleport.Orientation == null || teleport.Size == 0)
+            {
+                Debug.WriteLine($"{teleport.OrientationIndex} {teleport.Size}");
+                Debugger.Break();
+                return teleport.Pos.ToVec3d().Add(0.5);
+            }
+
+            var thick = teleport.GetThick();
+            var dir = teleport.Orientation.Normalf;
+            return teleport.Pos.ToVec3d().Add(0.5).Add(dir * thick);
+        }
+
+        public static Vec3d GetTeleportPoint(this Teleport target)
+        {
+            var targetPos = GetCenter(target);
+            targetPos -= target.Orientation.Normald.Clone().Mul(0.5); // Forward offset
+            return targetPos;
+        }
+
+        public static Vec3d GetTeleportPoint(this Teleport from, Entity entity, Teleport to)
+        {
+            if (from.Orientation == null || to.Orientation == null ||  from.Size == 0 || to.Size == 0)
+                return GetTeleportPoint(to);
+
+            var fromCenterPos = GetCenter(from);
+            var entityRelativePos = fromCenterPos - entity.Pos.XYZ;
+
+            var axis = new Vec3d();
+            axis.Cross(to.Orientation.Normald, from.Orientation.Normald);
+
+            var targetPos = GetCenter(to);
+            
+            targetPos -= to.Orientation.Normalf.ToVec3d().Mul(0.5); // Forward offset
+            return targetPos;
+        }
+
+        public static Entity[] GetEntityInPortal(this Teleport teleport, ICoreAPI api)
+        {
+            return MathUtil.GetInCyllinderEntities(api, teleport.Size, GetThick(teleport), GetCenter(teleport), teleport.Orientation);
+        }
+
         public static void StabilityRelatedTeleportTo(this Entity entity, Vec3d pos, ILogger logger, Action? onTeleported = null)
         {
             var entityPos = entity.Pos.Copy();
@@ -80,24 +128,6 @@ namespace TeleportationNetwork
                     onTeleported?.Invoke();
                 });
             }
-        }
-
-        public static Vec3d GetTargetPos(this Teleport target)
-        {
-            if (target.Orientation == null || target.Size == 0)
-            {
-                Debug.WriteLine($"{target.OrientationIndex} {target.Size}");
-                return GetGateCenter(target);
-            }
-
-            var targetPos = GetGateCenter(target);
-            targetPos -= target.Orientation.Normalf.ToVec3d().Mul(0.5); // Forward offset
-            return targetPos;
-        }
-
-        public static Vec3d GetGateCenter(this Teleport teleport)
-        {
-            return teleport.Pos.ToVec3d().Add(0.5);
         }
     }
 }

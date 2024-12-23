@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Text;
 using Vintagestory.API.Client;
@@ -7,10 +9,24 @@ using Vintagestory.API.Common.Entities;
 using Vintagestory.API.Datastructures;
 using Vintagestory.API.MathTools;
 using Vintagestory.API.Server;
+using Vintagestory.API.Util;
 using Vintagestory.Client.NoObf;
 
 namespace TeleportationNetwork
 {
+    public class EntityComparer : IEqualityComparer<Entity>
+    {
+        public bool Equals(Entity? x, Entity? y)
+        {
+            return x?.EntityId == y?.EntityId;
+        }
+
+        public int GetHashCode([DisallowNull] Entity obj)
+        {
+            return obj.EntityId.GetHashCode();
+        }
+    }
+
     public class BlockEntityTeleport : BlockEntity, IDisposable
     {
         private ILogger Logger => _modLogger ?? Api.Logger;
@@ -23,6 +39,13 @@ namespace TeleportationNetwork
         private BlockPos? _lastTargetPos;
         private GuiDialogTeleportList? _teleportDialog;
         private GuiDialogEditTeleport? _editDialog;
+
+        private Teleport? _teleportCached;
+        private Vec3d _center = Vec3d.Zero;
+        private BlockFacing _orientation = BlockFacing.NORTH;
+        private float _radius;
+        private float _thick;
+        private readonly HashSet<Entity> _entitiesForTeleport = new(10, new EntityComparer());
 
         public override void Initialize(ICoreAPI api)
         {
@@ -46,8 +69,8 @@ namespace TeleportationNetwork
 
             _controllers?.UpdateTeleport(this);
 
-            RegisterGameTickListener(OnGameTick, 50);
-            RegisterGameTickListener(OnGameRenderTick, 10); // For prevent shader lags on open/close
+            RegisterGameTickListener(OnGameLongTick, 30);
+            RegisterGameTickListener(OnGameTick, 10); // For prevent shader lags on open/close
         }
 
         public override bool OnTesselation(ITerrainMeshPool mesher, ITesselatorAPI tessThreadTesselator)
@@ -55,49 +78,75 @@ namespace TeleportationNetwork
             return true;
         }
 
-        private void OnGameRenderTick(float dt)
+        private void OnGameTick(float dt)
         {
             Status.OnTick(dt);
             _controllers?.Update(Status);
+
+            if (Status.State != TeleportStatus.FSMState.Activated || _teleportCached == null) return;
+
+            _controllers?.Particles.SpawnGateParticles(_radius - 0.5f, _thick, _center, _orientation);
+
+            if (Api is ICoreServerAPI)
+            {
+                _entitiesForTeleport.AddRange(MathUtil.GetInCyllinderEntities(Api, _radius, _thick, _center, _orientation));
+            }
         }
 
-        private void OnGameTick(float dt)
+        private void OnGameLongTick(float dt)
         {
-            var teleport = GetOrCreateTeleport();
+            _teleportCached = GetOrCreateTeleport();
 
-            if (!teleport.Enabled || teleport.Target == null || teleport.Target != _lastTargetPos)
+            if (!_teleportCached.Enabled || _teleportCached.Target == null || _teleportCached.Target != _lastTargetPos)
             {
-                _lastTargetPos = teleport.Target;
+                _lastTargetPos = _teleportCached.Target;
                 Status.Stop();
                 return;
             }
 
             Status.Start();
 
-            if (Status.State != TeleportStatus.FSMState.Activated) return;
+            if (_controllers != null)
+            {
+                Api.World.SpawnParticles(new SimpleParticleProperties
+                {
+                    MinQuantity = 1f,
+                    AddQuantity = 0f,
+                    MinPos = TeleportUtil.GetCenter(_teleportCached),
+                    AddPos = new Vec3d(),
+                    MinVelocity = new Vec3f(),
+                    AddVelocity = new Vec3f(),
+                    LifeLength = 0.1f,
+                    GravityEffect = 0,
+                    MinSize = 0.2f,
+                    MaxSize = 0.2f,
+                    ParticleModel = EnumParticleModel.Quad,
+                    Color = _controllers.Particles.GetRandomColor(),
+                });
+            }
 
-            var center = teleport.GetGateCenter();
-            var orientation = teleport.Orientation;
-
-            var radius = teleport.Size / 2f;
-            var thick = 0.5f;
-            _controllers?.Particles.SpawnGateParticles(radius, thick, center, orientation);
+            _center = TeleportUtil.GetCenter(_teleportCached);
+            _orientation = _teleportCached.Orientation;
+            _radius = _teleportCached.Size / 2f;
+            _thick = 0.5f;
 
             if (Api is ICoreServerAPI)
             {
-                var entities = MathUtil.GetInCyllinderEntities(Api, radius, thick, center, orientation);
-                if (entities.Length > 0)
+                if (_entitiesForTeleport.Count > 0)
                 {
-                    if (!_manager.Points.TryGetValue(teleport.Target, out var targetTeleport) || targetTeleport.Target != Pos)
+                    if (!_manager.Points.TryGetValue(_teleportCached.Target, out var targetTeleport) || targetTeleport.Target != Pos)
                     {
                         _manager.Points.Unlink(Pos);
                         return;
                     }
-                    foreach (var entity in entities)
+
+                    foreach (var entity in _entitiesForTeleport)
                     {
                         if (entity.Teleporting) continue;
-                        TeleportEntity(entity, teleport, targetTeleport);
+                        TeleportEntity(entity, _teleportCached, targetTeleport);
                     }
+
+                    _entitiesForTeleport.Clear();
                 }
             }
         }
@@ -110,12 +159,12 @@ namespace TeleportationNetwork
             if (entity.IsActivityRunning(Constants.TeleportCooldownActivityName))
                 return;
 
-            var center = teleport.GetGateCenter();
+            var center = TeleportUtil.GetCenter(teleport);
             var orientation = teleport.Orientation;
-            var targetCenter = targetTeleport.GetGateCenter();
+            var targetCenter = TeleportUtil.GetCenter(targetTeleport);
             var targetOrientation = targetTeleport.Orientation;
 
-            var entityPos = entity.Pos.Copy();
+            var entityPos = entity.ServerPos.Copy();
             var forwardOffset = targetTeleport.Orientation.Normalf.ToVec3d().Mul(-1); // Forward offset
             entityPos.SetPos(targetCenter + forwardOffset);
             if (orientation.IsHorizontal && targetOrientation.IsHorizontal)
@@ -137,6 +186,7 @@ namespace TeleportationNetwork
             }
 
             var motion = entityPos.Motion.Clone();
+            entity.ServerPos.Motion = Vec3d.Zero;
             TeleportUtil.StabilityRelatedTeleportTo(entity, entityPos, Logger, () => //TODO: Random teleport sound + text?
             {
                 entity.ServerPos.Motion = motion;

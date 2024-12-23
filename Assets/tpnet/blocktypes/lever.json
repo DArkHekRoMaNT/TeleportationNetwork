@@ -2,12 +2,10 @@
   "code": "lever",
   "class": "tpnet:BlockTeleportLever",
   "entityClass": "tpnet:TeleportLever",
-  "attributes": {
-    "handbook": {
-      "exclude": true
-    }
-  },
-  "shape": { "base": "block/lever" },
+  "behaviors": [{ "name": "HorizontalOrientable" }],
+  "variantGroups": [{ "code": "side", "loadFromProperties": "abstract/horizontalorientation" }],
+  "attributes": {},
+  "shape": { "base": "block/lever", "rotateYByType": { "*-north": 0, "*-west": 90, "*-south": 180, "*-east": 270 } },
   "textures": {
     "smoky": { "base": "game:block/glass/smoky" },
 		"device-plate": { "base": "game:block/machine/device-plate" },
@@ -18,7 +16,7 @@
 		"tallow": { "base": "game:block/tallow" },
 		"charred": { "base": "game:block/wood/charred" }
   },
-  "creativeinventory": { "general": ["*"], "decorative": ["*"], "tpnet":  ["*"] },
+  "creativeinventory": { "general": ["*-north"], "decorative": ["*-north"], "tpnet":  ["*-north"] },
   "blockMaterial": "Stone",
   "replaceable": 200,
   "resistance": 4,

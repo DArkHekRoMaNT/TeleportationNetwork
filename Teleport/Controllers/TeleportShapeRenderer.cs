@@ -73,6 +73,8 @@ namespace TeleportationNetwork
                 return _api.Render.UploadMesh(mesh);
             }
 
+            CleanMeshes();
+
             _staticMesh = UploadMesh(GetShape($"{Constants.ModId}:block/gate/static"));
             _dynamicMesh = UploadMesh(GetShape($"{Constants.ModId}:block/gate/dynamic"));
 
@@ -210,9 +212,8 @@ namespace TeleportationNetwork
             prog.Stop();
         }
 
-        public void Dispose()
+        public void CleanMeshes()
         {
-            _api.Event.UnregisterRenderer(this, EnumRenderStage.Opaque);
             _staticMesh?.Dispose();
             _dynamicMesh?.Dispose();
 
@@ -223,6 +224,12 @@ namespace TeleportationNetwork
                     mesh.Dispose();
                 }
             }
+        }
+
+        public void Dispose()
+        {
+            _api.Event.UnregisterRenderer(this, EnumRenderStage.Opaque);
+            CleanMeshes();
         }
     }
 }
