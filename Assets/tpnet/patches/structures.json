@@ -30,7 +30,7 @@
     "value": {
       "code": "teleport",
       "group": "teleport",
-      "minGroupDistance": 100,
+      "minGroupDistance": 4000,
       "name": "Teleport",
       "chance": 5,
       "schematics": [ "tpnet/teleport/*" ],
