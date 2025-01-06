@@ -27,7 +27,9 @@ namespace TeleportationNetwork
             _teleportLayer = teleportLayer;
             _data = _teleport.GetClientData(capi);
 
-            if (_teleport.Enabled)
+            var activatedByPlayer = _teleport.ActivatedByPlayers.Contains(capi.World.Player.PlayerUID);
+            var creativePlayer = capi.World.Player.WorldData.CurrentGameMode == EnumGameMode.Creative;
+            if (_teleport.Enabled && (activatedByPlayer || creativePlayer))
             {
                 ColorUtil.ToRGBAVec4f(_data.Color, ref _color);
             }
