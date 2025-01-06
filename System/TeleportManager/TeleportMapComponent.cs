@@ -29,7 +29,7 @@ namespace TeleportationNetwork
 
             var activatedByPlayer = _teleport.ActivatedByPlayers.Contains(capi.World.Player.PlayerUID);
             var creativePlayer = capi.World.Player.WorldData.CurrentGameMode == EnumGameMode.Creative;
-            if (_teleport.Enabled && (activatedByPlayer || creativePlayer))
+            if (_teleport.Enabled && (_teleport.IsGlobal || activatedByPlayer || creativePlayer))
             {
                 ColorUtil.ToRGBAVec4f(_data.Color, ref _color);
             }

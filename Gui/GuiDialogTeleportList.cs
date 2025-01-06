@@ -184,6 +184,11 @@ namespace TeleportationNetwork
                     nameFont.Color = ColorUtil.Hex2Doubles("#555555");
                 }
 
+                if (tp.IsGlobal)
+                {
+                    nameFont.Color = ColorUtil.Hex2Doubles("#d4af37");
+                }
+
                 if (data.Pinned)
                 {
                     nameFont.FontWeight = FontWeight.Bold;
@@ -220,7 +225,7 @@ namespace TeleportationNetwork
             {
                 _allPoints = TeleportManager.Points.GetAll((tp) =>
                     tp.Enabled &&
-                    tp.ActivatedByPlayers.Contains(capi.World.Player.PlayerUID)).ToList();
+                    (tp.IsGlobal || tp.ActivatedByPlayers.Contains(capi.World.Player.PlayerUID))).ToList();
             }
 
             _allPoints = _allPoints

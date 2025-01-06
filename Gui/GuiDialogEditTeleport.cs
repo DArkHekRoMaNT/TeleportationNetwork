@@ -2,6 +2,7 @@ using System;
 using System.Globalization;
 using System.Linq;
 using Vintagestory.API.Client;
+using Vintagestory.API.Common;
 using Vintagestory.API.Config;
 using Vintagestory.API.MathTools;
 using Vintagestory.API.Util;
@@ -105,8 +106,11 @@ namespace TeleportationNetwork
             var pinnedLabel = leftColumn.FlatCopy().FixedUnder(orderLabel, spacing);
             var pinnedSwitch = rightColumn.FlatCopy().FixedUnder(orderInput, spacing);
 
-            var colorLabel = leftColumn.FlatCopy().FixedUnder(pinnedLabel, spacing);
-            var colorPicker = rightColumn.FlatCopy().FixedUnder(pinnedSwitch, spacing)
+            var globalLabel = leftColumn.FlatCopy().FixedUnder(pinnedLabel, spacing);
+            var globalSwitch = rightColumn.FlatCopy().FixedUnder(pinnedSwitch, spacing);
+
+            var colorLabel = leftColumn.FlatCopy().FixedUnder(globalLabel, spacing);
+            var colorPicker = rightColumn.FlatCopy().FixedUnder(globalSwitch, spacing)
                 .WithFixedSize(colorIconSize, colorIconSize);
 
             var iconLabel = leftColumn.FlatCopy()
@@ -151,6 +155,9 @@ namespace TeleportationNetwork
                     .AddStaticText(Lang.Get("Pinned"), CairoFont.WhiteSmallText(), pinnedLabel)
                     .AddSwitch(OnPinnedChanged, pinnedSwitch, "pinnedSwitch")
 
+                    .AddStaticText(Lang.Get($"{Constants.ModId}:edittpdlg-global-label"), CairoFont.WhiteSmallText(), globalLabel)
+                    .AddSwitch(null, globalSwitch, "globalSwitch")
+
                     .AddRichtext(Lang.Get("waypoint-color"), CairoFont.WhiteSmallText(), colorLabel)
                     .AddColorListPicker(_colors, OnColorSelected, colorPicker, 270, "colorPicker")
 
@@ -169,6 +176,10 @@ namespace TeleportationNetwork
             SingleComposer.GetTextArea("noteInput").SetValue(_data.Note);
             SingleComposer.GetNumberInput("orderInput").SetValue(_data.SortOrder);
             SingleComposer.GetSwitch("pinnedSwitch").SetValue(_data.Pinned);
+
+            var globalSwitchButton = SingleComposer.GetSwitch("globalSwitch");
+            globalSwitchButton.SetValue(_teleport.IsGlobal);
+            globalSwitchButton.Enabled = capi.World.Player.WorldData.CurrentGameMode == EnumGameMode.Creative;
 
             SingleComposer.GetTextArea("noteInput").SetMaxLines(noteMaxLines);
         }
@@ -220,6 +231,7 @@ namespace TeleportationNetwork
         private bool OnSave()
         {
             _teleport.Name = SingleComposer.GetTextInput("nameInput").GetText();
+            _teleport.IsGlobal = SingleComposer.GetSwitch("globalSwitch").On;
             _teleport.SetClientData(capi, _data);
 
             capi.ModLoader.GetModSystem<TeleportManager>().UpdateTeleport(_teleport);

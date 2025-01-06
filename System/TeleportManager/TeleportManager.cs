@@ -131,6 +131,7 @@ namespace TeleportationNetwork
                 return;
             }
 
+            teleport.IsGlobal = msg.Teleport.IsGlobal;
             teleport.SetClientData(fromPlayer.PlayerUID, msg.Teleport.GetClientData(fromPlayer.PlayerUID));
 
             if (teleport.Name != msg.Teleport.Name)

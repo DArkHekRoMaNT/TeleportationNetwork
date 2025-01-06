@@ -20,6 +20,7 @@ namespace TeleportationNetwork
             }
         }
         public bool Enabled { get; set; }
+        public bool IsGlobal { get; set; } = false;
 
         public List<Teleport> Neighbours { get; private set; }
         public List<string> ActivatedByPlayers { get; private set; }
