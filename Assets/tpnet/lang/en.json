@@ -27,6 +27,7 @@
 
   "edittpdlg-title": "Edit teleport",
   "edittpdlg-order-label": "Sort",
+  "edittpdlg-global-label": "Global",
 
   "game:maplayer-tpnetwaypoints": "Teleports"
 }
