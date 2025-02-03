@@ -2,10 +2,10 @@
 	<PropertyGroup>
 		<Name>Teleportation Network</Name>
 		<ModId>tpnet</ModId>
-		<Version>2.0.0-pre.3</Version>
+		<Version>2.0.0-pre.4</Version>
 		<Authors>DArkHekRoMaNT</Authors>
-		<MinimalGameVersion>1.20.0-rc.4</MinimalGameVersion>
-		<GameVersion>1.20.0-rc.4</GameVersion>
+		<MinimalGameVersion>1.20.0</MinimalGameVersion>
+		<GameVersion>1.20.3</GameVersion>
 		<Description>Adds surface teleport network</Description>
 		<Website>https://github.com/DArkHekRoMaNT/TeleportationNetwork</Website>
 	</PropertyGroup>
