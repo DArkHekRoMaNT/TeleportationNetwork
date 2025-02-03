@@ -201,13 +201,18 @@ namespace TeleportationNetwork
             Logger.Audit($"{entity?.GetName()} teleported from {teleport.Pos} ({teleport.Name}) to {targetTeleport.Pos} ({targetTeleport.Name})");
         }
 
+        /// <summary>
+        /// Server only
+        /// </summary>
         public void ActivateTeleportByPlayer(string playerUID)
         {
-            var teleport = GetOrCreateTeleport();
-            if (!teleport.ActivatedByPlayers.Contains(playerUID))
+            if (Api.Side == EnumAppSide.Server)
             {
-                teleport.ActivatedByPlayers.Add(playerUID);
-                _manager.Points.MarkDirty(Pos);
+                var teleport = GetOrCreateTeleport();
+                if (teleport.ActivatedByPlayers.Add(playerUID))
+                {
+                    _manager.Points.MarkDirty(Pos);
+                }
             }
         }
 

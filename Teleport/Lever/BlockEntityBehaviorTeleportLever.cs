@@ -272,6 +272,7 @@ namespace TeleportationNetwork
                 else
                 {
                     be.OpenTeleportDialog();
+                    be.ActivateTeleportByPlayer(byPlayer.PlayerUID);
                 }
                 handling = EnumHandling.PreventDefault;
                 return true;

@@ -21,7 +21,7 @@ namespace TeleportationNetwork
         [ProtoMember(4)] public BlockPos? Target { get; set; }
         [ProtoMember(5)] public float Size { get; private set; }
         [ProtoMember(6)] public int OrientationIndex { get; private set; }
-        [ProtoMember(7)] public List<string> ActivatedByPlayers { get; private set; }
+        [ProtoMember(7)] public HashSet<string> ActivatedByPlayers { get; private set; }
         [ProtoMember(8)] public Dictionary<string, TeleportClientData> ClientData { get; private set; } //TODO: Store it at client side?
 
         public BlockFacing Orientation => BlockFacing.ALLFACES[OrientationIndex];

@@ -188,6 +188,7 @@ namespace TeleportationNetwork
                 if (be.Status.IsRepaired)
                 {
                     be.OpenTeleportDialog();
+                    be.ActivateTeleportByPlayer(byPlayer.PlayerUID);
                     return true;
                 }
 
@@ -206,10 +207,7 @@ namespace TeleportationNetwork
                             activeSlot.MarkDirty();
                         }
 
-                        if (api.Side == EnumAppSide.Server)
-                        {
-                            be.ActivateTeleportByPlayer(byPlayer.PlayerUID);
-                        }
+                        be.ActivateTeleportByPlayer(byPlayer.PlayerUID);
 
                         world.PlaySoundAt(new AssetLocation("sounds/effect/latch"), blockSel.Position.X + 0.5, blockSel.Position.Y, blockSel.Position.Z + 0.5, byPlayer, true, 16);
                         return true;
@@ -252,12 +250,9 @@ namespace TeleportationNetwork
                     be.Status.Repair();
                 }
 
-                if (api.Side == EnumAppSide.Server)
+                if (flag && byPlayer.WorldData.CurrentGameMode == EnumGameMode.Creative)
                 {
-                    if (flag && byPlayer.WorldData.CurrentGameMode == EnumGameMode.Creative)
-                    {
-                        be.ActivateTeleportByPlayer(byPlayer.PlayerUID);
-                    }
+                    be.ActivateTeleportByPlayer(byPlayer.PlayerUID);
                 }
 
                 be.UpdateBlock();
