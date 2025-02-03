@@ -46,6 +46,9 @@ namespace TeleportationNetwork.WorldGen
                 yield return new CodeInstruction(OpCodes.Initobj, typeof(int?));
                 yield return new CodeInstruction(OpCodes.Ldloc, tempIndex);
             }
+            var rockIdIndex = generator.DeclareLocal(typeof(int?)).LocalIndex;
+            yield return new CodeInstruction(OpCodes.Stloc, rockIdIndex);
+            yield return new CodeInstruction(OpCodes.Ldloc, rockIdIndex);
             yield return CodeInstruction.Call(typeof(StructureRandomizerInstance), nameof(StructureRandomizerInstance.GetNewReplaceBlocks));
             yield return CodeInstruction.StoreLocal(newReplaceBlocksIndex);
 
@@ -65,6 +68,7 @@ namespace TeleportationNetwork.WorldGen
 
             yield return CodeInstruction.LoadLocal(randomizerIndex);
             yield return CodeInstruction.LoadArgument(1); // IBlockAccessor
+            yield return new CodeInstruction(OpCodes.Ldloc, rockIdIndex);
             yield return CodeInstruction.Call(typeof(StructureRandomizerInstance), nameof(StructureRandomizerInstance.AfterPlace));
 
             yield return codes[^2]; // count

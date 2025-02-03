@@ -1,7 +1,5 @@
 using System;
 using Vintagestory.API.Client;
-using Vintagestory.API.Common;
-using Vintagestory.API.Config;
 using Vintagestory.API.MathTools;
 
 namespace TeleportationNetwork
@@ -17,7 +15,7 @@ namespace TeleportationNetwork
         public void UpdateTeleport(BlockEntityTeleport be)
         {
             var rotationDeg = (be.Block as BlockTeleport)?.RotationDeg ?? 0;
-            _shapeRenderer.UpdateMesh(be.Block, rotationDeg, be.Size);
+            _shapeRenderer.UpdateMesh(be.Block, rotationDeg, be.Size, be.Type, be.Status.IsBroken);
             _riftRenderer.UpdateTeleport(be.Size, rotationDeg, be.Status.IsBroken);
         }
 

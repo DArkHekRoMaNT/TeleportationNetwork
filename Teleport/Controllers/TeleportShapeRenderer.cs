@@ -1,24 +1,26 @@
-using MonoMod.Core.Platforms;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
 using Vintagestory.API.MathTools;
+using Vintagestory.GameContent;
 
 namespace TeleportationNetwork
 {
     public class TeleportShapeRenderer : IRenderer
     {
-        public double RenderOrder => 0.37;
+        public double RenderOrder => 0.5;
         public int RenderRange => 100;
 
         private readonly ICoreClientAPI _api;
         private readonly BlockPos _pos;
         private readonly Matrixf _modelMatrix;
+        private readonly Matrixf _shadowMatrix;
 
         private float _rotationDeg;
         private float _size;
+        private string _type;
         private MeshRef? _staticMesh;
         private MeshRef? _dynamicMesh;
         private MeshRef[]? _rodMesh;
@@ -46,14 +48,23 @@ namespace TeleportationNetwork
             _status = new TeleportStatus();
             _rotationDeg = 0;
             _size = 0;
+            _type = "";
             _modelMatrix = new Matrixf();
+            _shadowMatrix = new Matrixf();
 
-            _api.Event.RegisterRenderer(this, EnumRenderStage.Opaque, $"{Constants.ModId}-teleport-shape");
+            _api.Event.RegisterRenderer(this, EnumRenderStage.Opaque, $"{Constants.ModId}:teleport-shape");
+            _api.Event.RegisterRenderer(this, EnumRenderStage.ShadowFar, $"{Constants.ModId}:teleport-shape");
+            _api.Event.RegisterRenderer(this, EnumRenderStage.ShadowNear, $"{Constants.ModId}:teleport-shape");
         }
 
-        public void UpdateMesh(Block block, float rotationDeg, int size)
+        public void UpdateMesh(Block block, float rotationDeg, int size, string type, bool broken)
         {
-            if (rotationDeg == _rotationDeg && size == _size)
+            if (rotationDeg == _rotationDeg && size == _size && _type == type)
+            {
+                return;
+            }
+
+            if (block is not BlockTeleport teleport || !teleport.Props.Textures.TryGetValue(type, out var textures) || textures == null)
             {
                 return;
             }
@@ -69,7 +80,16 @@ namespace TeleportationNetwork
             MeshRef? UploadMesh(Shape? shape)
             {
                 if (shape == null) return null;
-                _api.Tesselator.TesselateShape(block, shape, out var mesh);
+
+                var texSource = new ShapeTextureSource(_api, shape, $"{block.Code}::{type},{size},{broken}");
+                foreach (var (key, texture) in textures)
+                {
+                    var compositeTexture = texture.Clone();
+                    compositeTexture.Bake(_api.Assets);
+                    texSource.textures[key] = texture;
+                }
+
+                _api.Tesselator.TesselateShape($"{block.Code}::{type},{size},{broken}", shape, out var mesh, texSource);
                 return _api.Render.UploadMesh(mesh);
             }
 
@@ -126,10 +146,6 @@ namespace TeleportationNetwork
             rpi.GlToggleBlend(true);
             rpi.GlDisableCullFace();
 
-            var prog = rpi.PreparedStandardShader(_pos.X, _pos.Y, _pos.Z);
-
-            prog.Tex2D = _api.BlockTextureAtlas.AtlasTextures[0].TextureId;
-
             var cx = _pos.X - camPos.X;
             var cy = _pos.Y - camPos.Y;
             var cz = _pos.Z - camPos.Z;
@@ -140,40 +156,73 @@ namespace TeleportationNetwork
             var size = _size / 10f;
             var zOffset = _size == 10f ? 0 : -0.5f;
 
+            var prog = (IStandardShaderProgram?)null;
+            if (stage == EnumRenderStage.Opaque)
+            {
+                prog = rpi.PreparedStandardShader(_pos.X, _pos.Y, _pos.Z);
+                prog.Tex2D = _api.BlockTextureAtlas.AtlasTextures[0].TextureId;
+                //prog.DamageEffect = repairingProgress * 0.25f;
+                prog.NormalShaded = 0;
+            }
+
+            void DoRender(MeshRef mesh)
+            {
+                if (stage == EnumRenderStage.Opaque)
+                {
+                    if (prog == null)
+                    {
+                        return;
+                    }
+
+                    prog.ModelMatrix = _modelMatrix.Values;
+                    prog.ViewMatrix = rpi.CameraMatrixOriginf;
+                    prog.ProjectionMatrix = rpi.CurrentProjectionMatrix;
+
+                    rpi.RenderMesh(mesh);
+                }
+                else
+                {
+                    _shadowMatrix
+                        .Set(rpi.CurrentProjectionMatrix)
+                        .Mul(rpi.CurrentModelviewMatrix)
+                        .Mul(_modelMatrix.Values);
+
+                    rpi.CurrentActiveShader.BindTexture2D("tex2d", _api.BlockTextureAtlas.AtlasTextures[0].TextureId, 0);
+                    rpi.CurrentActiveShader.UniformMatrix("mvpMatrix", _shadowMatrix.Values);
+                    rpi.CurrentActiveShader.Uniform("origin", new Vec3f());
+
+                    rpi.RenderMesh(mesh);
+                }
+            }
+
             // Static render
             if (_staticMesh != null)
             {
-                prog.ModelMatrix = _modelMatrix
+                _modelMatrix
                         .Identity()
                         .Translate(cx + 0.5, cy + 0.5, cz + 0.5)
                         .RotateYDeg(_rotationDeg)
                         .Scale(size, size, size)
-                        .Translate(-0.5, -0.5, -0.5 + zOffset)
-                        .Values;
+                        .Translate(-0.5, -0.5, -0.5 + zOffset);
 
-                prog.ViewMatrix = rpi.CameraMatrixOriginf;
-                prog.ProjectionMatrix = rpi.CurrentProjectionMatrix;
+                DoRender(_staticMesh);
 
-                rpi.RenderMesh(_staticMesh);
             }
 
             // Dynamic ring render
             if (_dynamicMesh != null)
             {
                 _ringRotation += activatingProgress * deltaTime / 5f;
-                prog.ModelMatrix = _modelMatrix
+
+                _modelMatrix
                         .Identity()
                         .Translate(cx + 0.5, cy + 0.5, cz + 0.5)
                         .RotateYDeg(_rotationDeg)
                         .RotateZ(_ringRotation)
                         .Scale(size, size, size)
-                        .Translate(-0.5, -0.5, -0.5 + zOffset)
-                        .Values;
+                        .Translate(-0.5, -0.5, -0.5 + zOffset);
 
-                prog.ViewMatrix = rpi.CameraMatrixOriginf;
-                prog.ProjectionMatrix = rpi.CurrentProjectionMatrix;
-
-                rpi.RenderMesh(_dynamicMesh);
+                DoRender(_dynamicMesh);
             }
 
             // Rods render
@@ -190,7 +239,7 @@ namespace TeleportationNetwork
 
                     var mesh = _rodMesh[(int)Math.Clamp(activatingProgress * _rodMesh.Length, 0, _rodMesh.Length - 1)];
 
-                    prog.ModelMatrix = _modelMatrix
+                    _modelMatrix
                         .Identity()
                         .Translate(cx + 0.5, cy + 0.5, cz + 0.5)
                         .RotateYDeg(_rotationDeg)
@@ -199,17 +248,13 @@ namespace TeleportationNetwork
                         .Rotate(rotX * repairingProgress, rotY * repairingProgress, rotZ * repairingProgress)
                         .Scale(size, size, size)
                         .Translate(-0.5, -0.5, -0.5 + zOffset)
-                        .RotateYDeg(0.01f)
-                        .Values;
+                        .RotateYDeg(0.01f);
 
-                    prog.ViewMatrix = rpi.CameraMatrixOriginf;
-                    prog.ProjectionMatrix = rpi.CurrentProjectionMatrix;
-
-                    rpi.RenderMesh(mesh);
+                    DoRender(mesh);
                 }
             }
 
-            prog.Stop();
+            prog?.Stop();
         }
 
         public void CleanMeshes()
@@ -229,6 +274,9 @@ namespace TeleportationNetwork
         public void Dispose()
         {
             _api.Event.UnregisterRenderer(this, EnumRenderStage.Opaque);
+            _api.Event.UnregisterRenderer(this, EnumRenderStage.ShadowFar);
+            _api.Event.UnregisterRenderer(this, EnumRenderStage.ShadowNear);
+
             CleanMeshes();
         }
     }

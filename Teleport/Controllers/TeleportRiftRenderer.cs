@@ -35,7 +35,7 @@ namespace TeleportationNetwork
             _matrixf = new Matrixf();
             _size = 1;
 
-            _api.Event.RegisterRenderer(this, EnumRenderStage.AfterBlit, $"{Constants.ModId}-teleport-rift");
+            _api.Event.RegisterRenderer(this, EnumRenderStage.AfterBlit, $"{Constants.ModId}:teleport-rift");
             _renderSystem = _api.ModLoader.GetModSystem<TeleportRenderSystem>();
         }
 

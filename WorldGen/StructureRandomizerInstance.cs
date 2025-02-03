@@ -58,12 +58,7 @@ namespace TeleportationNetwork.WorldGen
                 }
             }
 
-            if (!rockBlockId.HasValue)
-            {
-                var blockPos = new BlockPos(_schematic.SizeX / 2 + _startPos.X, _startPos.Y, _schematic.SizeZ / 2 + _startPos.Z, _startPos.dimension);
-                var mapChunkAtBlockPos = blockAccessor.GetMapChunkAtBlockPos(blockPos);
-                rockBlockId ??= mapChunkAtBlockPos.TopRockIdMap[blockPos.Z % 32 * 32 + blockPos.X % 32];
-            }
+            rockBlockId ??= GetRock(blockAccessor);
 
             foreach (var (_, code) in _schematic.BlockCodes)
             {
@@ -120,7 +115,7 @@ namespace TeleportationNetwork.WorldGen
             return blockId;
         }
 
-        public void AfterPlace(IBlockAccessor blockAccessor)
+        public void AfterPlace(IBlockAccessor blockAccessor, int? rockBlockId)
         {
             if (_skip == true) return;
 
@@ -142,9 +137,27 @@ namespace TeleportationNetwork.WorldGen
                                 lbe.material = lantern;
                             }
                         }
+
+                        if (block is BlockTeleport)
+                        {
+                            tempPos.Set(_startPos.X + x, _startPos.Y + y, _startPos.Z + z);
+                            rockBlockId ??= GetRock(blockAccessor);
+                            var rock = blockAccessor.GetBlock(rockBlockId.Value).LastCodePart();
+                            if (blockAccessor.GetBlockEntity(tempPos) is BlockEntityTeleport be)
+                            {
+                                be.Type = be.Type.Replace("granite", rock);
+                            }
+                        }
                     }
                 }
             }
+        }
+
+        private int GetRock(IBlockAccessor blockAccessor)
+        {
+            var blockPos = new BlockPos(_schematic.SizeX / 2 + _startPos.X, _startPos.Y, _schematic.SizeZ / 2 + _startPos.Z, _startPos.dimension);
+            var mapChunkAtBlockPos = blockAccessor.GetMapChunkAtBlockPos(blockPos);
+            return mapChunkAtBlockPos.TopRockIdMap[blockPos.Z % 32 * 32 + blockPos.X % 32];
         }
     }
 }

@@ -1,6 +1,6 @@
 {
-  "block-teleport-broken-*": "Broken teleport",
-  "block-teleport-normal-*": "Teleport",
+  "block-teleport-broken": "Broken Teleport ({0}, {1})",
+  "block-teleport-normal": "Teleport ({0}, {1})",
 
   "tpdlg-title": "Available Points",
   "tpdlg-empty": "No available teleports",
@@ -12,20 +12,7 @@
   "blockhelp-teleport-open": "Open",
   "blockhelp-teleport-unknownitem": "Unknown repair item, check config",
 
-  "block-brokenlantern-copper-*": "Broken copper lantern",
-  "block-brokenlantern-brass-*": "Broken brass lantern",
-  "block-brokenlantern-blackbronze-*": "Broken black bronze lantern",
-  "block-brokenlantern-bismuth-*": "Broken bismuth lantern",
-  "block-brokenlantern-tinbronze-*": "Broken tin bronze lantern",
-  "block-brokenlantern-bismuthbronze-*": "Broken bismuth bronze lantern",
-  "block-brokenlantern-iron-*": "Broken iron lantern",
-  "block-brokenlantern-molybdochalkos-*": "Broken molybdochalkos lantern",
-  "block-brokenlantern-silver-*": "Broken silver lantern",
-  "block-brokenlantern-gold-*": "Broken gold lantern",
-  "block-brokenlantern-steel-*": "Broken steel lantern",
-  "block-brokenlantern-meteoriciron-*": "Broken meteoric iron lantern",
-
-  "edittpdlg-title": "Edit teleport",
+  "edittpdlg-title": "Edit Teleport",
   "edittpdlg-order-label": "Sort",
 
   "game:maplayer-tpnetwaypoints": "Teleports",

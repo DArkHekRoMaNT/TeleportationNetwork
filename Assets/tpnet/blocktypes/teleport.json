@@ -3,59 +3,35 @@
   "class": "tpnet:BlockTeleport",
   "entityClass": "tpnet:Teleport",
   "blockMaterial": "Stone",
-  "shapeInventory": { "base": "block/gate/static" },
+  "shapeInventory": { "base": "block/gate/inventory" },
   "shape": null,
   "behaviors": [{ "name": "HorizontalOrientable" }],
-  "textures": {
-    "metal": { "base": "game:block/metal/tarnished/rusty-iron" },
-    "machinic": { "base": "game:block/metal/tarnished/machinic/machinic" },
-    "machinic2": { "base": "game:block/metal/tarnished/machinic/machinic2" },
-    "machinic3": { "base": "game:block/metal/tarnished/machinic/machinic3" },
-    "machinic4": { "base": "game:block/metal/tarnished/machinic/machinic4" },
-    "iron-sheet1": { "base": "game:block/metal/tarnished/iron-sheet1" },
-    "rusty-iron2": { "base": "game:block/metal/tarnished/rusty-iron2" }
-  },
   "variantGroups": [{ "code": "side", "loadFromProperties": "abstract/horizontalorientation" }],
-  "creativeInventoryStacksByType": {
-    "*-north": [{
-      "tabs": [ "general", "decorative", "tpnet" ],
-      "stacks": [
-        {
-          "type": "block",
-          "code": "teleport-north",
-          "attributes": {
-            "broken": "true",
-            "size": "5"
-          }
-        },
-        {
-          "type": "block",
-          "code": "teleport-north",
-          "attributes": {
-            "broken": "false",
-            "size": "5"
-          }
-        },
-        {
-          "type": "block",
-          "code": "teleport-north",
-          "attributes": {
-            "broken": "true",
-            "size": "10"
-          }
-        },
-        {
-          "type": "block",
-          "code": "teleport-north",
-          "attributes": {
-            "broken": "false",
-            "size": "10"
-          }
-        }
-      ]
-    }]
+  "attributes": {  
+    "types": ["rusty", "rock-{rock}"],
+    "sizes": [5, 10],
+    "textures": {
+      "rusty": {
+        "metal": { "base": "game:block/metal/tarnished/rusty-iron" },
+        "machinic": { "base": "game:block/metal/tarnished/machinic/machinic" },
+        "machinic2": { "base": "game:block/metal/tarnished/machinic/machinic2" },
+        "machinic3": { "base": "game:block/metal/tarnished/machinic/machinic3" },
+        "machinic4": { "base": "game:block/metal/tarnished/machinic/machinic4" },
+        "iron-sheet1": { "base": "game:block/metal/tarnished/iron-sheet1" },
+        "rusty-iron2": { "base": "game:block/metal/tarnished/rusty-iron2" }
+      },
+      "rock-{rock}": { 
+        "metal": { "base": "game:block/stone/rock/{rock}*" },
+        "machinic":  { "base": "game:block/stone/rock/{rock}*", "blendedOverlays": [{ "base": "tpnet:block/teleport/rock",  "blendMode": "Overlay" }] },
+        "machinic2": { "base": "game:block/stone/rock/{rock}*", "blendedOverlays": [{ "base": "tpnet:block/teleport/rock2", "blendMode": "Overlay" }] },
+        "machinic3": { "base": "game:block/stone/rock/{rock}*", "blendedOverlays": [{ "base": "tpnet:block/teleport/rock3", "blendMode": "Overlay" }] },
+        "machinic4": { "base": "game:block/stone/rock/{rock}*", "blendedOverlays": [{ "base": "tpnet:block/teleport/rock4", "blendMode": "Overlay" }] },
+        "iron-sheet1": { "base": "game:block/stone/rock/{rock}*", "blendedOverlays": [{ "base": "tpnet:block/teleport/plate", "blendMode": "Overlay" }]  },//TODO: Fix shape (outside lines, branch faces, z-fight sectors)
+        "rusty-iron2": { "base": "game:block/stone/rock/{rock}*" }
+      }
+    },
+    "tabs": [ "general", "decorative", "tpnet" ]
   },
-  "attributes": {},
   "replaceable": 200,
   "resistance": 4,
   "lightAbsorption": 0,

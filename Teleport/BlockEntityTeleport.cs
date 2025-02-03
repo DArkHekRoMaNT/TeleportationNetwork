@@ -32,6 +32,7 @@ namespace TeleportationNetwork
         private ILogger Logger => _modLogger ?? Api.Logger;
         public TeleportStatus Status { get; } = new();
         public int Size { get; set; }
+        public string Type { get; set; } = "rusty";
 
         private TeleportManager _manager = null!;
         private TeleportControllers? _controllers;
@@ -232,6 +233,7 @@ namespace TeleportationNetwork
             if (_lastTargetPos != null)
                 tree.SetBlockPos("lastTargetPos", _lastTargetPos);
             tree.SetInt("size", Size);
+            tree.SetString("type", Type);
         }
 
         public override void FromTreeAttributes(ITreeAttribute tree, IWorldAccessor worldAccessForResolve)
@@ -240,6 +242,7 @@ namespace TeleportationNetwork
             Status.FromTreeAttributes(tree);
             _lastTargetPos = tree.GetBlockPos("lastTargetPos");
             Size = tree.GetInt("size");
+            Type = tree.GetString("type", Type);
         }
 
         public override void OnReceivedClientPacket(IPlayer fromPlayer, int packetid, byte[] data)
@@ -295,6 +298,15 @@ namespace TeleportationNetwork
             {
                 if (ClientSettings.ExtendedDebugInfo)
                 {
+                    if (forPlayer.WorldData.CurrentGameMode == EnumGameMode.Creative)
+                    {
+                        dsc.AppendLine();
+                        dsc.AppendLine($"Type: {Type}");
+                        dsc.AppendLine($"Size: {Size}");
+                        dsc.AppendLine($"Broken: {Status.IsBroken}");
+                        dsc.AppendLine();
+                    }
+
                     dsc.AppendLine($"Status: {Status.State} {Status.Progress:0%}");
                 }
 

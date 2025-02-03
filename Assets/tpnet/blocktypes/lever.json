@@ -3,9 +3,15 @@
   "class": "tpnet:BlockTeleportLever",
   "entityClass": "tpnet:TeleportLever",
   "behaviors": [{ "name": "HorizontalOrientable" }],
-  "variantGroups": [{ "code": "side", "loadFromProperties": "abstract/horizontalorientation" }],
-  "attributes": {},
-  "shape": { "base": "block/lever", "rotateYByType": { "*-north": 0, "*-west": 90, "*-south": 180, "*-east": 270 } },
+  "variantGroups": [
+    //{ "code": "type", "states": ["clutter", "largelever"]},
+    { "code": "side", "loadFromProperties": "abstract/horizontalorientation" }
+  ],
+  "attributes": {
+    
+  },
+  //"shape": { "base": "block/lever/{type}", "rotateYByType": { "*-north": 0, "*-west": 90, "*-south": 180, "*-east": 270 } },
+  "shape": { "base": "block/lever/clutter", "rotateYByType": { "*-north": 0, "*-west": 90, "*-south": 180, "*-east": 270 } },
   "textures": {
     "smoky": { "base": "game:block/glass/smoky" },
 		"device-plate": { "base": "game:block/machine/device-plate" },
