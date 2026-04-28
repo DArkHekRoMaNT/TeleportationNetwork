@@ -34,10 +34,9 @@ namespace TeleportationNetwork
             _api = api;
             _logger = logger;
 
-            var rockstrata = api.Assets.Get("game:worldgen/rockstrata.json").ToObject<RockStrataConfig>();
-            var blockLayerConfig = api.Assets.Get("game:worldgen/blocklayers.json").ToObject<BlockLayerConfig>();
-            blockLayerConfig.ResolveBlockIds(api, rockstrata);
-
+            var blockLayerConfig = BlockLayerConfig.GetInstance(api);
+            blockLayerConfig.ResolveBlockIds(api);
+            
             _structures = LoadSchematicList(blockLayerConfig, props.Schematics);
             _bases = LoadSchematicList(blockLayerConfig, props.BaseSchematics);
             _pillars = LoadSchematicList(blockLayerConfig, props.PillarSchematics);
@@ -89,7 +88,7 @@ namespace TeleportationNetwork
                     continue;
                 }
 
-                schematic.FromFileName = asset.Name;
+                schematic.FromFile = asset.Name;
 
                 var rotatedSchematics = new TeleportSchematicStructure[4];
                 rotatedSchematics[0] = schematic;
@@ -104,7 +103,7 @@ namespace TeleportationNetwork
                     rotatedSchematics[k].blockLayerConfig = config;
                     rotatedSchematics[k].Init(_api.World.BlockAccessor);
                     rotatedSchematics[k].LoadMetaInformationAndValidate(_api.World.BlockAccessor,
-                        _api.World, schematic.FromFileName);
+                        _api.World, schematic.FromFile);
                 }
 
                 return rotatedSchematics;

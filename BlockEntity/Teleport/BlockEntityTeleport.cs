@@ -306,10 +306,10 @@ namespace TeleportationNetwork
                                 var soundLoc = new AssetLocation("sounds/effect/translocate-breakdimension.ogg");
                                 entity.World.PlaySoundAt(soundLoc, entity, null, true, 32, .5f);
                             }
-                           ((ICoreServerAPI)Api).Network.BroadcastBlockEntityPacket(
-                               targetPoint.X, targetPoint.Y, targetPoint.Z,
-                               Constants.EntityTeleportedPacketId,
-                               BitConverter.GetBytes(entity.EntityId));
+                            ((ICoreServerAPI)Api).Network.BroadcastBlockEntityPacket(
+                                new BlockPos(targetPoint.X, targetPoint.Y, targetPoint.Z),
+                                Constants.EntityTeleportedPacketId,
+                                BitConverter.GetBytes(entity.EntityId));
                         });
                     }
                 }

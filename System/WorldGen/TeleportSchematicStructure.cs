@@ -92,7 +92,7 @@ namespace TeleportationNetwork
                 BlockIds = new List<int>(BlockIds),
                 BlockEntities = new Dictionary<uint, string>(BlockEntities),
                 ReplaceMode = ReplaceMode,
-                FromFileName = FromFileName
+                FromFile = FromFile
             };
         }
     }

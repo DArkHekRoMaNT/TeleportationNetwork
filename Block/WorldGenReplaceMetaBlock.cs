@@ -5,7 +5,7 @@ namespace TeleportationNetwork
 {
     public class WorldGenReplaceMetaBlock : Block
     {
-        public override bool TryPlaceBlockForWorldGen(IBlockAccessor blockAccessor, BlockPos pos, BlockFacing onBlockFace, LCGRandom worldgenRandom)
+        public override bool TryPlaceBlockForWorldGen(IBlockAccessor blockAccessor, BlockPos pos, BlockFacing onBlockFace, IRandom worldgenRandom, BlockPatchAttributes attributes = null)
         {
             blockAccessor.SetBlock(0, pos);
 

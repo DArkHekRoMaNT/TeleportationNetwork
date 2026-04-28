@@ -1,0 +1,16 @@
+{
+  "$schema": "https://moddbcdn.vintagestory.at/schema/modinfo.latest.json",
+  "type": "Code",
+  "name": "Teleportation Network",
+  "modid": "tpnet",
+  "version": "1.14.5",
+  "description": "Adds surface teleport network",
+  "website": "https://github.com/DArkHekRoMaNT/TeleportationNetwork",
+  "authors": [
+    "DArkHekRoMaNT"
+  ],
+  "dependencies": {
+    "game": "1.22.0",
+    "commonlib": "2.3.1"
+  }
+}

@@ -20,7 +20,7 @@
     "height": 2,
     "output": {
       "type": "block",
-      "code": "game:lantern-up",
+      "code": "game:lantern-large-up",
       "attributes": {
         "material": "{material}",
         "lining": "plain",
@@ -49,7 +49,7 @@
     "height": 2,
     "output": {
       "type": "block",
-      "code": "game:lantern-up",
+      "code": "game:lantern-large-up",
       "attributes": {
         "material": "{material}",
         "lining": "plain",
